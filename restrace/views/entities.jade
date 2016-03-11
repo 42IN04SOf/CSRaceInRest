@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    h1= title
+    p Welcome 2 #{title}
+    p= message
+    div.container
+        if result.length != 0
+            - each item in result
+                div.item= item.name
+        else
+            div.error lol no item kek
