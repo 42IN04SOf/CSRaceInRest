@@ -9,5 +9,5 @@ module.exports = function (mongoose, middleware) {
         middleware(schema);
     }
     
-    return mongoose.model('race', schema);
+    mongoose.model('race', schema);
 }

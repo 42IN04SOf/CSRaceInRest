@@ -10,12 +10,6 @@ config.google = {
 
 config.db = {
     connection: 'mongodb://localhost:27017/restrace',
-    middleware: require('./lib/dummyMiddelware'),
-    schemas: [
-        require('./lib/schema/entity'),
-        require('./lib/schema/race'),
-        require('./lib/schema/waypoint')
-    ]
 };
 
 module.exports = config;

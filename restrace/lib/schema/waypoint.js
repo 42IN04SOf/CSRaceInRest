@@ -9,5 +9,5 @@ module.exports = function (mongoose, middleware) {
         middleware(schema);
     }
     
-    return mongoose.model('waypoint', schema);
+    mongoose.model('waypoint', schema);
 }

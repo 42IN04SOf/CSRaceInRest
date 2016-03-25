@@ -15,114 +15,41 @@ var html = {
     }
 };
 
-// GET /entity
-router.get('/', function(req, res) {
-    var Model = req.mongoose.model(model);
-    Model.find(function(err, result){
-        if(err) {
-            res.error(400, `${model} could not be retrieved, ${err}.`);
+module.exports = function(entityRepository) {
+    // GET /entity
+    router.get('/', entityRepository.read, function(req, res, next) {
+        console.log(req[model]);
+        if(res.isHTMLRequested()) {
+            req[model] = { result: req[model] };
+            req[model].title = html.overview.title;
+            req[model].message = html.overview.message;
         }
-        else {
-            if(res.isHTMLRequested()) {
-                result = { result: result };
-                result.title = html.overview.title;
-                result.message = html.overview.message;
-            }
-            res.return(result, html.overview.view);
-        }
+        res.return({ result: req[model], view: html.overview.view });
     });
-});
 
-// POST /entity/
-// request-body to model
-router.post('/', function(req, res, next) {
-    var Model = req.mongoose.model(model);
-    var mModel = new Model({
-        name    : req.body.name,
-        rating  : req.body.rating
+    // POST /entity
+    router.post('/', entityRepository.create, function(req, res) {
+        res.sendStatus(201);
     });
-    req[model] = mModel;
-    next();
-});
 
-// POST /entity/
-// store model and return statuscode
-router.post('/', function(req, res) {
-    req[model].save(function(err) {
-        if(err) {
-            res.error(500, `${model} could not be saved, ${err}.`);
+    // ANY /entity/:id
+    router.param('id', entityRepository.readById);
+
+    // GET /entity/:id
+    router.get('/:id', function (req, res){
+        if(res.isHTMLRequested()) {
+            req[model] = { result: req[model] };
+            req[model].title = html.detail.title;
+            req[model].message = html.detail.message;
         }
-        else {
-            res.sendStatus(201);
-        }
+        res.return({ result: req[model], view: html.detail.view });
     });
-});
 
-// ANY /entity/:id
-// retrieve model from id
-router.param('id', function(req, res, next, id) {
-    var Model = req.mongoose.model(model);
-    var modelId = req.params.id;
-    Model.findOne({ "_id" : modelId },{},function(err, result){
-        if(err) {
-            res.error(500, `${model} could not be retrieved, ${err}.`);
-        }
-        else if(result) {
-            req[model] = result;
-            next();
-        }
-        else {
-            res.error(404, `${model} does not exist.`);
-        }
-    });
-});
+    // PUT /entity/:id
+    router.put('/:id', entityRepository.update);
 
-// GET /entity/:id
-// return entity from id
-router.get('/:id', function (req, res){
-    if(res.isHTMLRequested()) {
-        req[model] = { result: req[model] };
-        req[model].title = html.overview.title;
-        req[model].message = html.overview.message;
-    }    
-    res.return(req[model], html.detail.view);
-});
-
-// PUT /entity/:id
-// assign req.body to entity
-router.put('/:id', function (req, res, next){
-    if(req.query.partial) {
-        if(req.body.name) {
-            req[model].name = req.body.name;
-        }
-        if(req.body.rating) {
-            req[model].rating = req.body.rating;
-        }
-    }
-    else {
-        req[model].name = req.body.name;
-        req[model].rating = req.body.rating;
-    }
-    next();
-});
-
-// PUT /entity/:id
-// save entity
-router.put('/:id', function (req, res){
-    req[model].save(function(err) {
-        if(err) {
-            res.error(500, `${model} could not be updated, ${err}.`);
-        }
-        else {
-            res.sendStatus(204);
-        }
-    });
-});
-
-// DELETE /entity/:id
-router.delete('/:id', function(req, res) {
-    req[model].remove();
-    res.sendStatus(204);
-});
-
-module.exports = router;
+    // DELETE /entity/:id
+    router.delete('/:id', entityRepository.delete);
+    
+    return router;
+}

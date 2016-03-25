@@ -1,8 +1,4 @@
-var express = require('express');
-var router = express.Router();
-
-// Add global subrouter functions 
-router.use(function(req, res, next) {
+module.exports = function(req, res, next) {
     var getReturnFormat = function() {
         return req.query.format;
     }
@@ -13,24 +9,24 @@ router.use(function(req, res, next) {
                 return callbacks.html();
             case "json":
                 if(callbacks.json) {
-                return callbacks.json();  
+                    return callbacks.json(); 
                 }
             default: // Some unsupported format is given.
                 return callbacks.default();
         }
     } 
     // return handler
-    res.return = function(result, view) {
+    res.return = function(data) {
         returnAction({
             html: function(){
-                if(view) {
-                    res.render(view, result);
+                if(data.view) {
+                    res.render(data.view, data.result);
                 }
                 else {
                     res.status(400).send('The content could not be viewed in a(n) HTML page.');
                 }
             },
-            json: function(){ res.json(result); },
+            json: function(){ res.json(data.result); },
             default: function(){ res.status(400).send('An unsupported format was specified in the format-query parameter.'); }
         });
     };
@@ -49,6 +45,4 @@ router.use(function(req, res, next) {
         });
     }
     next();
-});
-
-module.exports = router;
+};

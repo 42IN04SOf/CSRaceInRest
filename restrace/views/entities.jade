@@ -7,6 +7,6 @@ block content
     div.container
         if result.length != 0
             - each item in result
-                div.item= item.name
+                div.item #{item.name} & #{item.id} 
         else
             div.error lol no item kek

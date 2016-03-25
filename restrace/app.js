@@ -9,21 +9,21 @@ var mongoose = require('mongoose');
 var request = require('request');
 var querystring = require('querystring');
 
-// subrouters
-var routes = require('./routes/index');
-var user = require('./routes/user');
-var entity = require('./routes/entity');
-
 // miscellanous
-var config = require('./config.js');
-var dbInit = require('./lib/dbInit.js');
+var config = require('./config');
+var returnHandler = require('./lib/module/returnHandler');
 
-// pre-init
-dbInit(mongoose, config.db);
+var preDbHelper = require('./lib/module/dbHelper');
+var dbHelper = new preDbHelper(mongoose, config.db);
+
+// subrouters
+var index = require('./routes/index')();
+var user = require('./routes/user')();
+var entity = require('./routes/entity')(dbHelper.repositories.entity);
 
 // start
 var app = express();
-
+// dfta
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -36,18 +36,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// add global dependencies here
-app.use(function(req, res, next) {
-    req.mongoose = mongoose;
-    // todo: add lib helpers
-    req.config = config;
-    next();
-});
+// add lib handler
+app.use(returnHandler);
 
 // define routes here
-app.use('/', routes);
-app.use('/entity', entity);
+app.use('/', index);
 app.use('/user', user);
+app.use('/entity', entity);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
