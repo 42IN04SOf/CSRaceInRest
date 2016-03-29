@@ -18,7 +18,7 @@ var dbHelper = new preDbHelper(mongoose, config.db);
 
 // subrouters
 var index = require('./routes/index')();
-var user = require('./routes/user')();
+var user = require('./routes/user')(dbHelper.repositories.user);
 var entity = require('./routes/entity')(dbHelper.repositories.entity);
 
 // start
