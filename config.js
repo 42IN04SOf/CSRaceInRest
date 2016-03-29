@@ -9,7 +9,7 @@ config.google = {
 };
 
 config.db = {
-    connection: 'mongodb://localhost:27017/restrace',
+    connection: ' mongodb://admin:admino@ds025439.mlab.com:25439/restrace',
 };
 
 module.exports = config;
