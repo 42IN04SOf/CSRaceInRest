@@ -15,7 +15,7 @@ var html = {
     }
 };
 
-module.exports = function() {
+module.exports = function(userRepository) {
     // GET /user
     router.get('/', userRepository.read, function(req, res, next) {
         console.log(req[model]);
