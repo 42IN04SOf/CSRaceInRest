@@ -46,10 +46,14 @@ module.exports = function(entityRepository) {
     });
 
     // PUT /entity/:id
-    router.put('/:id', entityRepository.update);
+    router.put('/:id', entityRepository.update, function(req, res) {
+        res.sendStatus(204);
+    });
 
     // DELETE /entity/:id
-    router.delete('/:id', entityRepository.delete);
+    router.delete('/:id', entityRepository.delete, function(req, res) {
+        res.sendStatus(204);
+    });
     
     return router;
 }
