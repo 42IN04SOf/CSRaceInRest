@@ -21,6 +21,9 @@ var index = require('./routes/index')();
 var user = require('./routes/user')(dbHelper.repositories.user);
 var entity = require('./routes/entity')(dbHelper.repositories.entity);
 var waypoint = require('./routes/waypoint')(dbHelper.repositories.waypoint);
+var race = require('./routes/race')(dbHelper.repositories.race);
+var participant = require('./routes/participant')(dbHelper.repositories.participant);
+var stats = require('./routes/stats')(dbHelper.repositories.stats);
 
 // start
 var app = express();
@@ -45,6 +48,9 @@ app.use('/', index);
 app.use('/user', user);
 app.use('/entity', entity);
 app.use('/waypoint', waypoint);
+app.use('/race', race);
+app.use('/participant', participant);
+app.use('/stats', stats);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    h1= title
+    p Welcome op de races pagina
+    p= message
+    div.container
+        if result.length != 0
+            - each item in result
+                div.item Race naam: #{item.name} eigenaar ID: #{item.ownerID}
+        else
+            div.error geen races beschikbaar
