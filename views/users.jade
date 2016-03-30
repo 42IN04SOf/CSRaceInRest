@@ -7,6 +7,6 @@ block content
     div.container
         if result.length != 0
             - each item in result
-                div.item #{item.name} & #{item.id} 
+                div.item Username: #{item.username} Voornaam: #{item.name} Achternaam: #{item.lastname}
         else
             div.error geen users beschikbaar
