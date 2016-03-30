@@ -1,15 +1,11 @@
 extends layout
 
-- var bota = 'áyylmao'
 block content
     h1= title
     p Welcome 2 #{title}
     p= message
-    p DOTAAA
     div.container
-        if bota
-            div.item lol items kek
-            - each item in result
-                div.item= item.name
+        if result.length != 0
+            div.item = #{result.name}
         else
-            div.item lol no item kek
+            div.item dit item bestaat niet
