@@ -7,6 +7,8 @@ block content
     div.container
         if result.length != 0
             - each item in result
-                div.item Username: #{item.username} Voornaam: #{item.name} Achternaam: #{item.lastname}
+                li
+                    div.item Username: #{item.username} Voornaam: #{item.name} Achternaam: #{item.lastname}
+                    a(href="#{item.id}") details
         else
             div.error geen users beschikbaar
