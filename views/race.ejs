@@ -38,10 +38,10 @@
         <!-- GOOGLE INFORMATION -->
         <div class="col-sm-6">
             <div class="well">
-                <h3>Race list</h3>
+                <h3>Mijn races list</h3>
 
                 <!-- check if the user has this token (is the user authenticated with this social account) -->
-                <% if (races) { %>
+                <% if (myraces) { %>
                 
                     <table>
                         <tr>
@@ -49,8 +49,33 @@
                         </tr>
                     <% for(var i=0; i < races.length; i++) { %>
                         <tr>
-                            <td><%= races[i].name %></td>
-                            <td><%= races[i].ownerID %></td>
+                            <td><%= myraces[i].name %></td>
+                            <td><%= myraces[i].ownerID %></td>
+                        </tr>
+                    <% } %>
+                    </table>
+
+                    <a href="/unlink/google" class="btn btn-primary">Unlink</a>
+                <% } else { %>
+                    <a href="/connect/google" class="btn btn-primary">Connect Google</a>
+                <% } %>
+
+            </div>
+            
+            <div class="well">
+                <h3>Deelnemend aan races list</h3>
+
+                <!-- check if the user has this token (is the user authenticated with this social account) -->
+                <% if (deelnemendraces) { %>
+                
+                    <table>
+                        <tr>
+                            <td><b>Naam</b></td> <td><b>Eigenaar</b></td>
+                        </tr>
+                    <% for(var i=0; i < races.length; i++) { %>
+                        <tr>
+                            <td><%= deelnemendraces[i].name %></td>
+                            <td><%= deelnemendraces[i].ownerID %></td>
                         </tr>
                     <% } %>
                     </table>

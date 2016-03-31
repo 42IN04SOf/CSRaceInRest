@@ -89,16 +89,13 @@ module.exports = function(app, passport) {
     app.get('/race', isLoggedIn, function(req, res) {
         
         Race.find({}).exec(function(err, races) {
-            console.log('exec started');
             if(err) {
                 res.send('error has occured');
             } else {
-                console.log(races);
-                req.races = races;
-                
+                req.myraces = races;
                 res.render('race.ejs', {
                     user : req.user, // get the user out of session and pass to template
-                    races : req.races
+                    races : req.myraces
                 });
             }
         })     
