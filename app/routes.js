@@ -87,10 +87,16 @@ module.exports = function(app, passport) {
     
     // the races list page
     app.get('/race', isLoggedIn, function(req, res) {
+        
+        console.log('race get method started');
+        
         Race.find({}).exec(function(err, races) {
+            console.log('exec started');
             if(err) {
+                console.log('error');
                 res.send('error has occured');
             } else {
+                console.log('not error');
                 console.log(races);
                 req.races = races;
             }
