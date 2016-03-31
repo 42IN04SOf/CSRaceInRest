@@ -1,7 +1,7 @@
 var mongoose    = require('mongoose');
 
 // require models
-var Race        = require('./app/models/race.js');
+var Race        = require('./models/race.js');
 
 module.exports = function(app, passport) {
 // =====================================
