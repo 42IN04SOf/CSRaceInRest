@@ -139,6 +139,27 @@ module.exports = function(app, passport) {
         })        
     });
     
+    app.get('/race/details/:id', isLoggedIn, function(req, res) {
+      
+        Race.find({ _id: req.params.id }).exec(function(err, _race) {
+            if(err) {
+                res.senmd('error has occured');
+            } else {
+                res.render('racedetails.ejs', {
+                    race : _race
+                });
+            }
+        })
+        
+        newDeelnemer.save(function(err, raceDeelnemer) {
+            if(err) {
+                res.send('error joining race');
+            } else {
+                res.send(raceDeelnemer);
+            }
+        })
+    })
+    
     app.post('/race/join/:id', isLoggedIn, function(req, res) {
         var newDeelnemer = new RaceDeelnemer();
         
