@@ -151,14 +151,6 @@ module.exports = function(app, passport) {
                 });
             }
         })
-        
-        newDeelnemer.save(function(err, raceDeelnemer) {
-            if(err) {
-                res.send('error joining race');
-            } else {
-                res.send(raceDeelnemer);
-            }
-        })
     })
     
     app.post('/race/join/:id', isLoggedIn, function(req, res) {
