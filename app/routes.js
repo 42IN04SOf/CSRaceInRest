@@ -89,9 +89,13 @@ module.exports = function(app, passport) {
     });
     
     app.post('/race', isLoggedIn, function(req, res) {
-        res.render('race.ejs', {
-            ownerID : req.user._id,
-            name : req.body.name,
+        var RaceModel = mongoose.model('Race');
+        var newModel = new RaceModel(callbacks.create(req, res));
+        
+        newModel.save(function(err) {
+            if(err) { return next(err); }
+            req[model] = newModel;
+            next();
         });
     });
 };
