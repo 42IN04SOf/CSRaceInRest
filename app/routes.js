@@ -1,3 +1,5 @@
+var mongoose = require('mongoose');
+
 module.exports = function(app, passport) {
 // =====================================
     // HOME PAGE (with login links) ========
