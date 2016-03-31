@@ -146,7 +146,8 @@ module.exports = function(app, passport) {
                 res.senmd('error has occured');
             } else {
                 res.render('racedetails.ejs', {
-                    race : _race
+                    race : _race,
+                    user : req.user
                 });
             }
         })
