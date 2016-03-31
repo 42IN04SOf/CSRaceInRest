@@ -101,9 +101,7 @@ module.exports = function(app, passport) {
                     races : req.races
                 });
             }
-        })
-        
-        
+        })     
     });
     
     app.post('/race', isLoggedIn, function(req, res) {
