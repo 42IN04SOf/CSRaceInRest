@@ -113,6 +113,7 @@ module.exports = function(app, passport) {
                                
                                for(i = 0; i < _deelnemend.length; i++) {
                                     ids[i] = _deelnemend.raceID;
+                                    console.log(ids[i]);
                                }
                                
                                Race.find({ _id: { $in: ids } }).exec(function(err, _deelnemendRace) {
