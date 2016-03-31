@@ -8,7 +8,7 @@ config.google = {
     }
 };
 
-config.db = {
+config.url = {
     connection: 'mongodb://admin:admino@ds025439.mlab.com:25439/restrace',
 };
 
