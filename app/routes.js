@@ -97,9 +97,12 @@ module.exports = function(app, passport) {
             if(err) {
                 res.send('error has occured');
             } else {
+                console.log(req.myraces);
                 req.myraces = _myRaces;
             }
         })
+        
+        console.log(req.myraces);
         
         //req.myraces = myRaces;
         
