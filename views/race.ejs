@@ -101,12 +101,14 @@
                         <tr>
                             <td><%= races[i].name %></td>
                             <td><%= races[i].ownerID %></td>
-                            <td><a href="/race/join/<%= races[i]._id %>" class="btn btn-primary">Join</a></td>
+                            <td>
+                                <form action="/race/join/<%= races[i]._id %>" method="post">
+                                    <button type="submit" class="btn btn-warning btn-lg">Join</button>
+                                </form>
+                            </td>
                         </tr>
                     <% } %>
                     </table>
-
-                    <a href="/unlink/google" class="btn btn-primary">Unlink</a>
                 <% } else { %>
                     <a href="/connect/google" class="btn btn-primary">Connect Google</a>
                 <% } %>
