@@ -115,12 +115,12 @@ module.exports = function(app, passport) {
                                     ids[i] = _deelnemend.raceID;
                                }
                                
-                               Race.find({ _id: { '$in': ids } }).exec(function(err, _deelnemendRace) {
+                               Race.find({ _id: { $in: ids } }).exec(function(err, _deelnemendRace) {
                                    if(err) {
                                        res.send('error has occured');
                                    } else {
                                        deelnemend = _deelnemendRace;
-                                       
+
                                        res.render('race.ejs', {
                                             user : req.user, // get the user out of session and pass to template
                                             myraces : myRaces,
