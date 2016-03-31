@@ -110,12 +110,9 @@ module.exports = function(app, passport) {
                                res.send('error has occured');
                            } else {
                                var ids = [];
-                               
-                               console.log(_deelnemend.length);
-                               
+      
                                for(i = 0; i < _deelnemend.length; i++) {
                                     ids.push(_deelnemend[i].raceID);
-                                    console.log(ids[i]);
                                }
                                
                                Race.find({ _id: { $in: ids } }).exec(function(err, _deelnemendRace) {
@@ -123,10 +120,7 @@ module.exports = function(app, passport) {
                                        res.send('error has occured');
                                    } else {
                                        deelnemend = _deelnemendRace;
-                                       
-                                       console.log('Deelnemend: ');
-                                       console.log(_deelnemendRace);
-                                       
+
                                        res.render('race.ejs', {
                                             user : req.user, // get the user out of session and pass to template
                                             myraces : myRaces,

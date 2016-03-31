@@ -54,10 +54,8 @@
                         </tr>
                     <% } %>
                     </table>
-
-                    <a href="/unlink/google" class="btn btn-primary">Unlink</a>
                 <% } else { %>
-                    <a href="/connect/google" class="btn btn-primary">Connect Google</a>
+                    U heeft nog geen races aangemaakt.
                 <% } %>
 
             </div>
@@ -79,10 +77,8 @@
                         </tr>
                     <% } %>
                     </table>
-
-                    <a href="/unlink/google" class="btn btn-primary">Unlink</a>
                 <% } else { %>
-                    <a href="/connect/google" class="btn btn-primary">Connect Google</a>
+                    U doet nog niet aan een race mee.
                 <% } %>
 
             </div>
@@ -103,22 +99,18 @@
                             <td><%= races[i].ownerID %></td>
                             <td>
                                 <form action="/race/join/<%= races[i]._id %>" method="post">
-                                    <button type="submit" class="btn btn-warning btn-lg">Join</button>
+                                    <button type="submit" class="btn btn-primary">Join</button>
                                 </form>
                             </td>
                         </tr>
                     <% } %>
                     </table>
                 <% } else { %>
-                    <a href="/connect/google" class="btn btn-primary">Connect Google</a>
+                    Er zijn op het moment geen races.
                 <% } %>
-
             </div>
-            
         </div>
-
     </div>
-
 </div>
 </body>
 </html>
