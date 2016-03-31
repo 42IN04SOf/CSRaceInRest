@@ -109,13 +109,13 @@ module.exports = function(app, passport) {
                            if(err) {
                                res.send('error has occured');
                            } else {
-                               var ids;
+                               var ids = [];
                                
                                for(i = 0; i < _deelnemend.length; i++) {
                                     ids[i] = _deelnemend.raceID;
                                }
                                
-                               Race.find({ _id: { $in: ids } }).exec(function(err, _deelnemendRace) {
+                               Race.find({ _id: { '$in': ids } }).exec(function(err, _deelnemendRace) {
                                    if(err) {
                                        res.send('error has occured');
                                    } else {
