@@ -88,24 +88,22 @@ module.exports = function(app, passport) {
     // the races list page
     app.get('/race', isLoggedIn, function(req, res) {
         
-        console.log('race get method started');
-        
         Race.find({}).exec(function(err, races) {
             console.log('exec started');
             if(err) {
-                console.log('error');
                 res.send('error has occured');
             } else {
-                console.log('not error');
                 console.log(races);
                 req.races = races;
+                
+                res.render('race.ejs', {
+                    user : req.user, // get the user out of session and pass to template
+                    races : req.races
+                });
             }
         })
         
-        res.render('race.ejs', {
-            user : req.user, // get the user out of session and pass to template
-            races : req.races
-        });
+        
     });
     
     app.post('/race', isLoggedIn, function(req, res) {
