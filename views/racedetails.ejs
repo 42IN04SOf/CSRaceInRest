@@ -26,8 +26,8 @@
 
                 <% if (race) { %>
                     <p>
-                        <strong>Naam</strong>: <%= race.name %><br>
-                        <strong>Eigenaar</strong>: <%= race.ownerID %><br>
+                        <strong>Naam</strong>: <%= race[0].name %><br>
+                        <strong>Eigenaar</strong>: <%= race[0].ownerID %><br>
                     </p>
                 <% } else { %>
                     Deze race bestaat niet.
