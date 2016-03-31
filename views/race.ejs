@@ -86,6 +86,32 @@
                 <% } %>
 
             </div>
+            
+            <div class="well">
+                <h3>Alle races</h3>
+
+                <!-- check if the user has this token (is the user authenticated with this social account) -->
+                <% if (races) { %>
+                
+                    <table>
+                        <tr>
+                            <td><b>Naam</b></td> <td><b>Eigenaar</b></td>
+                        </tr>
+                    <% for(var i=0; i < races.length; i++) { %>
+                        <tr>
+                            <td><%= races[i].name %></td>
+                            <td><%= races[i].ownerID %></td>
+                        </tr>
+                    <% } %>
+                    </table>
+
+                    <a href="/unlink/google" class="btn btn-primary">Unlink</a>
+                <% } else { %>
+                    <a href="/connect/google" class="btn btn-primary">Connect Google</a>
+                <% } %>
+
+            </div>
+            
         </div>
 
     </div>

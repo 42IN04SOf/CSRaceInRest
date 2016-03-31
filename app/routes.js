@@ -89,18 +89,34 @@ module.exports = function(app, passport) {
     // the races list page
     app.get('/race', isLoggedIn, function(req, res) {
         
-        Race.find({ ownerID: req.user._id }).exec(function(err, races) {
+        var myRaces;
+        var deelnemend;
+        var races;
+        
+        Race.find({ ownerID: req.user._id }).exec(function(err, _myRaces) {
             if(err) {
                 res.send('error has occured');
             } else {
-                req.myraces = races;
-                res.render('race.ejs', {
-                    user : req.user, // get the user out of session and pass to template
-                    myraces : req.myraces,
-                    deelnemendraces: req.myraces
-                });
+                myRaces = _myRaces;
             }
         })
+        
+        Race.find({}).exec(function(err, _allRaces) {
+            if(err) {
+                res.send('error has occured');
+            } else {
+                races = _allRaces;
+            }
+        })
+        
+        req.myraces = races;
+        
+        res.render('race.ejs', {
+            user : req.user, // get the user out of session and pass to template
+            myraces : myRaces,
+            deelnemendraces: myRaces,
+            races : races
+        });
     });
     
     app.post('race/join/:id', isLoggedIn, function(req, res) {
