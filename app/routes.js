@@ -95,7 +95,7 @@ module.exports = function(app, passport) {
                 req.myraces = races;
                 res.render('race.ejs', {
                     user : req.user, // get the user out of session and pass to template
-                    races : req.myraces
+                    myraces : req.myraces
                 });
             }
         })     
