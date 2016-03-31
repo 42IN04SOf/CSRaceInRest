@@ -140,13 +140,18 @@ module.exports = function(app, passport) {
     });
     
     app.get('/race/details/:id', isLoggedIn, function(req, res) {
-      
+        var race;
+
         Race.find({ _id: req.params.id }).exec(function(err, _race) {
             if(err) {
-                res.senmd('error has occured');
+                res.send('error has occured');
             } else {
+                race = _race;
+                
+                console.log(race);
+                
                 res.render('racedetails.ejs', {
-                    race : _race,
+                    race : race,
                     user : req.user
                 });
             }
