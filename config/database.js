@@ -1,4 +1,8 @@
-var config = {};
+module.exports = {
+    'url' : 'mongodb://admin:admino@ds025439.mlab.com:25439/restrace'
+};
+
+/*var config = {};
 
 config.google = {
     placesAPI: { key: "AIzaSyD1SgryAGvNa_bXpcaiAEBeHcbVxtQofTg" },
@@ -9,7 +13,7 @@ config.google = {
 };
 
 config.url = {
-    connection: 'mongodb://admin:admino@ds025439.mlab.com:25439/restrace',
+    url: 'mongodb://admin:admino@ds025439.mlab.com:25439/restrace',
 };
 
-module.exports = config;
+module.exports = config; */
