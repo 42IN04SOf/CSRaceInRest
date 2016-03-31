@@ -97,17 +97,17 @@ module.exports = function(app, passport) {
             if(err) {
                 res.send('error has occured');
             } else {
-                myRaces = _myRaces;
+                req.myraces = _myRaces;
             }
         })
         
-        req.myraces = myRaces;
+        //req.myraces = myRaces;
         
         Race.find({}).exec(function(err, _allRaces) {
             if(err) {
                 res.send('error has occured');
             } else {
-                races = _allRaces;
+                req.races = _allRaces;
             }
         })
         
