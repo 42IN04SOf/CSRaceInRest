@@ -123,7 +123,7 @@ module.exports = function(app, passport) {
         })        
     });
     
-    app.post('join/:id', isLoggedIn, function(req, res) {
+    app.post('/join/:id', isLoggedIn, function(req, res) {
         var newDeelnemer = new RaceDeelnemer();
         
         newDeelnemer.userID = req.body.id;
