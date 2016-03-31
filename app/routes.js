@@ -101,6 +101,8 @@ module.exports = function(app, passport) {
             }
         })
         
+        req.myraces = myRaces;
+        
         Race.find({}).exec(function(err, _allRaces) {
             if(err) {
                 res.send('error has occured');
@@ -109,13 +111,13 @@ module.exports = function(app, passport) {
             }
         })
         
-        req.myraces = races;
+        req.races = races;
         
         res.render('race.ejs', {
             user : req.user, // get the user out of session and pass to template
-            myraces : myRaces,
-            deelnemendraces: myRaces,
-            races : races
+            myraces : req.myRaces,
+            deelnemendraces: req.myRaces,
+            races : req.races
         });
     });
     
