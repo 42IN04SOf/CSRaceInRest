@@ -87,6 +87,14 @@ module.exports = function(app, passport) {
     
     // the races list page
     app.get('/race', isLoggedIn, function(req, res) {
+        Race.find({}).exec(function(err, races) {
+            if(err) {
+                res.send('error has occured');
+            } else {
+                req.races = races;
+            }
+        })
+        
         res.render('race.ejs', {
             user : req.user, // get the user out of session and pass to template
             races : req.races
