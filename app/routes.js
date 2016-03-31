@@ -2,6 +2,7 @@ var mongoose    = require('mongoose');
 
 // require models
 var Race        = require('./models/race.js');
+var RaceDeelnemer = require('./models/racedeelnemer.js');
 
 module.exports = function(app, passport) {
 // =====================================
@@ -101,6 +102,21 @@ module.exports = function(app, passport) {
             }
         })
     });
+    
+    app.post('race/join/:id', isLoggedIn, function(req, res) {
+        var newDeelnemer = new RaceDeelnemer();
+        
+        newDeelnemer.userID = req.body.id;
+        newDeelnemer.raceID = req.params.id;
+        
+        newDeelnemer.save(function(err, raceDeelnemer) {
+            if(err) {
+                res.send('error joining race');
+            } else {
+                res.send(raceDeelnemer);
+            }
+        })
+    })
     
     app.post('/race', isLoggedIn, function(req, res) {
         var newRace = new Race();
