@@ -41,13 +41,16 @@
                 <h3>Race list</h3>
 
                 <!-- check if the user has this token (is the user authenticated with this social account) -->
-                <% if (user.google.token) { %>
-                    <p>
-                        <strong>id</strong>: <%= user.google.id %><br>
-                        <strong>token</strong>: <%= user.google.token %><br>
-                        <strong>email</strong>: <%= user.google.email %><br>
-                        <strong>name</strong>: <%= user.google.name %>
-                    </p>
+                <% if (races) { %>
+                
+                    <table>
+                    <% for(var i=0; i < races.length; i++) { %>
+                        <tr>
+                            <td><%= races[i].name %></td>
+                            <td><%= races[i].ownerID %></td>
+                        </tr>
+                    <% } %>
+                    </table>
 
                     <a href="/unlink/google" class="btn btn-primary">Unlink</a>
                 <% } else { %>
