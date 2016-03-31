@@ -98,25 +98,41 @@ module.exports = function(app, passport) {
                 res.send('error has occured');
             } else {
                 myRaces = _myRaces;
-                
-                console.log('my races: ');
-                console.log(myRaces);
-                
-                Race.find({}).exec(function(err, _allRaces) {
+
+                Race.find({}).exec(function(err, _allRaces) {                    
                     if(err) {
                         res.send('error has occured');
                     } else {
                         races = _allRaces;
                         
-                        console.log('all races: ');
-                        console.log(races);
-                        
-                        res.render('race.ejs', {
-                            user : req.user, // get the user out of session and pass to template
-                            myraces : myRaces,
-                            deelnemendraces: myRaces,
-                            races : races
+                        RaceDeelnemer.find({ userID: req.user._id }).exec(function(err, _deelnemend) {
+                           if(err) {
+                               res.send('error has occured');
+                           } else {
+                               var ids;
+                               
+                               for(i = 0; i < _deelnemend.length; i++) {
+                                    ids[i] = _deelnemend.raceID;
+                               }
+                               
+                               Race.find({ _id: { $in: ids } }).exec(function(err, _deelnemendRace) {
+                                   if(err) {
+                                       res.send('error has occured');
+                                   } else {
+                                       deelnemend = _deelnemendRace;
+                                       
+                                       res.render('race.ejs', {
+                                            user : req.user, // get the user out of session and pass to template
+                                            myraces : myRaces,
+                                            deelnemendraces: deelnemend,
+                                            races : races
+                                       });
+                                   }                                                                  
+                               })
+                           }
                         });
+                        
+                        
                     }
                 })
             }
