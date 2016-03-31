@@ -88,7 +88,7 @@ module.exports = function(app, passport) {
     // the races list page
     app.get('/race', isLoggedIn, function(req, res) {
         
-        Race.find({}).exec(function(err, races) {
+        Race.find({ ownerID: req.user._id }).exec(function(err, races) {
             if(err) {
                 res.send('error has occured');
             } else {
@@ -99,7 +99,7 @@ module.exports = function(app, passport) {
                     deelnemendraces: req.myraces
                 });
             }
-        })     
+        })
     });
     
     app.post('/race', isLoggedIn, function(req, res) {
