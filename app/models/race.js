@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var raceSchema = mongoose.Schema({
 
         name        : { type: String },
-        ownerID     : { type: raceSchema.ObjectId, ref: 'user' },
+        ownerID     : { type: String, ref: 'user' },
         dateCreate  : { type: Date, default: Date.now },
         dateStart   : { type: Date},
         dateStop    : { type: Date}
