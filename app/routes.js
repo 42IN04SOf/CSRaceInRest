@@ -120,7 +120,10 @@ module.exports = function(app, passport) {
                                        res.send('error has occured');
                                    } else {
                                        deelnemend = _deelnemendRace;
-
+                                       
+                                       console.log('Deelnemend: ');
+                                       console.log(_deelnemendRace);
+                                       
                                        res.render('race.ejs', {
                                             user : req.user, // get the user out of session and pass to template
                                             myraces : myRaces,
