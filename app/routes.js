@@ -83,7 +83,15 @@ module.exports = function(app, passport) {
     // the races list page
     app.get('/race', isLoggedIn, function(req, res) {
         res.render('race.ejs', {
-            user : req.user // get the user out of session and pass to template
+            user : req.user, // get the user out of session and pass to template
+            races : req.races
+        });
+    });
+    
+    app.post('/race', isLoggedIn, function(req, res) {
+        res.render('race.ejs', {
+            ownerID : req.user._id,
+            name : req.body.name,
         });
     });
 };
