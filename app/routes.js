@@ -99,11 +99,15 @@ module.exports = function(app, passport) {
             } else {
                 req.myraces = _myRaces;
                 
+                console.log(req.myraces);
+                
                 Race.find({}).exec(function(err, _allRaces) {
                     if(err) {
                         res.send('error has occured');
                     } else {
                         req.races = _allRaces;
+                        
+                        console.log(req.myraces);
                         
                         res.render('race.ejs', {
                             user : req.user, // get the user out of session and pass to template
