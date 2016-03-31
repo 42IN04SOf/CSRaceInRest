@@ -114,7 +114,7 @@ module.exports = function(app, passport) {
                                console.log(_deelnemend.length);
                                
                                for(i = 0; i < _deelnemend.length; i++) {
-                                    ids[i] = _deelnemend.raceID;
+                                    ids.push(_deelnemend.raceID);
                                     console.log(ids[i]);
                                }
                                
