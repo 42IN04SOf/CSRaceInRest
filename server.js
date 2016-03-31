@@ -12,7 +12,10 @@ var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
 
-var configDB = require('./config/database.js');
+var configDB     = require('./config/database.js');
+
+// require models
+var race        = require('./app/models/race.js');
 
 // configuration ===============================================================
 mongoose.connect(configDB.url); // connect to our database
