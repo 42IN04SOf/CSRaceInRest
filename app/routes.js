@@ -148,7 +148,7 @@ module.exports = function(app, passport) {
     app.post('/race/join/:id', isLoggedIn, function(req, res) {
         var newDeelnemer = new RaceDeelnemer();
         
-        newDeelnemer.userID = req.body.id;
+        newDeelnemer.userID = req.user.id;
         newDeelnemer.raceID = req.params.id;
         
         newDeelnemer.save(function(err, raceDeelnemer) {
