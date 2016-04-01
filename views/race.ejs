@@ -35,7 +35,6 @@
             </div>
         </div>
         
-        <!-- GOOGLE INFORMATION -->
         <div class="col-sm-6">
             <div class="well">
                 <h3>Mijn races list</h3>
@@ -51,6 +50,9 @@
                         <tr>
                             <td><%= myraces[i].name %></td>
                             <td><%= myraces[i].ownerID %></td>
+                            <td><form action="/race/edit/<%= myraces[i]._id %>" method="get">
+                                    <button type="submit" class="btn btn-primary">Details</button>
+                            </form></td>
                         </tr>
                     <% } %>
                     </table>
