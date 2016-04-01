@@ -161,22 +161,22 @@ module.exports = function(app, passport) {
         var race;
         
         Race.find({ _id: req.params.id }).exec(function(err, _race) {
-        if(err) {
-            res.send('error has occured');
-        } else {
-            race = _race;
-            if(req.user._id != race.ownerID)
-            {
-                res.send('You are not the owner of this race, and therefore you cannot edit it.')
+            if(err) {
+                res.send('error has occured');
+            } else {
+                race = _race;
+                if(req.user._id != race.ownerID) {
+                    res.send('You are not the owner of this race, and therefore you cannot edit it.')
+                }
+                else
+                {
+                    res.render('raceedit.ejs', {
+                        race : race,
+                        user : req.user
+                    });
+                }
             }
-            else
-            {
-                res.render('raceedit.ejs', {
-                    race : race,
-                    user : req.user
-                });
-            }
-        }
+        })
     })
     
     app.post('/race/join/:id', isLoggedIn, function(req, res) {
