@@ -2,6 +2,7 @@
 var mongoose = require('mongoose');
 
 // define the schema for our race model
+/*
 var placeSchema = mongoose.Schema({
     geometry: { location: { lat: { type: Number }, lng: { type: Number } } },
     icon: { type: String },
@@ -13,7 +14,7 @@ var placeSchema = mongoose.Schema({
     scope: { type: String },
     types: [{ type: String }],
     vicinity: { type: String }
-});
+});*/
 
 var waypointSchema = mongoose.Schema({
     raceid : { type: String },

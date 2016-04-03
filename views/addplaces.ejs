@@ -33,6 +33,9 @@
                         <tr>
                             <td><%= places[i].name %></td>
                             <td><%= places[i].vicinity %></td>
+                            <td><form action="/race/<%= race._id %>/addplace/add/<%= places[i].place_id %>" method="post">                                    
+                                    <button type="submit" class="btn btn-primary">Add</button>
+                            </form></td>
                         </tr>
                     <% } %>
                     </table>

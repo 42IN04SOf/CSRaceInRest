@@ -37,7 +37,7 @@
         
         <div class="col-sm-6">
             <div class="well">
-                <h3>Mijn races list</h3>
+                <h3>Mijn races</h3>
 
                 <!-- check if the user has this token (is the user authenticated with this social account) -->
                 <% if (myraces) { %>
@@ -51,6 +51,9 @@
                             <td><%= myraces[i].name %></td>
                             <td><%= myraces[i].ownerID %></td>
                             <td><form action="/race/edit/<%= myraces[i]._id %>" method="get">
+                                    <button type="submit" class="btn btn-primary">Edit</button>
+                            </form></td>
+                            <td><form action="/race/details/<%= myraces[i]._id %>" method="get">
                                     <button type="submit" class="btn btn-primary">Details</button>
                             </form></td>
                         </tr>
@@ -63,7 +66,7 @@
             </div>
             
             <div class="well">
-                <h3>Deelnemend aan races list</h3>
+                <h3>Deelnemend aan races</h3>
 
                 <!-- check if the user has this token (is the user authenticated with this social account) -->
                 <% if (deelnemendraces) { %>
@@ -76,6 +79,9 @@
                         <tr>
                             <td><%= deelnemendraces[i].name %></td>
                             <td><%= deelnemendraces[i].ownerID %></td>
+                            <td><form action="/race/details/<%= deelnemendraces[i]._id %>" method="get">
+                                    <button type="submit" class="btn btn-primary">Details</button>
+                            </form></td>
                         </tr>
                     <% } %>
                     </table>

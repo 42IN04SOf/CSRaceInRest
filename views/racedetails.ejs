@@ -42,7 +42,19 @@
                 <h3 class="text-danger">Deelnemers</h3>
 
                 <!-- check if the user has this token (is the user authenticated with this social account) -->
-                <% if (user.google.token) { %>
+                <% if (deelnemers) { %>
+                
+                    <table>
+                        <tr>
+                            <td><b>Naam</b></td> <td><b>ID</b></td>
+                        </tr>
+                    <% for(var i=0; i < deelnemers.length; i++) { %>
+                        <tr>
+                            <td><%= deelnemers[i].local.email %></td>
+                            <td><%= deelnemers[i]._id %></td>
+                        </tr>
+                    <% } %>
+                    </table>
                     
                 <% } else { %>
                     Geen deelnemers.

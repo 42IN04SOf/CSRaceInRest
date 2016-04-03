@@ -10,6 +10,7 @@ var API = "AIzaSyBnOX9RDvO8Te8BftCqZBTeA5-bGPuQYb4";
 var Race = require('./models/race.js');
 var RaceDeelnemer = require('./models/racedeelnemer.js');
 var Waypoint = require('./models/waypoint.js');
+var User = require('./models/user.js');
 
 module.exports = function(app, passport) {
     // =====================================
@@ -147,17 +148,42 @@ module.exports = function(app, passport) {
 
     app.get('/race/details/:id', isLoggedIn, function(req, res) {
         var race;
+        var deelnemers;
 
         Race.findOne({ _id: req.params.id }).exec(function(err, _race) {
             if (err) {
-                res.send('error has occured');
+                res.send('error has occured while finding race');
             } else {
                 race = _race;
 
-                res.render('racedetails.ejs', {
-                    race: race,
-                    user: req.user
-                });
+                RaceDeelnemer.find({ raceID: race._id }).exec(function(err, _deelnemend) {
+                    if (err) {
+                        res.send('error has occured while finding deelnemers');
+                    }
+                    else {
+
+                        var ids = [];
+
+                        for (i = 0; i < _deelnemend.length; i++) {
+                            ids.push(_deelnemend[i].userID);
+                        }
+
+                        User.find({ _id: { $in: ids } }).exec(function(err, _users) {
+                            if (err) {
+                                res.send('erros has occured while finding users');
+                            }
+                            else {
+                                deelnemers = _users;
+
+                                res.render('racedetails.ejs', {
+                                    race: race,
+                                    user: req.user,
+                                    deelnemers: deelnemers
+                                });
+                            }
+                        })
+                    }
+                })
             }
         })
     })
@@ -167,15 +193,49 @@ module.exports = function(app, passport) {
 
         Race.findOne({ _id: req.params.id }).exec(function(err, _race) {
             if (err) {
-                res.send('error has occured');
+                res.send('error has occured finding race');
             } else {
                 race = _race;
 
                 if (req.user._id == race.ownerID) {
-                    res.render('raceedit.ejs', {
-                        race: race,
-                        user: req.user
-                    });
+                    Waypoint.find({ raceid: req.params.id }).exec(function(err, _waypoints) {
+                        if (err) {
+                            res.send('error has occured finding waypoints');
+                        }
+                        else {
+                            waypoints = _waypoints;
+
+                            RaceDeelnemer.find({ raceID: race._id }).exec(function(err, _deelnemend) {
+                                if (err) {
+                                    res.send('error has occured while finding deelnemers');
+                                }
+                                else {
+
+                                    var ids = [];
+
+                                    for (i = 0; i < _deelnemend.length; i++) {
+                                        ids.push(_deelnemend[i].userID);
+                                    }
+
+                                    User.find({ _id: { $in: ids } }).exec(function(err, _users) {
+                                        if (err) {
+                                            res.send('erros has occured while finding users');
+                                        }
+                                        else {
+                                            deelnemers = _users;
+
+                                            res.render('raceedit.ejs', {
+                                                race: race,
+                                                user: req.user,
+                                                deelnemers: deelnemers,
+                                                waypoints: waypoints
+                                            });
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
                 }
                 else {
                     res.send('You are not the owner of this race, and therefore you cannot edit it.')
@@ -184,13 +244,14 @@ module.exports = function(app, passport) {
         })
     })
 
-    app.get('/race/:id/addplaces/:lon/:lat/:rad/:query', isLoggedIn, function(req, res) {
+    app.post('/race/:id/addplaces/', isLoggedIn, function(req, res) {
 
         var id = req.params.id;
-        var lon = req.params.lon;
-        var lat = req.params.lat;
-        var rad = req.params.rad;
-        var query = req.params.query;
+        var lon = req.body.lon;
+        var lat = req.body.lat;
+        var rad = req.body.rad;
+        var query = req.body.query;
+        var race;
 
         if (id != null && lon != null && lat != null && rad != null && query != null) {
             var url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=';
@@ -201,25 +262,38 @@ module.exports = function(app, passport) {
             url += '&type=' + query;
         }
 
-        //'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyBnOX9RDvO8Te8BftCqZBTeA5-bGPuQYb4&location=51.698963,5.302557&radius=2000&type=cafe'
+        Race.findOne({ _id: req.params.id }).exec(function(err, _race) {
+            if (err) {
+                res.send('error has occured finding race');
+            } else {
+                race = _race;
 
-        request(url, function(error, response, body) {
-            if (!error && response.statusCode == 200) {
-                var json = JSON.parse(body);
+                request(url, function(error, response, body) {
+                    if (!error && response.statusCode == 200) {
+                        var json = JSON.parse(body);
 
-                console.log(json.results[0]) // Show the HTML for the Google homepage.
+                        //console.log(json.results[0]) // Show the HTML for the Google homepage.
 
-                res.render('addplaces.ejs', {
-                    user: req.user,
-                    raceID: id,
-                    places: json.results
-                });
+                        res.render('addplaces.ejs', {
+                            user: req.user,
+                            raceID: id,
+                            race: race,
+                            places: json.results
+                        });
+                    }
+                })
             }
         })
+        //'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyBnOX9RDvO8Te8BftCqZBTeA5-bGPuQYb4&location=51.698963,5.302557&radius=2000&type=cafe'
     })
 
-    app.post('/race/:id/addplace/', isLoggedIn, function(req, res) {
+    app.post('/race/:id/addplace/add/:gid', isLoggedIn, function(req, res) {
         var newWaypoint = new Waypoint();
+
+        var redirectUrl = '/race/edit/' + req.params.id;
+
+        var url = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + req.params.gid + '&key=' + API;
+        console.log(url);
 
         Race.findOne({ _id: req.params.id }).exec(function(err, _race) {
             if (err) {
@@ -228,14 +302,22 @@ module.exports = function(app, passport) {
                 race = _race;
 
                 if (req.user._id == race.ownerID) {
-                    newWaypoint.place = req.body.place;
-                    newWaypoint.raceid = req.params.id;
+                    request(url, function(error, response, body) {
+                        if (!error && response.statusCode == 200) {
+                            var json = JSON.parse(body);
 
-                    newWaypoint.save(function(err, waypoint) {
-                        if (err) {
-                            res.send('error saving waypoint');
-                        } else {
-                            res.send(waypoint);
+                            console.log(body) // Show the HTML for the Google homepage.
+
+                            newWaypoint.place = json.result;
+                            newWaypoint.raceid = req.params.id;
+
+                            newWaypoint.save(function(err, waypoint) {
+                                if (err) {
+                                    res.send('error saving waypoint');
+                                } else {
+                                    res.redirect(redirectUrl);
+                                }
+                            })
                         }
                     })
                 }
@@ -244,18 +326,25 @@ module.exports = function(app, passport) {
                 }
             }
         })
+    })
 
-        if (req.user._id == race.ownerID) {
-            res.render('raceedit.ejs', {
-                race: race,
-                user: req.user
-            });
-        }
-        else {
-            res.send('You are not the owner of this race, and therefore you cannot edit it.')
-        }
-
-
+    //Completing a waypoint. rid = raceID, did = deelnemerID, wid = waypointID.
+    app.post('/race/:rid/waypoint/complete/:did/:wid', isLoggedIn, function(req, res) {
+        RaceDeelnemer.findOne({ _id: req.params.did }).exec(function(err, _deelnemer) {
+            if (err) {
+                res.send('error finding deelnemer');
+            } else {
+                _deelnemer.waypointsCompleted.push( { waypoint: { waypointID: req.params.wid } } );
+                _deelnemer.save(function(err) {
+                    if(err) {
+                        res.send('an error occured while adding waypoint');
+                    }
+                    else {
+                        res.redirect('/race/' + req.paramas.rid + '/details');
+                    }
+                })
+            }
+        })
     })
 
     app.post('/race/join/:id', isLoggedIn, function(req, res) {
