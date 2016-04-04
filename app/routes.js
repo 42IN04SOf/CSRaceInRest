@@ -18,10 +18,14 @@ module.exports = function(app, passport) {
     
     server = ws.createServer(function(conn) {
         console.log('New socket connection');
+        conn.send("Deze socketje");
         conn.on("text", function(str) {
             console.log(str);
-            conn.sendText("Spelers hebben checkpoints behaald!");
+            conn.sendText(str);
         })
+        conn.on("close", function (code, reason) {
+		console.log("Connection closed");
+	    })
     }).listen(9091)
     
     // =====================================
