@@ -9,6 +9,11 @@
     </style>
 </head>
 <body>
+
+<script>
+    var connection = new WebSocket('ws://localhost:9091');
+</script>
+
 <div class="container">
 
     <div class="page-header text-center">
@@ -19,7 +24,6 @@
 
     <div class="row">
 
-        <!-- LOCAL INFORMATION -->
         <div class="col-sm-6">
             <div class="well">
                 <h3><span class="fa fa-user"></span> Local</h3>
@@ -28,6 +32,8 @@
                     <p>
                         <strong>Naam</strong>: <%= race.name %><br>
                         <strong>Eigenaar</strong>: <%= race.ownerID %><br>
+                        <strong>Starttijd</strong>: <% if (race.dateStart) { %> <%= race.dateStart %> <% } else { %> Race is nog niet gestart <% } %> <br>
+                        <strong>Stoptijd</strong>: <% if (race.dateStop) { %> <%= race.dateStop %> <% } else { %> Race is nog niet gestopt <% } %> <br>
                     </p>
                 <% } else { %>
                     Deze race bestaat niet.
@@ -36,7 +42,6 @@
             </div>
         </div>
         
-        <!-- GOOGLE INFORMATION -->
         <div class="col-sm-6">
             <div class="well">
                 <h3 class="text-danger">Deelnemers</h3>
@@ -46,12 +51,13 @@
                 
                     <table>
                         <tr>
-                            <td><b>Naam</b></td> <td><b>ID</b></td>
+                            <td><b>Naam</b></td> <td><b>Waypoints behaald</b></td>
                         </tr>
                     <% for(var i=0; i < deelnemers.length; i++) { %>
                         <tr>
                             <td><%= deelnemers[i].local.email %></td>
-                            <td><%= deelnemers[i]._id %></td>
+                            <td><%= deelnemers[i].waypointsCompleted.length %></td>
+                            <td><%= deelnemers[i].latestCompleteDate %></td>
                         </tr>
                     <% } %>
                     </table>
@@ -61,33 +67,56 @@
                 <% } %>
 
             </div>
-        </div>
-        
-        <div class="col-sm-6">
+
             <div class="well">
-                <h3 class="text-danger">Waypoints</h3>
+                <h3 class="text-danger">Onbehaalde Waypoints</h3>
 
                 <!-- check if the user has this token (is the user authenticated with this social account) -->
-                <% if (waypoints) { %>
+                <% if (uncompWaypoints) { %>
                     <table>
                         <tr>
                             <td><b>Naam</b></td> <td><b>adres</b></td>
                         </tr>
-                    <% for(var i=0; i < waypoints.length; i++) { %>
+                    <% for(var i=0; i < uncompWaypoints.length; i++) { %>
                         <tr>
-                            <td><%= waypoints[i].place.name %></td>
-                            <td><%= waypoints[i].place.vicinity %></td>
+                            <td><%= uncompWaypoints[i].place.name %></td>
+                            <td><%= uncompWaypoints[i].place.vicinity %></td>
+                            <td><form action="/race/<%= race._id %>/waypoint/complete/<%= deelnemer._id %>/<%= uncompWaypoints[i]._id %>" method="post">
+                                    <button onclick="connection.send("Speler heeft zich op een checkpoint aangemeld.");" type="submit" class="btn btn-primary">Complete</button>
+                            </form></td>
                         </tr>
                     <% } %>
                     </table>
                 <% } else { %>
                     Geen waypoints.
                 <% } %>
+            </div>
+            
+            <div class="well">
+                <h3 class="text-danger">Behaalde Waypoints</h3>
 
+                <!-- check if the user has this token (is the user authenticated with this social account) -->
+                <% if (compWaypoints) { %>
+                    <table>
+                        <tr>
+                            <td><b>Naam</b></td> <td><b>adres</b></td> <td><b>behaald op</b></td>
+                        </tr>
+                    <% for(var i=0; i < compWaypoints.length; i++) { %>
+                        <tr>
+                            <td><%= compWaypoints[i].place.name %></td>
+                            <td><%= compWaypoints[i].place.vicinity %></td>
+                            <td><%= compWaypoints[i].dateCompleted %></td>
+                        </tr>
+                    <% } %>
+                    </table>
+                <% } else { %>
+                    Geen waypoints.
+                <% } %>
             </div>
 
     </div>
 
 </div>
+
 </body>
 </html>

@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var http = require('http');
 var request = require('request');
 var JSON = require('JSON');
+var ws = require('nodejs-websocket');
 
 // local vars
 var API = "AIzaSyBnOX9RDvO8Te8BftCqZBTeA5-bGPuQYb4";
@@ -11,8 +12,18 @@ var Race = require('./models/race.js');
 var RaceDeelnemer = require('./models/racedeelnemer.js');
 var Waypoint = require('./models/waypoint.js');
 var User = require('./models/user.js');
+var server;
 
 module.exports = function(app, passport) {
+    
+    server = ws.createServer(function(conn) {
+        console.log('New socket connection');
+        conn.on("text", function(str) {
+            console.log(str);
+            conn.sendText("Spelers hebben checkpoints behaald!");
+        })
+    }).listen(9091)
+    
     // =====================================
     // HOME PAGE (with login links) ========
     // =====================================
@@ -25,7 +36,6 @@ module.exports = function(app, passport) {
     // =====================================
     // show the login form
     app.get('/login', function(req, res) {
-
         // render the page and pass in any flash data if it exists
         res.render('login.ejs', { message: req.flash('loginMessage') });
     });
@@ -93,6 +103,70 @@ module.exports = function(app, passport) {
         successRedirect: '/profile',
         failureRedirect: '/'
     }));
+    
+    // =====================================
+    // WEBSOCKET ===========================
+    // =====================================
+
+    // =====================================
+    // API ONLY ============================
+    // =====================================
+    
+    // Gets one race, id = race id.
+    app.get('/api/race/:id', function(req, res) {
+        Race.findOne({ _id: req.params.id }).exec(function(err, _race) {
+            if(err) {
+                res.send('error occured while getting race');
+            } else {
+                res.json(_race);
+            }
+        })
+    })
+    
+    app.post('/api/race', function(req, res) {
+        var race = new Race();
+        
+        race.name =  req.body.name;
+        race.ownerID = req.body.ownerID;
+        
+        race.save(function(err, race) {
+            if(err) {
+                res.send('something went wrong creating race');
+            } else {
+                res.json(race);
+            }
+        })
+    })
+    
+    app.patch('/api/race/:id', function(req, res) {
+        Race.findOne({ _id: req.params.id }).exec(function(err, _race) {
+            if(req.body.name) {
+                _race.name = req.body.name;
+            }
+            if(req.body.ownerID) {
+                _race.ownerID = req.body.ownerID;
+            }
+            
+            _race.save(function(err) {
+                if(err) {
+                    res.send('something when wrong updating race');
+                }
+                else {
+                    res.json(_race);
+                }
+            })
+        })
+    })
+    
+    app.delete('/api/race/:id', function(req, res) {
+        Race.remove({ _id: req.params.id }).exec(function(err) {
+            if(err) {
+                res.send('something went wrong deleting race');
+            } else {
+                res.send('race deleted');
+            }
+        })
+    })
 
     // the races list page
     app.get('/race', isLoggedIn, function(req, res) {
@@ -173,13 +247,176 @@ module.exports = function(app, passport) {
                                 res.send('erros has occured while finding users');
                             }
                             else {
-                                deelnemers = _users;
+                                for (i = 0; i < _users.length; i++) {
+                                    for (x = 0; x < _deelnemend.length; x++) {
+                                        if (_users[i]._id == _deelnemend[x].userID) {
+                                            _users[i].waypointsCompleted = _deelnemend[x].waypointsCompleted;
+                                            
+                                            var latestCompleteDate;
+                                            
+                                            for(y = 0; y < _deelnemend[x].waypointsCompleted.length; y++) {
+                                                console.log(_deelnemend[x].waypointsCompleted[y].waypoint.dateCreate);
+                                                
+                                                if(_deelnemend[x].waypointsCompleted[y].waypoint.dateCreate > latestCompleteDate || y == 0)
+                                                {
+                                                    console.log(_deelnemend[x].waypointsCompleted[y].waypoint.dateCreate);
+                                                    _users[i].latestCompleteDate = _deelnemend[x].waypointsCompleted[y].waypoint.dateCreate;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
 
                                 res.render('racedetails.ejs', {
                                     race: race,
                                     user: req.user,
-                                    deelnemers: deelnemers
+                                    deelnemers: _users
                                 });
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    })
+
+    app.post('/race/:id/start', isLoggedIn, function(req, res) {
+        Race.findOne({ _id: req.params.id }).exec(function(err, _race) {
+            if (err) {
+                res.send('error has occured finding race');
+            } else {
+                if (req.user._id == _race.ownerID) {
+                    _race.dateStart = new Date();
+
+                    _race.save(function(err) {
+                        if (err) {
+                            res.send('error has occured while starting race');
+                        }
+                        else {
+                            res.redirect('/race/edit/' + req.params.id);
+                        }
+                    })
+                }
+                else {
+                    res.send('You are not the owner of this race, and therefore you cannot start it.');
+                }
+            }
+        })
+    })
+
+    app.post('/race/:id/stop', isLoggedIn, function(req, res) {
+        Race.findOne({ _id: req.params.id }).exec(function(err, _race) {
+            if (err) {
+                res.send('error has occured finding race');
+            } else {
+                if (req.user._id == _race.ownerID) {
+                    _race.dateStop = new Date();
+
+                    console.log(_race.dateStart);
+
+                    _race.save(function(err) {
+                        if (err) {
+                            res.send('error has occured while starting race');
+                        }
+                        else {
+                            res.redirect('/race/edit/' + req.params.id);
+                        }
+                    })
+                }
+                else {
+                    res.send('You are not the owner of this race, and therefore you cannot start it.');
+                }
+            }
+        })
+    })
+
+    app.get('/race/deelnemer/:id', isLoggedIn, function(req, res) {
+        var race;
+        var deelnemers;
+
+        Race.findOne({ _id: req.params.id }).exec(function(err, _race) {
+            if (err) {
+                res.send('error has occured while finding race');
+            } else {
+                race = _race;
+
+                RaceDeelnemer.find({ raceID: race._id }).exec(function(err, _deelnemend) {
+                    if (err) {
+                        res.send('error has occured while finding deelnemers');
+                    }
+                    else {
+
+                        var ids = [];
+                        var myDeelnemer;
+
+                        for (i = 0; i < _deelnemend.length; i++) {
+                            ids.push(_deelnemend[i].userID);
+                            if (_deelnemend[i].userID == req.user._id) {
+                                myDeelnemer = _deelnemend[i];
+                            }
+                        }
+
+                        User.find({ _id: { $in: ids } }).exec(function(err, _users) {
+                            if (err) {
+                                res.send('erros has occured while finding users');
+                            }
+                            else {
+                                for (i = 0; i < _users.length; i++) {
+                                    for (x = 0; x < _deelnemend.length; x++) {
+                                        if (_users[i]._id == _deelnemend[x].userID) {
+                                            _users[i].waypointsCompleted = _deelnemend[x].waypointsCompleted;
+                                            
+                                            var latestCompleteDate;
+                                            
+                                            for(y = 0; y < _deelnemend[x].waypointsCompleted.length; y++) {
+                                                console.log(_deelnemend[x].waypointsCompleted[y].waypoint.dateCreate);
+                                                
+                                                if(_deelnemend[x].waypointsCompleted[y].waypoint.dateCreate > latestCompleteDate || y == 0)
+                                                {
+                                                    console.log(_deelnemend[x].waypointsCompleted[y].waypoint.dateCreate);
+                                                    _users[i].latestCompleteDate = _deelnemend[x].waypointsCompleted[y].waypoint.dateCreate;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                deelnemers = _users;
+
+                                Waypoint.find({ raceid: req.params.id }).exec(function(err, _waypoints) {
+                                    if (err) {
+                                        res.send('error has occured finding waypoints');
+                                    }
+                                    else {
+                                        var uncompletedWaypoints = [];
+                                        var completedWaypoints = [];
+
+                                        for (i = 0; i < _waypoints.length; i++) {
+                                            var isCompleted = false;
+                                            for (x = 0; x < myDeelnemer.waypointsCompleted.length; x++) {
+                                                if (_waypoints[i]._id == myDeelnemer.waypointsCompleted[x].waypoint.waypointID) {
+                                                    newWaypoint = _waypoints[i];
+                                                    newWaypoint.dateCompleted = myDeelnemer.waypointsCompleted[x].waypoint.dateCreate;
+                                                    completedWaypoints.push(newWaypoint);
+                                                    isCompleted = true;
+                                                }
+                                            }
+                                            if (!isCompleted) {
+                                                uncompletedWaypoints.push(_waypoints[i]);
+                                            }
+                                        }
+
+                                        res.render('racedeelnemer.ejs', {
+                                            race: race,
+                                            user: req.user,
+                                            deelnemers: deelnemers,
+                                            waypoints: _waypoints,
+                                            compWaypoints: completedWaypoints,
+                                            uncompWaypoints: uncompletedWaypoints,
+                                            deelnemer: myDeelnemer
+                                        });
+                                    }
+                                })
                             }
                         })
                     }
@@ -222,6 +459,25 @@ module.exports = function(app, passport) {
                                             res.send('erros has occured while finding users');
                                         }
                                         else {
+                                            for (i = 0; i < _users.length; i++) {
+                                                for (x = 0; x < _deelnemend.length; x++) {
+                                                    if (_users[i]._id == _deelnemend[x].userID) {
+                                                        _users[i].waypointsCompleted = _deelnemend[x].waypointsCompleted;
+
+                                                        var latestCompleteDate;
+
+                                                        for (y = 0; y < _deelnemend[x].waypointsCompleted.length; y++) {
+                                                            console.log(_deelnemend[x].waypointsCompleted[y].waypoint.dateCreate);
+
+                                                            if (_deelnemend[x].waypointsCompleted[y].waypoint.dateCreate > latestCompleteDate || y == 0) {
+                                                                console.log(_deelnemend[x].waypointsCompleted[y].waypoint.dateCreate);
+                                                                _users[i].latestCompleteDate = _deelnemend[x].waypointsCompleted[y].waypoint.dateCreate;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+
                                             deelnemers = _users;
 
                                             res.render('raceedit.ejs', {
@@ -293,8 +549,7 @@ module.exports = function(app, passport) {
         var redirectUrl = '/race/edit/' + req.params.id;
 
         var url = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + req.params.gid + '&key=' + API;
-        console.log(url);
-
+        
         Race.findOne({ _id: req.params.id }).exec(function(err, _race) {
             if (err) {
                 res.send('error has occured');
@@ -305,8 +560,6 @@ module.exports = function(app, passport) {
                     request(url, function(error, response, body) {
                         if (!error && response.statusCode == 200) {
                             var json = JSON.parse(body);
-
-                            console.log(body) // Show the HTML for the Google homepage.
 
                             newWaypoint.place = json.result;
                             newWaypoint.raceid = req.params.id;
@@ -334,13 +587,13 @@ module.exports = function(app, passport) {
             if (err) {
                 res.send('error finding deelnemer');
             } else {
-                _deelnemer.waypointsCompleted.push( { waypoint: { waypointID: req.params.wid } } );
+                _deelnemer.waypointsCompleted.push({ waypoint: { waypointID: req.params.wid } });
                 _deelnemer.save(function(err) {
-                    if(err) {
-                        res.send('an error occured while adding waypoint');
+                    if (err) {
+                        res.send('an error occured while completing waypoint');
                     }
                     else {
-                        res.redirect('/race/' + req.paramas.rid + '/details');
+                        res.redirect('/race/deelnemer/' + req.params.rid);
                     }
                 })
             }

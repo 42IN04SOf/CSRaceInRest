@@ -16,6 +16,7 @@
     "http" : "latest",
     "request" : "latest",
     "JSON" : "latest",
+    "nodejs-websocket": "latest",
     
     "morgan": "~1.0.0",
     "body-parser": "~1.0.0",

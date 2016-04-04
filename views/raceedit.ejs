@@ -15,7 +15,7 @@
     </div>
 
     <div class="row">
-
+    
         <!-- LOCAL INFORMATION -->
         <div class="col-sm-6">
             <div class="well">
@@ -25,6 +25,14 @@
                     <p>
                         <strong>Naam</strong>: <%= race.name %><br>
                         <strong>Eigenaar</strong>: <%= race.ownerID %><br>
+                        <strong>Starttijd</strong>: <% if (race.dateStart) { %> <%= race.dateStart %> <% } else { %> Race is nog niet gestart <% } %> <br>
+                        <strong>Stoptijd</strong>: <% if (race.dateStop) { %> <%= race.dateStop %> <% } else { %> Race is nog niet gestopt <% } %> <br>
+                        <form action="/race/<%= race._id %>/start" method="post">
+                            <button type="submit" class="btn btn-primary">Start race</button>
+                        </form>
+                        <form action="/race/<%= race._id %>/stop" method="post">
+                            <button type="submit" class="btn btn-primary">Stop race</button>
+                        </form> <br>
                         
                     </p>
                 <% } else { %>
@@ -32,58 +40,7 @@
                 <% } %>
 
             </div>
-        </div>
         
-        <!-- GOOGLE INFORMATION -->
-        <div class="col-sm-6">
-            <div class="well">
-                <h3 class="text-danger">Deelnemers</h3>
-
-                <!-- check if the user has this token (is the user authenticated with this social account) -->
-                <% if (deelnemers) { %>
-                
-                    <table>
-                        <tr>
-                            <td><b>Naam</b></td> <td><b>ID</b></td>
-                        </tr>
-                    <% for(var i=0; i < deelnemers.length; i++) { %>
-                        <tr>
-                            <td><%= deelnemers[i].local.email %></td>
-                            <td><%= deelnemers[i]._id %></td>
-                        </tr>
-                    <% } %>
-                    </table>
-                    
-                <% } else { %>
-                    Geen deelnemers.
-                <% } %>
-
-            </div>
-        </div>
-        
-        <div class="col-sm-6">
-            <div class="well">
-                <h3 class="text-danger">Waypoints</h3>
-
-                <!-- check if the user has this token (is the user authenticated with this social account) -->
-                <% if (waypoints) { %>
-                    <table>
-                        <tr>
-                            <td><b>Naam</b></td> <td><b>adres</b></td>
-                        </tr>
-                    <% for(var i=0; i < waypoints.length; i++) { %>
-                        <tr>
-                            <td><%= waypoints[i].place.name %></td>
-                            <td><%= waypoints[i].place.vicinity %></td>
-                        </tr>
-                    <% } %>
-                    </table>
-                <% } else { %>
-                    Geen waypoints.
-                <% } %>
-
-            </div>
-            
             <div class="well">
                 <td><form action="/race/<%= race._id %>/addplaces/" method="post">
                     
@@ -111,8 +68,53 @@
                 </form></td>
             </div>
         </div>
-    </div>
+        
+        <div class="col-sm-6">
+            <div class="well">
+                <h3 class="text-danger">Deelnemers</h3>
 
+                <!-- check if the user has this token (is the user authenticated with this social account) -->
+                <% if (deelnemers) { %>
+                
+                    <table>
+                        <tr>
+                            <td><b>Naam</b></td> <td><b>Waypoints behaald</b></td>
+                        </tr>
+                    <% for(var i=0; i < deelnemers.length; i++) { %>
+                        <tr>
+                            <td><%= deelnemers[i].local.email %></td>
+                            <td><%= deelnemers[i].waypointsCompleted.length %></td>
+                            <td><%= deelnemers[i].latestCompleteDate %></td>
+                        </tr>
+                    <% } %>
+                    </table>
+                <% } else { %>
+                    Geen deelnemers.
+                <% } %>
+            </div>
+        
+            <div class="well">
+                <h3 class="text-danger">Waypoints</h3>
+
+                <!-- check if the user has this token (is the user authenticated with this social account) -->
+                <% if (waypoints) { %>
+                    <table>
+                        <tr>
+                            <td><b>Naam</b></td> <td><b>adres</b></td>
+                        </tr>
+                    <% for(var i=0; i < waypoints.length; i++) { %>
+                        <tr>
+                            <td><%= waypoints[i].place.name %></td>
+                            <td><%= waypoints[i].place.vicinity %></td>
+                        </tr>
+                    <% } %>
+                    </table>
+                <% } else { %>
+                    Geen waypoints.
+                <% } %>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
