@@ -50,10 +50,10 @@
                         <tr>
                             <td><%= myraces[i].name %></td>
                             <td><%= myraces[i].ownerID %></td>
-                            <td><form action="/race/edit/<%= myraces[i]._id %>" method="get">
+                            <td><form action="/race/<%= myraces[i]._id %>/edit" method="get">
                                     <button type="submit" class="btn btn-primary">Edit</button>
                             </form></td>
-                            <td><form action="/race/details/<%= myraces[i]._id %>" method="get">
+                            <td><form action="/race/<%= myraces[i]._id %>" method="get">
                                     <button type="submit" class="btn btn-primary">Details</button>
                             </form></td>
                         </tr>
@@ -79,7 +79,7 @@
                         <tr>
                             <td><%= deelnemendraces[i].name %></td>
                             <td><%= deelnemendraces[i].ownerID %></td>
-                            <td><form action="/race/deelnemer/<%= deelnemendraces[i]._id %>" method="get">
+                            <td><form action="/race/<%= deelnemendraces[i]._id %>/deelnemer" method="get">
                                     <button type="submit" class="btn btn-primary">Details</button>
                             </form></td>
                         </tr>
@@ -106,12 +106,12 @@
                             <td><%= races[i].name %></td>
                             <td><%= races[i].ownerID %></td>
                             <td>
-                                <form action="/race/join/<%= races[i]._id %>" method="post">
+                                <form action="/race/<%= races[i]._id %>/join" method="post">
                                     <button type="submit" class="btn btn-primary">Join</button>
                                 </form>
                             </td>
                             <td>
-                                <form action="/race/details/<%= races[i]._id %>" method="get">
+                                <form action="/race/<%= races[i]._id %>" method="get">
                                     <button type="submit" class="btn btn-primary">Details</button>
                                 </form>
                             </td>

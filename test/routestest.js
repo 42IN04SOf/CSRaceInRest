@@ -127,13 +127,15 @@ describe('Testing race route', function() {
                     if (err) {
                         done(err);
                     } else {
+                        res.body.should.have.property('name', 'naamtest');
+                        res.body.should.have.property('ownerID', 'ownerIDtest');
                         done();
                     }
                 })
         });
 
         it('should join a race', function(done) {
-            var url = "/race/join/" + resultID;
+            var url = "/race/" + resultID + '/join';
             console.log(url);
             request(app).post(url)
                 .expect(302)
@@ -158,6 +160,49 @@ describe('Testing race route', function() {
                         done(err);
                     } else {
                         res.body.should.have.property('name', 'nieuwenaam');
+                        res.body.should.have.property('ownerID', 'ownerIDtest');
+                        done();
+                    }
+                })
+        })
+        
+        it('should add a waypoint to a race', function(done) {
+            //race/:id/addplace/add/:gid
+            var url = '/race/' + resultID + '/addplace/add/ChIJz7lU6reqoUcRtKnmGYl3whs';
+            request(app).post(url)
+                .expect(302)
+                .end(function(err, res) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        done();
+                    }
+                })
+        })
+        
+        it('should open the race edit page', function(done) {
+            var url = '/race/' + resultID + '/edit';
+            console.log(url);
+            request(app).get(url)
+                .expect(302)
+                .end(function(err, res) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        done();
+                    }
+                })
+        })
+        
+        it('should open the race deelnemer page', function(done) {
+            var url = '/race/' + resultID + '/deelnemer';
+            console.log(url);
+            request(app).get(url)
+                .expect(302)
+                .end(function(err, res) {
+                    if (err) {
+                        done(err);
+                    } else {
                         done();
                     }
                 })
@@ -213,6 +258,144 @@ describe('Testing race route', function() {
         it('should log out', function(done) {
             request(app).get("/logout")
                 .expect(302)
+                .end(function(err, res) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        done();
+                    }
+                })
+        })
+    })
+    
+    describe('Testing pages while logged out', function() {
+        it('should create a new race, and return it', function(done) {
+            request(app).post('/api/race/')
+                .send({ "name": "naamtest", "ownerID": "ownerIDtest" })
+                .expect(201)
+                .expect('Content-Type', /json/)
+                .end(function(err, res) {
+                    if (err) {
+                        done(err);
+                    }
+                    else {
+                        res.body.should.have.property('name', 'naamtest');
+                        res.body.should.have.property('ownerID', 'ownerIDtest');
+                        done();
+                    }
+                })
+        });
+        
+        var resultID;
+
+        it('should return a race list', function(done) {
+            request(app).get('/api/race/')
+                .expect(200)
+                .expect('Content-Type', /json/)
+                .end(function(err, res) {
+                    if (err) {
+                        done(err);
+                    }
+                    else {
+                        resultID = res.body[0]._id;
+                        done();
+                    }
+                })
+        });
+
+        it('should read a specific race', function(done) {
+            var url = "/api/race/" + resultID;
+            request(app).get(url)
+                .expect(200)
+                .expect('Content-Type', /json/)
+                .end(function(err, res) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        done();
+                    }
+                })
+        });
+
+        it('should join a race', function(done) {
+            var url = "/race/" + resultID + '/join';
+            console.log(url);
+            request(app).post(url)
+                .expect(302)
+                .end(function(err, res) {
+                    if (err) {
+                        done(err);
+                    }
+                    else {
+                        done();
+                    }
+                })
+        });
+
+        it('should update a race', function(done) {
+            var url = "/api/race/" + resultID;
+            request(app).patch(url)
+                .send({ "name": "nieuwenaam" })
+                .expect(202)
+                .expect('Content-Type', /json/)
+                .end(function(err, res) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        res.body.should.have.property('name', 'nieuwenaam');
+                        done();
+                    }
+                })
+        })
+        
+        it('should add a waypoint to a race', function(done) {
+            //race/:id/addplace/add/:gid
+            var url = '/race/' + resultID + '/addplace/add/ChIJz7lU6reqoUcRtKnmGYl3whs';
+            request(app).post(url)
+                .expect(302)
+                .end(function(err, res) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        done();
+                    }
+                })
+        })
+        
+        it('should open the race edit page', function(done) {
+            var url = '/race/' + resultID + '/edit';
+            console.log(url);
+            request(app).get(url)
+                .expect(302)
+                .end(function(err, res) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        done();
+                    }
+                })
+        })
+        
+        it('should open the race deelnemer page', function(done) {
+            var url = '/race/' + resultID + '/deelnemer';
+            console.log(url);
+            request(app).get(url)
+                .expect(302)
+                .end(function(err, res) {
+                    if (err) {
+                        done(err);
+                    } else {
+                        done();
+                    }
+                })
+        })
+
+        // this test should always be ran last within this block.
+        it('should delete the found race', function(done) {
+            var url = "/api/race/" + resultID;
+            request(app).delete(url)
+                .expect(202)
+                .expect('Content-Type', /json/)
                 .end(function(err, res) {
                     if (err) {
                         done(err);

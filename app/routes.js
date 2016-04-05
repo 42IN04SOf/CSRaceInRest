@@ -244,7 +244,7 @@ module.exports = function(app, passport) {
         })
     });
 
-    app.get('/race/details/:id', isLoggedIn, function(req, res) {
+    app.get('/race/:id', isLoggedIn, function(req, res) {
         var race;
         var deelnemers;
 
@@ -317,7 +317,7 @@ module.exports = function(app, passport) {
                             res.send('error has occured while starting race');
                         }
                         else {
-                            res.redirect('/race/edit/' + req.params.id);
+                            res.redirect('/race/' + req.params.id + '/edit');
                         }
                     })
                 }
@@ -343,7 +343,7 @@ module.exports = function(app, passport) {
                             res.send('error has occured while starting race');
                         }
                         else {
-                            res.redirect('/race/edit/' + req.params.id);
+                            res.redirect('/race/' + req.params.id + '/edit');
                         }
                     })
                 }
@@ -354,7 +354,7 @@ module.exports = function(app, passport) {
         })
     })
 
-    app.get('/race/deelnemer/:id', isLoggedIn, function(req, res) {
+    app.get('/race/:id/deelnemer', isLoggedIn, function(req, res) {
         var race;
         var deelnemers;
 
@@ -449,7 +449,7 @@ module.exports = function(app, passport) {
         })
     })
 
-    app.get('/race/edit/:id', isLoggedIn, function(req, res) {
+    app.get('/race/:id/edit', isLoggedIn, function(req, res) {
         var race;
 
         Race.findOne({ _id: req.params.id }).exec(function(err, _race) {
@@ -570,7 +570,7 @@ module.exports = function(app, passport) {
     app.post('/race/:id/addplace/add/:gid', isLoggedIn, function(req, res) {
         var newWaypoint = new Waypoint();
 
-        var redirectUrl = '/race/edit/' + req.params.id;
+        var redirectUrl = '/race/' + req.params.id + '/edit';
 
         var url = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + req.params.gid + '&key=' + API;
         
@@ -606,7 +606,7 @@ module.exports = function(app, passport) {
     })
 
     //Completing a waypoint. rid = raceID, did = deelnemerID, wid = waypointID.
-    app.post('/race/:rid/waypoint/complete/:did/:wid', isLoggedIn, function(req, res) {
+    app.post('/race/:rid/waypoint/:wid/complete/:did/', isLoggedIn, function(req, res) {
         RaceDeelnemer.findOne({ _id: req.params.did }).exec(function(err, _deelnemer) {
             if (err) {
                 res.send('error finding deelnemer');
@@ -620,7 +620,7 @@ module.exports = function(app, passport) {
                                 res.send('an error occured while completing waypoint');
                             }
                             else {
-                                res.redirect('/race/deelnemer/' + req.params.rid);
+                                res.redirect('/race/' + req.params.rid + '/deelnemer');
                             }
                         })
                     }
@@ -632,7 +632,7 @@ module.exports = function(app, passport) {
         })
     })
 
-    app.post('/race/join/:id', isLoggedIn, function(req, res) {
+    app.post('/race/:id/join', isLoggedIn, function(req, res) {
         var newDeelnemer = new RaceDeelnemer();
 
         newDeelnemer.userID = req.user.id;
@@ -642,7 +642,7 @@ module.exports = function(app, passport) {
             if (err) {
                 res.send('error joining race');
             } else {
-                res.redirect('/race/deelnemer/' + req.params.id);
+                res.redirect('/race/' + req.params.id + '/deelnemer');
             }
         })
     })

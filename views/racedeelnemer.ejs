@@ -11,7 +11,7 @@
 <body>
 
 <script>
-    var connection = new WebSocket('wss://rrfm.herokuapp.com:9091');
+    var connection = new WebSocket('wss://localhost:9091');
     
     connection.onmessage = function(event) {
         document.getElementById('result').value=event.data;
@@ -89,7 +89,7 @@
                         <tr>
                             <td><%= uncompWaypoints[i].place.name %></td>
                             <td><%= uncompWaypoints[i].place.vicinity %></td>
-                            <td><form action="/race/<%= race._id %>/waypoint/complete/<%= deelnemer._id %>/<%= uncompWaypoints[i]._id %>" method="post">
+                            <td><form action="/race/<%= race._id %>/waypoint/<%= uncompWaypoints[i]._id %>/complete/<%= deelnemer._id %>" method="post">
                                     <button onclick='connection.send("<%= race._id %>" + " Speler " + "<%= user.local.email %>" + " heeft zich op checkpoint " + "<%= uncompWaypoints[i].place.vicinity %>" + " aangemeld.");' type="submit" class="btn btn-primary">Complete</button>
                             </form></td>
                         </tr>
