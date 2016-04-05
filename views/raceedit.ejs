@@ -4,6 +4,7 @@
     <title>Race details</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -33,7 +34,10 @@
                         <form action="/race/<%= race._id %>/stop" method="post">
                             <button type="submit" class="btn btn-primary">Stop race</button>
                         </form> <br>
-                        
+                    </p>
+                        <button id="deletebutton" class="btn btn-primary">Delete race</button>
+                    <p>
+                    
                     </p>
                 <% } else { %>
                     Deze race bestaat niet.
@@ -116,5 +120,21 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#deletebutton").click(function(){
+
+            $.ajax({
+                type: 'DELETE',
+                url: '/api/race/<%= race._id %>',
+                success: function(data) {
+                    window.location.href="/race";
+                }
+            });
+        });
+    });
+</script>
+
 </body>
 </html>
