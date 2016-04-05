@@ -611,13 +611,21 @@ module.exports = function(app, passport) {
             if (err) {
                 res.send('error finding deelnemer');
             } else {
-                _deelnemer.waypointsCompleted.push({ waypoint: { waypointID: req.params.wid } });
-                _deelnemer.save(function(err) {
-                    if (err) {
-                        res.send('an error occured while completing waypoint');
+                Race.findOne({ _id: req.params.rid }).exec(function(err, _race) {
+                    var date = new Date();
+                    if (_race.dateStart && !_race.dateStop) {
+                        _deelnemer.waypointsCompleted.push({ waypoint: { waypointID: req.params.wid } });
+                        _deelnemer.save(function(err) {
+                            if (err) {
+                                res.send('an error occured while completing waypoint');
+                            }
+                            else {
+                                res.redirect('/race/deelnemer/' + req.params.rid);
+                            }
+                        })
                     }
                     else {
-                        res.redirect('/race/deelnemer/' + req.params.rid);
+                        res.send('The start or stopdate prevent you from completing this checkpoint.')
                     }
                 })
             }
@@ -649,7 +657,7 @@ module.exports = function(app, passport) {
             if (err) {
                 res.send('error saving race');
             } else {
-                res.send(race);
+                res.redirect('/race');
             }
         })
     });
