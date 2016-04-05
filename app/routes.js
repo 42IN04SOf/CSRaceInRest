@@ -143,7 +143,6 @@ module.exports = function(app, passport) {
         if(!req.body)
         {
             res.send('One or both values were not entered');
-            console.log('One or both values were not entered');
         }
         else {
             race.name = req.body.name;
@@ -188,6 +187,17 @@ module.exports = function(app, passport) {
             } else {
                 res.status(202);
                 res.json({"message": "race deleted"});
+            }
+        })
+    })
+    
+    app.get('/race/my', isLoggedIn, function(req, res) {
+        Race.find({ ownerID: req.user._id }).exec(function(err, _races) {
+            if(err) {
+                res.send('something went wrong getting your races');
+            } else {
+                res.status(202);
+                res.json(_races);
             }
         })
     })
@@ -279,11 +289,9 @@ module.exports = function(app, passport) {
                                             var latestCompleteDate;
                                             
                                             for(y = 0; y < _deelnemend[x].waypointsCompleted.length; y++) {
-                                                console.log(_deelnemend[x].waypointsCompleted[y].waypoint.dateCreate);
                                                 
                                                 if(_deelnemend[x].waypointsCompleted[y].waypoint.dateCreate > latestCompleteDate || y == 0)
                                                 {
-                                                    console.log(_deelnemend[x].waypointsCompleted[y].waypoint.dateCreate);
                                                     _users[i].latestCompleteDate = _deelnemend[x].waypointsCompleted[y].waypoint.dateCreate;
                                                 }
                                             }
@@ -335,8 +343,6 @@ module.exports = function(app, passport) {
             } else {
                 if (req.user._id == _race.ownerID) {
                     _race.dateStop = new Date();
-
-                    console.log(_race.dateStart);
 
                     _race.save(function(err) {
                         if (err) {
@@ -393,11 +399,9 @@ module.exports = function(app, passport) {
                                             var latestCompleteDate;
                                             
                                             for(y = 0; y < _deelnemend[x].waypointsCompleted.length; y++) {
-                                                console.log(_deelnemend[x].waypointsCompleted[y].waypoint.dateCreate);
                                                 
                                                 if(_deelnemend[x].waypointsCompleted[y].waypoint.dateCreate > latestCompleteDate || y == 0)
                                                 {
-                                                    console.log(_deelnemend[x].waypointsCompleted[y].waypoint.dateCreate);
                                                     _users[i].latestCompleteDate = _deelnemend[x].waypointsCompleted[y].waypoint.dateCreate;
                                                 }
                                             }
@@ -491,10 +495,8 @@ module.exports = function(app, passport) {
                                                         var latestCompleteDate;
 
                                                         for (y = 0; y < _deelnemend[x].waypointsCompleted.length; y++) {
-                                                            console.log(_deelnemend[x].waypointsCompleted[y].waypoint.dateCreate);
 
                                                             if (_deelnemend[x].waypointsCompleted[y].waypoint.dateCreate > latestCompleteDate || y == 0) {
-                                                                console.log(_deelnemend[x].waypointsCompleted[y].waypoint.dateCreate);
                                                                 _users[i].latestCompleteDate = _deelnemend[x].waypointsCompleted[y].waypoint.dateCreate;
                                                             }
                                                         }
@@ -552,8 +554,6 @@ module.exports = function(app, passport) {
                     if (!error && response.statusCode == 200) {
                         var json = JSON.parse(body);
 
-                        //console.log(json.results[0]) // Show the HTML for the Google homepage.
-
                         res.render('addplaces.ejs', {
                             user: req.user,
                             raceID: id,
@@ -592,6 +592,7 @@ module.exports = function(app, passport) {
                                 if (err) {
                                     res.send('error saving waypoint');
                                 } else {
+                                    res.status(200);
                                     res.redirect(redirectUrl);
                                 }
                             })
@@ -657,6 +658,7 @@ module.exports = function(app, passport) {
             if (err) {
                 res.send('error saving race');
             } else {
+                res.status(201);
                 res.redirect('/race');
             }
         })
