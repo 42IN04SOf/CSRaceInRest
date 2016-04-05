@@ -11,7 +11,7 @@
 <body>
 
 <script>
-    var connection = new WebSocket('ws://rrfm.herokuapp.com:9091');
+    var connection = new WebSocket('wss://rrfm.herokuapp.com:9091');
     
     connection.onmessage = function(event) {
         document.getElementById('result').value=event.data;
