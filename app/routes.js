@@ -18,7 +18,7 @@ module.exports = function(app, passport) {
     
     server = ws.createServer(function(conn) {
         console.log('New socket connection');
-        conn.send("Deze socketje");
+        conn.send("Nog geen berichten");
         conn.on("text", function(str) {
             console.log(str);
             conn.sendText(str);
@@ -127,19 +127,37 @@ module.exports = function(app, passport) {
         })
     })
     
-    app.post('/api/race', function(req, res) {
-        var race = new Race();
-        
-        race.name =  req.body.name;
-        race.ownerID = req.body.ownerID;
-        
-        race.save(function(err, race) {
+    app.get('/api/race/', function(req, res) {
+        Race.find().exec(function(err, _race) {
             if(err) {
-                res.send('something went wrong creating race');
+                res.send('error occured while getting races');
             } else {
-                res.json(race);
+                res.json(_race);
             }
         })
+    })
+    
+    app.post('/api/race/', function(req, res) {
+        var race = new Race();
+        
+        if(!req.body)
+        {
+            res.send('One or both values were not entered');
+            console.log('One or both values were not entered');
+        }
+        else {
+            race.name = req.body.name;
+            race.ownerID = req.body.ownerID;
+
+            race.save(function(err, race) {
+                if (err) {
+                    res.send('something went wrong creating race');
+                } else {
+                    res.status(201);
+                    res.json(race);
+                }
+            })
+        }
     })
     
     app.patch('/api/race/:id', function(req, res) {
@@ -156,6 +174,7 @@ module.exports = function(app, passport) {
                     res.send('something when wrong updating race');
                 }
                 else {
+                    res.status(202);
                     res.json(_race);
                 }
             })
@@ -167,7 +186,8 @@ module.exports = function(app, passport) {
             if(err) {
                 res.send('something went wrong deleting race');
             } else {
-                res.send('race deleted');
+                res.status(202);
+                res.json({"message": "race deleted"});
             }
         })
     })
@@ -206,7 +226,7 @@ module.exports = function(app, passport) {
                                         res.send('error has occured');
                                     } else {
                                         deelnemend = _deelnemendRace;
-
+                                        
                                         res.render('race.ejs', {
                                             user: req.user, // get the user out of session and pass to template
                                             myraces: myRaces,
@@ -614,7 +634,7 @@ module.exports = function(app, passport) {
             if (err) {
                 res.send('error joining race');
             } else {
-                res.send(raceDeelnemer);
+                res.redirect('/race/deelnemer/' + req.params.id);
             }
         })
     })
@@ -643,5 +663,6 @@ function isLoggedIn(req, res, next) {
         return next();
 
     // if they aren't redirect them to the home page
+    res.status(401);
     res.redirect('/');
 }

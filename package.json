@@ -1,6 +1,10 @@
 {
   "name": "node-authentication",
   "main": "server.js",
+    "scripts": {
+    "start": "node ./server.js",
+    "test": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec"
+  },
   "dependencies" : {
     "express" : "~4.0.0",           
     "ejs" : "~0.8.5",               
@@ -18,13 +22,17 @@
     "JSON" : "latest",
     "nodejs-websocket": "latest",
     "new": "latest",
-    "json-socket": "latest",
-    "jsonsocket": "latest",
     
     "morgan": "~1.0.0",
     "body-parser": "~1.0.0",
     "cookie-parser": "~1.0.0",
     "method-override": "~1.0.0",
     "express-session": "~1.0.0"     
+  },
+  
+  "devDependencies": {
+    "chai": "^2.1.2",
+    "mocha": "^2.2.1",
+    "supertest": "^0.15.0"
   }
 }
