@@ -89,7 +89,7 @@
                         <tr>
                             <td><%= uncompWaypoints[i].place.name %></td>
                             <td><%= uncompWaypoints[i].place.vicinity %></td>
-                            <td><form action="/race/<%= race._id %>/waypoint/<%= uncompWaypoints[i]._id %>/complete/<%= deelnemer._id %>" method="post">
+                            <td><form action="/race/<%= race._id %>/waypoint/<%= uncompWaypoints[i]._id %>/complete/<%= deelnemer._id %>/" method="post">
                                     <button onclick='connection.send("<%= race._id %>" + " Speler " + "<%= user.local.email %>" + " heeft zich op checkpoint " + "<%= uncompWaypoints[i].place.vicinity %>" + " aangemeld.");' type="submit" class="btn btn-primary">Complete</button>
                             </form></td>
                         </tr>
@@ -113,7 +113,11 @@
                         <tr>
                             <td><%= compWaypoints[i].place.name %></td>
                             <td><%= compWaypoints[i].place.vicinity %></td>
-                            <td><%= compWaypoints[i].dateCompleted %></td>
+                            <% if (deelnemers[i].latestCompleteDate != "undefined") { %>
+                                <td><%= deelnemers[i].latestCompleteDate %></td>
+                            <% } else { %>
+                                <td>nog geen tijd beschikbaar.</td>
+                            <% } %>
                         </tr>
                     <% } %>
                     </table>

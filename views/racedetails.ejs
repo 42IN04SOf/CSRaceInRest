@@ -52,7 +52,11 @@
                         <tr>
                             <td><%= deelnemers[i].local.email %></td>
                             <td><%= deelnemers[i].waypointsCompleted.length %></td>
-                            <td><%= deelnemers[i].latestCompleteDate %></td>
+                            <% if (deelnemers[i].latestCompleteDate) { %>
+                                <td><%= deelnemers[i].latestCompleteDate %></td>
+                            <% } else { %>
+                                <td>nog geen tijd beschikbaar.</td>
+                            <% } %>
                         </tr>
                     <% } %>
                     </table>

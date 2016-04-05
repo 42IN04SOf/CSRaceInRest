@@ -82,13 +82,17 @@
                 
                     <table>
                         <tr>
-                            <td><b>Naam</b></td> <td><b>Waypoints behaald</b></td>
+                            <td><b>Naam</b></td> <td><b>Waypoints behaald</b></td><td><b>Tijd laatste checkpoint</b></td>
                         </tr>
                     <% for(var i=0; i < deelnemers.length; i++) { %>
                         <tr>
                             <td><%= deelnemers[i].local.email %></td>
                             <td><%= deelnemers[i].waypointsCompleted.length %></td>
-                            <td><%= deelnemers[i].latestCompleteDate %></td>
+                            <% if (deelnemers[i].latestCompleteDate) { %>
+                                <td><%= deelnemers[i].latestCompleteDate %></td>
+                            <% } else { %>
+                                <td>nog geen tijd beschikbaar.</td>
+                            <% } %>
                         </tr>
                     <% } %>
                     </table>
