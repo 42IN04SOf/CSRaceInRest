@@ -2,8 +2,7 @@
 	"name": "node-authentication",
 	"main": "server.js",
 	"scripts": {
-		"fskarsod": "nodemon ./test.js",
-		"start": "node ./server.js",
+		"start": "nodemon ./bin/www",
 		"test": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec"
 	},
 	"dependencies" : {
@@ -23,12 +22,13 @@
 		"JSON" : "latest",
 		"nodejs-websocket": "latest",
 		"new": "latest",
-		
+		"serve-favicon": "~2.3.0",
 		"morgan": "~1.0.0",
 		"body-parser": "~1.0.0",
 		"cookie-parser": "~1.0.0",
 		"method-override": "~1.0.0",
-		"express-session": "~1.0.0"     
+		"express-session": "~1.0.0",
+		"debug": "~2.2.0"
 	},
 	
 	"devDependencies": {
