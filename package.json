@@ -1,38 +1,39 @@
 {
-  "name": "node-authentication",
-  "main": "server.js",
-    "scripts": {
-    "start": "node ./server.js",
-    "test": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec"
-  },
-  "dependencies" : {
-    "express" : "~4.0.0",           
-    "ejs" : "~0.8.5",               
-    "mongoose" : "~3.8.1",          
-    "passport" : "~0.1.17",         
-    "passport-local" : "~0.1.6",    
-    "passport-facebook" : "~1.0.2", 
-    "passport-twitter" : "~1.0.2",  
-    "passport-google-oauth" : "~0.1.5",
-    "connect-flash" : "~0.1.1",     
-    "bcrypt-nodejs" : "latest",
-    "googleplaces" : "latest",
-    "http" : "latest",
-    "request" : "latest",
-    "JSON" : "latest",
-    "nodejs-websocket": "latest",
-    "new": "latest",
-    
-    "morgan": "~1.0.0",
-    "body-parser": "~1.0.0",
-    "cookie-parser": "~1.0.0",
-    "method-override": "~1.0.0",
-    "express-session": "~1.0.0"     
-  },
-  
-  "devDependencies": {
-    "chai": "^2.1.2",
-    "mocha": "^2.2.1",
-    "supertest": "^0.15.0"
-  }
+	"name": "node-authentication",
+	"main": "server.js",
+	"scripts": {
+		"fskarsod": "nodemon ./test.js",
+		"start": "node ./server.js",
+		"test": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec"
+	},
+	"dependencies" : {
+		"express" : "~4.0.0",           
+		"ejs" : "~0.8.5",               
+		"mongoose" : "~3.8.1",          
+		"passport" : "~0.1.17",         
+		"passport-local" : "~0.1.6",    
+		"passport-facebook" : "~1.0.2", 
+		"passport-twitter" : "~1.0.2",  
+		"passport-google-oauth" : "~0.1.5",
+		"connect-flash" : "~0.1.1",     
+		"bcrypt-nodejs" : "latest",
+		"googleplaces" : "latest",
+		"http" : "latest",
+		"request" : "latest",
+		"JSON" : "latest",
+		"nodejs-websocket": "latest",
+		"new": "latest",
+		
+		"morgan": "~1.0.0",
+		"body-parser": "~1.0.0",
+		"cookie-parser": "~1.0.0",
+		"method-override": "~1.0.0",
+		"express-session": "~1.0.0"     
+	},
+	
+	"devDependencies": {
+		"chai": "^2.1.2",
+		"mocha": "^2.2.1",
+		"supertest": "^0.15.0"
+	}
 }

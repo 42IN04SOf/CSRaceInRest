@@ -1,20 +1,25 @@
 module.exports = function(mongoose, model) {
-	var Race = mongoose.Model(model);
-	// create with name
-	this.create = function() {
-		
-	}
+	var Repository = require('./baseRepository');
+	var raceRepository = new Repository(mongoose, model, {
+        create: function(req, res) {
+            return {
+                local: {
+					email: req.body.email,
+                	password: req.body.password
+				}
+            }
+        },
+        update: function(req, res) {
+            req[model].local.email = req.body.password;
+            req[model].local.password = req.body.password;
+        }
+    });
 	
-	// retrieve single with raceId
-	this.readById = function(req, res, next) {
-		Race.findOne({ _id: req.params.id }).exec(function(err, _race) {
-            if(err) { return next(err) }
-			req[model] = _race;
-        })
-	}
+	// optional: Add more repository-methods
+	raceRepository.test = function()
+	{
+		console.log('dota');	
+	};
 	
-	// startRace, stopRace (if race has waypoints)
-	this.update = function() {
-		
-	} 
+    return raceRepository; 
 }
