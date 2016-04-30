@@ -1,0 +1,22 @@
+<%- include partials/_header.ejs %>
+<div class="container">
+
+    <%- title %>
+    <div class="jumbotron text-center">
+        <h1><span class="fa fa-lock"></span> Node Hashtags</h1>
+
+        <p>Hashtag:</p>
+
+        <a href="/#" class="btn btn-default"><span class="fa fa-user"></span>###</a>
+        <p>
+            _id <%- data._id %><br />
+            OwnerID<%- data.ownerID %><br />
+            Name <%- data.name %><br />
+            __v <%- data.__v %><br />
+            dateStart <%- data.dateStart %><br />
+            dateCreate <%- data.dateCreate %><br />
+        </p>
+    </div>
+
+</div>
+<%- include partials/_footer.ejs %>

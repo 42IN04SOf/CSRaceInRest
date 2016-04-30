@@ -18,6 +18,8 @@ var returnHelper 	= require('./lib/module/returnHelper');
 
 // router
 var indexRouter		= require('./routes/index');
+var raceRouter		= require('./routes/RaceRouter');
+var userRouter		= require('./routes/UserRouter');
 
 // ==== APP INITIALIZATION ====
 var app = express();
@@ -25,7 +27,7 @@ var app = express();
 // default setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -33,16 +35,22 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // database setup
-databaseHelper(mongoose, databaseConfig);
-
+databaseHelper = new databaseHelper(mongoose, databaseConfig);
+ 
 // auth setup
 
 // return setup
 app.use(returnHelper);
 
+// router init
+raceRouter = raceRouter(databaseHelper.repositories.Race);
+userRouter = userRouter(databaseHelper.repositories.User);
+
 // ==== ROUTING ====
 // todo: add all routers here
 app.use('/', indexRouter);
+app.use('/race', raceRouter);
+app.use('/user', userRouter);
 
 // no router applicable, catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -56,10 +64,12 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
+if (app.get('env') === 'development') {	
 	app.use(function(err, req, res, next) {
+		console.error(err.message);
 		res.status(err.status || 500);
 		res.render('error', {
+			title: err.title,
 			message: err.message,
 			error: err
 		});
@@ -71,6 +81,7 @@ if (app.get('env') === 'development') {
 app.use(function(err, req, res, next) {
 	res.status(err.status || 500);
 	res.render('error', {
+		title: err.title,
 		message: err.message,
 		error: {}
 	});
