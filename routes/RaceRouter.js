@@ -5,13 +5,13 @@ var crudRouter = require('../lib/CrudRouter');
 var model = 'Race';
 var html = {
     overview: {
-        title: 'Races',
-        message: 'Race overview',
+        title: 'race.overviewTitle',
+        bag: 'Race overview',
         view: 'Races'
     },
     detail: {
-        title: 'Race',
-        message: `Race detail`,
+        title: 'race.detailTitle',
+        bag: `Race detail`,
         view: 'Race'
     }
 };
@@ -29,23 +29,17 @@ module.exports = function(repository) {
     
     router.get("/:id/state", 
         function(req, res) {
-            var color = require('../lib/module/colorizer');
-            console.log(color.modify(['green', 'bgred'], 'your green text with red background'));
             req[model].start();
             res.status(204);
 		}
     );
     
-    // router.delete("/:id/state", 
-    //     function(req, res) {
-    //         console.log(req[model].asPublic());
-    //         res.json(req[model].asPublic())
-    //     },
-    //     repository.update,
-    //     function(req, res) {
-	// 		res.send('updota');
-	// 	}
-    // );
+    router.delete("/:id/state", 
+        function(req, res) {
+            req[model].stop();
+            res.status(204);
+        }
+    );
     
     return router;
 }

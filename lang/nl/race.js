@@ -1,0 +1,6 @@
+module.exports = {
+	'races': 'Reeses',
+	'race': 'Rees',
+	'overviewTitle': 'Een overzicht van alle races.',
+	'detailTitle': 'Een detail scherm van één rees.',
+};

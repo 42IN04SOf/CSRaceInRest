@@ -8,13 +8,17 @@ var cookieParser	= require('cookie-parser');
 var bodyParser    	= require('body-parser');
 var session       	= require('express-session');
 var mongoose		= require('mongoose');
+var ejs 			= require('ejs');
 
 // config
 var databaseConfig	= require('./config/database');
+var languageConfig	= require('./config/language');
 
 // lib
 var databaseHelper 	= require('./lib/module/databaseHelper');
 var returnHelper 	= require('./lib/module/returnHelper');
+var translator 		= require('./lib/module/translator');
+var colorizer		= require('./lib/module/colorizer');
 
 // router
 var indexRouter		= require('./routes/index');
@@ -23,6 +27,15 @@ var userRouter		= require('./routes/UserRouter');
 
 // ==== APP INITIALIZATION ====
 var app = express();
+
+// module setup
+databaseHelper 	= databaseHelper(mongoose, databaseConfig);
+translator 		= translator('./../../lang', languageConfig);
+
+ejs.filters.trans = translator.translate;
+
+app.use(returnHelper);
+app.use(translator.middleware);
 
 // default setup
 app.set('views', path.join(__dirname, 'views'));
@@ -34,13 +47,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// database setup
-databaseHelper = new databaseHelper(mongoose, databaseConfig);
- 
-// auth setup
-
-// return setup
-app.use(returnHelper);
 
 // router init
 raceRouter = raceRouter(databaseHelper.repositories.Race);
@@ -66,7 +72,7 @@ app.use(function(req, res, next) {
 // will print stacktrace
 if (app.get('env') === 'development') {	
 	app.use(function(err, req, res, next) {
-		console.error(err.message);
+		console.error(colorizer.modify(['bright', 'white', 'bgred'], err.message));
 		res.status(err.status || 500);
 		res.render('error', {
 			title: err.title,
