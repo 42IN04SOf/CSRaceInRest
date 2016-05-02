@@ -1,3 +1,6 @@
+// configuration for the database.
+// contains url to database
+// contains directory paths to schemas, repositories
 module.exports = {
 	url: "mongodb://admin:admino@ds025439.mlab.com:25439/restrace",
 	entities: [

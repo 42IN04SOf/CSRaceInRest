@@ -27,7 +27,15 @@ module.exports = function(repository) {
 		delete: true
 	}, html);
     
-    router.get("/:id/state", 
+    router.get('/:id/test',
+        repository.model, 
+        function(req, res) {
+            req['Model'].test();
+        }
+    )
+    
+    router.get("/:id/state",
+        repository.test,
         function(req, res) {
             req[model].start();
             res.status(204);

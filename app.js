@@ -47,7 +47,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 // router init
 raceRouter = raceRouter(databaseHelper.repositories.Race);
 userRouter = userRouter(databaseHelper.repositories.User);
@@ -89,7 +88,7 @@ app.use(function(err, req, res, next) {
 	res.render('error', {
 		title: err.title,
 		message: err.message,
-		error: {}
+		error: err
 	});
 });
 

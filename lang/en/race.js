@@ -1,3 +1,4 @@
+// contains key-value pairs for text to be translated 
 module.exports = {
 	'races': 'Races',
 	'race': 'Race',
