@@ -24,6 +24,7 @@ var colorizer		= require('./lib/module/colorizer');
 var indexRouter		= require('./routes/index');
 var raceRouter		= require('./routes/RaceRouter');
 var userRouter		= require('./routes/UserRouter');
+var participantRouter = require('./routes/ParticipantRouter');
 
 // ==== APP INITIALIZATION ====
 var app = express();
@@ -50,12 +51,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 // router init
 raceRouter = raceRouter(databaseHelper.repositories.Race);
 userRouter = userRouter(databaseHelper.repositories.User);
+participantRouter = participantRouter(databaseHelper.repositories.Participant)
 
 // ==== ROUTING ====
 // todo: add all routers here
 app.use('/', indexRouter);
 app.use('/race', raceRouter);
 app.use('/user', userRouter);
+app.use('/participant'. participantRouter);
 
 // no router applicable, catch 404 and forward to error handler
 app.use(function(req, res, next) {
