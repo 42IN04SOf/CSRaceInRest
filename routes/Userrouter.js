@@ -16,7 +16,7 @@ var html = {
     }
 };
 
-module.exports = function(repository) {
+module.exports = function(repository, authHandler) {
 	
 	// add default routes
 	crudRouter(router, model, repository, {

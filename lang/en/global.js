@@ -1,3 +1,5 @@
 module.exports = {
-	'notFound': 'Not found'
+	'notFound': 'Not found',
+	'notAuthenticated': 'Client is not authenticated',
+	'notAuthorized': 'Client is not authorized'
 }

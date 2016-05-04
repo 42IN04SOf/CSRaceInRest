@@ -57,7 +57,8 @@ module.exports = function(passport, User, config, translator) {
 
                     // set the user's local credentials
                     newUser.local.email    = email;
-                    newUser.local.password = newUser.generateHash(password);
+                    newUser.local.password = User.generateHash(password);
+                    newUser.generateToken();
 
                     // save the user
                     newUser.save(function(err) {
@@ -140,6 +141,8 @@ module.exports = function(passport, User, config, translator) {
                         newUser.google.token = token;
                         newUser.google.name  = profile.displayName;
                         newUser.google.email = profile.emails[0].value; // pull the first email
+                        newUser.local.email  = profile.emails[0].value; // pull the first email
+                        newUser.generateToken();
 
                         // save the user
                         newUser.save(function(err) {

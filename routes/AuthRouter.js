@@ -4,7 +4,10 @@ var router = express.Router();
 // subrouters
 var googleSubrouter = require('./GoogleRouter');
 
-module.exports = function(passport) {
+module.exports = function(passport, authHandler) {
+	
+	// subrouter initialization
+	googleSubrouter = googleSubrouter(passport, authHandler);
 	
 	// =====================================
 	// LOCAL LOGIN =========================

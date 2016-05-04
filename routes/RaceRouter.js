@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 
 var crudRouter = require('../lib/CrudRouter');
-var authModule = require('../lib/module/authModule');
 
 var model = 'Race';
 var html = {
@@ -18,7 +17,7 @@ var html = {
     }
 };
 
-module.exports = function(repository) {
+module.exports = function(repository, authHandler) {
 	
 	// add default routes
 	crudRouter(router, model, repository, {
@@ -29,19 +28,15 @@ module.exports = function(repository) {
 		delete: true
 	}, html);
     
-    router.post('/:id/test',
-        authModule.isAuthenticated(model),
-        repository.model, 
+    router.get('/:id/testdelete',
+        //authHandler.isAuthorized(model),
+        //repository.model,
         function(req, res) {
-            req['Model'].test();
-        }
-    )
-    
-    router.get('/:id/test',
-        authModule.isAuthorized(model),
-        repository.model, 
-        function(req, res) {
-            req['Model'].test();
+            req[model].popOwner((err, poppedRace) => { 
+                console.log(err);
+                console.log(poppedRace);
+                res.send('ggnore');
+            });
         }
     )
     

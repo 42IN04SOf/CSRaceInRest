@@ -1,39 +1,39 @@
 {
-	"name": "node-authentication",
-	"main": "server.js",
-	"scripts": {
-		"start": "nodemon ./bin/www",
-		"test": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec"
-	},
-	"dependencies" : {
-		"express" : "~4.0.0",           
-		"ejs" : "~0.8.5",               
-		"mongoose" : "~3.8.1",          
-		"passport" : "~0.1.17",         
-		"passport-local" : "~0.1.6",    
-		"passport-facebook" : "~1.0.2", 
-		"passport-twitter" : "~1.0.2",  
-		"passport-google-oauth" : "~0.1.5",
-		"connect-flash" : "~0.1.1",     
-		"bcrypt-nodejs" : "latest",
-		"googleplaces" : "latest",
-		"http" : "latest",
-		"request" : "latest",
-		"JSON" : "latest",
-		"nodejs-websocket": "latest",
-		"new": "latest",
-		"serve-favicon": "~2.3.0",
-		"morgan": "~1.0.0",
-		"body-parser": "~1.0.0",
-		"cookie-parser": "~1.0.0",
-		"method-override": "~1.0.0",
-		"express-session": "~1.0.0",
-		"debug": "~2.2.0"
-	},
-	
-	"devDependencies": {
-		"chai": "^2.1.2",
-		"mocha": "^2.2.1",
-		"supertest": "^0.15.0"
-	}
+  "name": "node-authentication",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon ./bin/www",
+    "test": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec"
+  },
+  "dependencies": {
+    "JSON": "latest",
+    "bcrypt-nodejs": "latest",
+    "body-parser": "~1.0.0",
+    "connect-flash": "~0.1.1",
+    "cookie-parser": "~1.0.0",
+    "debug": "~2.2.0",
+    "ejs": "~0.8.5",
+    "express": "~4.0.0",
+    "express-session": "~1.0.0",
+    "googleplaces": "latest",
+    "http": "latest",
+    "jwt-simple": "^0.5.0",
+    "method-override": "~1.0.0",
+    "mongoose": "~3.8.1",
+    "morgan": "~1.0.0",
+    "new": "latest",
+    "nodejs-websocket": "latest",
+    "passport": "~0.1.17",
+    "passport-facebook": "~1.0.2",
+    "passport-google-oauth": "~0.1.5",
+    "passport-local": "~0.1.6",
+    "passport-twitter": "~1.0.2",
+    "request": "latest",
+    "serve-favicon": "~2.3.0"
+  },
+  "devDependencies": {
+    "chai": "^2.1.2",
+    "mocha": "^2.2.1",
+    "supertest": "^0.15.0"
+  }
 }

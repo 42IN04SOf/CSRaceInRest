@@ -1,51 +1,59 @@
 // ==== APP DEPENDENCIES ====
 // 3rd-party
-var express       	= require('express');
-var path          	= require('path');
-var favicon       	= require('serve-favicon');
-var morgan        	= require('morgan');
-var cookieParser	= require('cookie-parser');
-var bodyParser    	= require('body-parser');
-var session       	= require('express-session');
-var mongoose		= require('mongoose');
-var ejs 			= require('ejs');
-var passport 		= require('passport');
-var flash    		= require('connect-flash');
+var express       		= require('express');
+var path          		= require('path');
+var favicon       		= require('serve-favicon');
+var morgan        		= require('morgan');
+var cookieParser		= require('cookie-parser');
+var bodyParser    		= require('body-parser');
+var session       		= require('express-session');
+var mongoose			= require('mongoose');
+var ejs 				= require('ejs');
+var passport 			= require('passport');
+var flash    			= require('connect-flash');
 
 // config
-var databaseConfig	= require('./config/database');
-var languageConfig	= require('./config/language');
+var databaseConfig		= require('./config/database');
+var languageConfig		= require('./config/language');
 
-var passportConfig	= require('./config/passport');
-var authConfig		= require('./config/auth');
+var passportConfig		= require('./config/passport');
+var authorizationConfig	= require('./config/authorization');
+var apikeysConfig		= require('./config/apikeys');
 
 // lib
-var databaseHelper 	= require('./lib/module/databaseHelper');
-var returnHelper 	= require('./lib/module/returnHelper');
-var translator 		= require('./lib/module/translator');
-var colorizer		= require('./lib/module/colorizer');
+var databaseHelper 		= require('./lib/module/databaseHelper');
+var returnHelper 		= require('./lib/module/returnHelper');
+
+var tokenHandler 		= require('./lib/module/tokenHandler');
+var authHandler 		= require('./lib/module/authHandler');
+
+var translator 			= require('./lib/module/translator');
+var colorizer			= require('./lib/module/colorizer');
 
 // router
-var indexRouter		= require('./routes/index');
-var authRouter		= require('./routes/AuthRouter');
+var indexRouter			= require('./routes/index');
+var authRouter			= require('./routes/AuthRouter');
 
-var raceRouter		= require('./routes/RaceRouter');
-var userRouter		= require('./routes/UserRouter');
+var raceRouter			= require('./routes/RaceRouter');
+var userRouter			= require('./routes/UserRouter');
 
 // ==== APP INITIALIZATION ====
 var app = express();
 
-// module setup
+// pre setup module setup
 databaseHelper 	= databaseHelper(mongoose, databaseConfig);
 translator 		= translator('./../../lang', languageConfig);
 
-passportConfig(passport, mongoose.model('User'), authConfig, translator);
+authHandler		= authHandler(mongoose, authorizationConfig);
+tokenHandler 	= tokenHandler(mongoose.model('User'));
+
+passportConfig(passport, mongoose.model('User'), apikeysConfig, translator);
 ejs.filters.trans = translator.translate;
 
 app.use(returnHelper);
 app.use(translator.middleware);
 
-// default setup
+// setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -59,11 +67,14 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
-// router init
-authRouter = authRouter(passport);
+// post setup module setup
+app.use(tokenHandler.middleware);
 
-raceRouter = raceRouter(databaseHelper.repositories.Race);
-userRouter = userRouter(databaseHelper.repositories.User); 
+// router init
+authRouter = authRouter(passport, authHandler);
+
+raceRouter = raceRouter(databaseHelper.repositories.Race, authHandler);
+userRouter = userRouter(databaseHelper.repositories.User, authHandler); 
 
 // ==== ROUTING ====
 app.use('/', indexRouter);
@@ -73,7 +84,7 @@ app.use('/user', userRouter);
 
 // no router applicable, catch 404 and forward to error handler
 app.use(function(req, res, next) {
-	var err = new Error('Not Found');
+	var err = new Error('global.notFound');
 	err.status = 404;
 	next(err);
 });
