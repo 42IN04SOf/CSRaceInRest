@@ -23,6 +23,7 @@ var apikeysConfig		= require('./config/apikeys');
 // lib
 var databaseHelper 		= require('./lib/module/databaseHelper');
 var returnHelper 		= require('./lib/module/returnHelper');
+var socketEmitter		= require('./lib/module/socketEmitter');
 
 var tokenHandler 		= require('./lib/module/tokenHandler');
 var authHandler 		= require('./lib/module/authHandler');
@@ -79,6 +80,10 @@ userRouter = userRouter(databaseHelper.repositories.User, authHandler);
 // ==== ROUTING ====
 app.use('/', indexRouter);
 app.use('/', authRouter);
+app.use('/dota/:id', function(req, res) {
+	socketEmitter.emitToRace(req.params.id, { user: 'server', message: 'A message to the room: ' + req.params.id });
+	res.json({ success: true });
+});
 app.use('/race', raceRouter);
 app.use('/user', userRouter);
 
@@ -117,4 +122,9 @@ app.use(function(err, req, res, next) {
 	});
 });
 
-module.exports = app;
+// module.exports = app;
+
+module.exports = {
+	app: app,
+	socketEmitter: socketEmitter
+};

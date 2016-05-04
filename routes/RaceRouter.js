@@ -29,7 +29,7 @@ module.exports = function(repository, authHandler) {
 	}, html);
     
     router.get('/:id/testdelete',
-        //authHandler.isAuthorized(model),
+        authHandler.isAuthorized('Race-create'),
         //repository.model,
         function(req, res) {
             req[model].popOwner((err, poppedRace) => { 

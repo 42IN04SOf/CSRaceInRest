@@ -4,9 +4,10 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var appModule = require('../app');
 var debug = require('debug')('create:server');
 var http = require('http');
+var io = require('socket.io');
 
 /**
  * Get port from environment and store in Express.
@@ -14,13 +15,14 @@ var http = require('http');
 
 var port = normalizePort(process.env.PORT || '3000');
 debug(port);
-app.set('port', port);
+appModule.app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = http.createServer(appModule.app);
+io = io(server);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -30,24 +32,53 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
+// status race - /Race
+// waypoint complete - /Race/:id
+
+var socketServer = io.of('/Race').on('connection', function(clientSocket) {	
+	// A client has connected.
+	socketServer.emit('toClient', { user: 'server', message: 'A user has connected', type: 'public' });
+	
+	clientSocket.on('disconnect', function() {
+		// A client has disconnected.
+		socketServer.emit('toClient', { user: 'server', message: 'A user has disconnected', type: 'public' });
+		// No need to leave room, works automatically (i hope)
+	});
+	
+	// Emit to new client.
+	clientSocket.emit('toClient', { user: 'server', message: 'Hello new user', type: 'private' });
+	clientSocket.on('toServer', function(data) {
+		console.log(data);
+		// receiving from the new client
+	});
+	
+	clientSocket.on('create', function(room) {
+		// join room
+		clientSocket.join(room);
+		socketServer.to(room).emit('toClient', { user: 'server', message: 'A new user has joined the room: ' + room, type: 'public' });
+		clientSocket.emit('toClient', { user: 'server', message: 'Welcome to this room, new user.', type: 'private' });
+	});
+});
+appModule.socketEmitter.setGlobalSocket(socketServer);
+
 /**
  * Normalize a port into a number, string, or false.
  */
 
 function normalizePort(val) {
-  var port = parseInt(val, 10);
+	var port = parseInt(val, 10);
 
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
+	if (isNaN(port)) {
+		// named pipe
+		return val;
+	}
 
-  if (port >= 0) {
-    // port number
-    return port;
-  }
+	if (port >= 0) {
+		// port number
+		return port;
+	}
 
-  return false;
+	return false;
 }
 
 /**
@@ -55,27 +86,27 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
+	if (error.syscall !== 'listen') {
+		throw error;
+	}
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+	var bind = typeof port === 'string'
+		? 'Pipe ' + port
+		: 'Port ' + port;
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
+	// handle specific listen errors with friendly messages
+	switch (error.code) {
+		case 'EACCES':
+			console.error(bind + ' requires elevated privileges');
+			process.exit(1);
+			break;
+		case 'EADDRINUSE':
+			console.error(bind + ' is already in use');
+			process.exit(1);
+			break;
+		default:
+			throw error;
+	}
 }
 
 /**
@@ -83,9 +114,9 @@ function onError(error) {
  */
 
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+	var addr = server.address();
+	var bind = typeof addr === 'string'
+		? 'pipe ' + addr
+		: 'port ' + addr.port;
+	debug('Listening on ' + bind);
 }
