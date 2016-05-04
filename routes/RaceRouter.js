@@ -18,7 +18,7 @@ var html = {
     }
 };
 
-module.exports = function(raceRepository, participantRepository) {
+module.exports = function(raceRepository, participantRepository, waypointRepository, request) {
 	
 	// add default routes
 	crudRouter(router, model, raceRepository, {
@@ -101,6 +101,29 @@ module.exports = function(raceRepository, participantRepository) {
                 res.status(200).end();
             }
         });
+    })
+    
+    router.post("/:id/waypoints", waypointRepository.model, function (req, res) {
+        var API = "AIzaSyBnOX9RDvO8Te8BftCqZBTeA5-bGPuQYb4";
+        var url = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + req.body.pid + '&key=' + API;
+        var place;
+        //console.log(url);
+
+        request(url, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                //console.log(body);
+                var json = JSON.parse(body);
+                
+                place = json.result;
+
+                console.log(place);
+
+                req.Model.createWaypoint(req.params.id, place, function (waypoint) {
+                    console.log(waypoint)
+                    res.status(201).end();
+                });
+            }
+        }); 
     })
     
     return router;

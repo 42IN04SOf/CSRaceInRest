@@ -9,6 +9,7 @@ var bodyParser    	= require('body-parser');
 var session       	= require('express-session');
 var mongoose		= require('mongoose');
 var ejs 			= require('ejs');
+var request			= require('request');
 
 // config
 var databaseConfig	= require('./config/database');
@@ -49,7 +50,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // router init
-raceRouter = raceRouter(databaseHelper.repositories.Race, databaseHelper.repositories.Participant);
+raceRouter = raceRouter(databaseHelper.repositories.Race, databaseHelper.repositories.Participant, databaseHelper.repositories.Waypoint, request);
 userRouter = userRouter(databaseHelper.repositories.User, databaseHelper.repositories.Participant, databaseHelper.repositories.Race);
 participantRouter = participantRouter(databaseHelper.repositories.Participant)
 
