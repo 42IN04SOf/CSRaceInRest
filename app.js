@@ -49,8 +49,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // router init
-raceRouter = raceRouter(databaseHelper.repositories.Race);
-userRouter = userRouter(databaseHelper.repositories.User);
+raceRouter = raceRouter(databaseHelper.repositories.Race, databaseHelper.repositories.Participant);
+userRouter = userRouter(databaseHelper.repositories.User, databaseHelper.repositories.Participant, databaseHelper.repositories.Race);
 participantRouter = participantRouter(databaseHelper.repositories.Participant)
 
 // ==== ROUTING ====
@@ -58,7 +58,7 @@ participantRouter = participantRouter(databaseHelper.repositories.Participant)
 app.use('/', indexRouter);
 app.use('/race', raceRouter);
 app.use('/user', userRouter);
-app.use('/participant'. participantRouter);
+app.use('/participant', participantRouter);
 
 // no router applicable, catch 404 and forward to error handler
 app.use(function(req, res, next) {

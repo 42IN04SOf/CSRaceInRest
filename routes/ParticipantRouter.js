@@ -17,7 +17,6 @@ var html = {
 };
 
 module.exports = function(repository) {
-	
 	// add default routes
 	crudRouter(router, model, repository, {
 		read: true,
