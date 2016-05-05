@@ -134,7 +134,7 @@ module.exports = function(raceRepository, participantRepository, waypointReposit
 
                 console.log(place);
 
-                req.Model.createWaypoint(req.params.id, place, function (waypoint) {
+                req.Model.createWaypoint(req.params.id, place, req.body.comment, function (waypoint) {
                     console.log(waypoint)
                     res.status(201).end();
                 });
