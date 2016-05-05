@@ -9,6 +9,7 @@ var bodyParser    	= require('body-parser');
 var session       	= require('express-session');
 var mongoose		= require('mongoose');
 var ejs 			= require('ejs');
+var request			= require('request');
 
 // config
 var databaseConfig	= require('./config/database');
@@ -24,6 +25,7 @@ var colorizer		= require('./lib/module/colorizer');
 var indexRouter		= require('./routes/index');
 var raceRouter		= require('./routes/RaceRouter');
 var userRouter		= require('./routes/UserRouter');
+var participantRouter = require('./routes/ParticipantRouter');
 
 // ==== APP INITIALIZATION ====
 var app = express();
@@ -48,14 +50,16 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // router init
-raceRouter = raceRouter(databaseHelper.repositories.Race);
-userRouter = userRouter(databaseHelper.repositories.User);
+raceRouter = raceRouter(databaseHelper.repositories.Race, databaseHelper.repositories.Participant, databaseHelper.repositories.Waypoint, request);
+userRouter = userRouter(databaseHelper.repositories.User, databaseHelper.repositories.Participant, databaseHelper.repositories.Race);
+participantRouter = participantRouter(databaseHelper.repositories.Participant)
 
 // ==== ROUTING ====
 // todo: add all routers here
 app.use('/', indexRouter);
 app.use('/race', raceRouter);
 app.use('/user', userRouter);
+app.use('/participant', participantRouter);
 
 // no router applicable, catch 404 and forward to error handler
 app.use(function(req, res, next) {
