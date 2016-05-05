@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router();
+var express         = require('express');
+var router          = express.Router();
 
-var crudRouter = require('../lib/CrudRouter');
+var crudRouter      = require('../lib/CrudRouter');
 
 var model = 'Race';
 var html = {
@@ -18,7 +18,7 @@ var html = {
 };
 
 module.exports = function(repository, authHandler) {
-	
+    
 	// add default routes
 	crudRouter(router, model, repository, {
 		read: true,

@@ -72,10 +72,10 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 app.use(tokenHandler.middleware);
 
 // router init
-authRouter = authRouter(passport, authHandler);
+authRouter 		= authRouter(passport, authHandler);
 
-raceRouter = raceRouter(databaseHelper.repositories.Race, authHandler);
-userRouter = userRouter(databaseHelper.repositories.User, authHandler); 
+raceRouter 		= raceRouter(databaseHelper.repositories.Race, authHandler); 
+userRouter 		= userRouter(databaseHelper.repositories.User, authHandler); 
 
 // ==== ROUTING ====
 app.use('/', indexRouter);

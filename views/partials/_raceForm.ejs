@@ -1,0 +1,61 @@
+<div class="container">
+	<!-- Button trigger modal -->
+	<button type="button" id="createRace" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+		Launch demo modal
+	</button>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel"><% if(typeof raceName == 'undefined') { %> <%=: 'race.newRace' | trans %> <% } else { %> <%=: 'race.editRace' | trans %> <% } %></h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-lg-8" style="height:500px;">
+							<input id="pac-input" class="controls" type="text" placeholder="Zoeken">
+							<div id="map"></div>
+						</div>
+						<form>
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label for="race_name">Naam</label>
+									<input type="text" name="race_name" class="form-control" required value="<% if(typeof raceName !== 'undefined') { %> <%- raceName %> <% } %>"/>
+								</div>
+								<button type="submit" class="btn btn-primary">Race aanmaken</button>
+								<h1>Uw waypoints</h1>
+								<div id="waypointContainer">
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="/javascripts/mapper.js"></script>
+<script>
+	placesAdded = ['ChIJH8ILpfXuxkcRFa8MNNClduE'];
+    function initMap() {
+		Mapper();
+    }
+    
+    $(document).ready(function() {
+        $('#myModal').on('shown.bs.modal', function() {
+			google.maps.event.trigger(map, "resize", {});
+        });
+		
+		$('body').tooltip({
+			selector: '[data-toggle="tooltip"]'
+		});
+    });
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcXuLjlvhOoDrC6as07h_1-eBXLynedHQ&callback=initMap&libraries=places"></script>
