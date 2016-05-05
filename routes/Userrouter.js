@@ -16,7 +16,7 @@ var html = {
     }
 };
 
-module.exports = function(repository, participantRepository, raceRepository) {
+module.exports = function(repository, participantRepository, raceRepository, authHandler) {
 	
 	// add default routes
 	crudRouter(router, model, repository, {

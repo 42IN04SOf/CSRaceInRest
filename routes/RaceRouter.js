@@ -18,7 +18,7 @@ var html = {
     }
 };
 
-module.exports = function(raceRepository, participantRepository, waypointRepository, request) {
+module.exports = function(raceRepository, participantRepository, waypointRepository, authHandler, request) {
 	
 	// add default routes
 	crudRouter(router, model, raceRepository, {
@@ -29,6 +29,18 @@ module.exports = function(raceRepository, participantRepository, waypointReposit
 		delete: true
 	}, html);
     
+    router.get('/:id/testdelete',
+        authHandler.isAuthorized('Race-create'),
+        //repository.model,
+        function(req, res) {
+            req[model].popOwner((err, poppedRace) => { 
+                console.log(err);
+                console.log(poppedRace);
+                res.send('ggnore');
+            });
+        }
+    )
+
     router.post('/:id/test',
         authModule.isAuthenticated(model),
         raceRepository.model, 
@@ -41,7 +53,11 @@ module.exports = function(raceRepository, participantRepository, waypointReposit
         authModule.isAuthorized(model),
         raceRepository.model, 
         function(req, res) {
-            req['Model'].test();
+            req[model].popOwner((err, poppedRace) => { 
+                console.log(err);
+                console.log(poppedRace);
+                res.send('ggnore');
+            });
         }
     )
     
