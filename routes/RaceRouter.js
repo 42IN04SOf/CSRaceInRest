@@ -142,5 +142,20 @@ module.exports = function(raceRepository, participantRepository, waypointReposit
         }); 
     })
     
+    router.delete("/:id/waypoints", waypointRepository.model, function (req, res) {
+        if(req.body.wid) {
+            req.Model.deleteWaypoint(req.body.wid, function(err) {
+                if(err) {
+                    console.log(err);
+                    res.status(403).end(); 
+                } else {
+                    res.status(200).end();
+                }
+            })
+        } else {
+            res.status(403).end();
+        }
+    })
+    
     return router;
 }
