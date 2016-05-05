@@ -16,7 +16,7 @@ var html = {
     }
 };
 
-module.exports = function(repository, authHandler) {
+module.exports = function(repository, participantRepository, raceRepository, authHandler) {
 	
 	// add default routes
 	crudRouter(router, model, repository, {
@@ -26,6 +26,28 @@ module.exports = function(repository, authHandler) {
 		update: true,
 		delete: true
 	}, html);
-	    
+	
+    router.get('/:id/participatingraces', participantRepository.model, function(req, res) {
+        req.Model.getParticipantsByUserId(req.params.id, function(err, participant) {
+            if(err) {
+               res.status(403).end();
+            } else {
+               res.return({ result: participant });
+            }
+        });
+    });
+    
+    router.get('/:id/owningraces', raceRepository.model, function(req, res) {
+        console.log(req.Model);
+        
+        req.Model.getRacesAsOwner(req.params.id, function(err, races) {
+            if(err) {
+               res.status(403).end();
+            } else {
+               res.return({ result: races });
+            }
+        });
+    });
+    
     return router;
 }

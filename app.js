@@ -11,6 +11,7 @@ var mongoose			= require('mongoose');
 var ejs 				= require('ejs');
 var passport 			= require('passport');
 var flash    			= require('connect-flash');
+var request				= require('request');
 
 // config
 var databaseConfig		= require('./config/database');
@@ -32,11 +33,11 @@ var translator 			= require('./lib/module/translator');
 var colorizer			= require('./lib/module/colorizer');
 
 // router
-var indexRouter			= require('./routes/index');
 var authRouter			= require('./routes/AuthRouter');
-
-var raceRouter			= require('./routes/RaceRouter');
-var userRouter			= require('./routes/UserRouter');
+var indexRouter		= require('./routes/index');
+var raceRouter		= require('./routes/RaceRouter');
+var userRouter		= require('./routes/UserRouter');
+var participantRouter = require('./routes/ParticipantRouter');
 
 // ==== APP INITIALIZATION ====
 var app = express();
@@ -73,9 +74,9 @@ app.use(tokenHandler.middleware);
 
 // router init
 authRouter = authRouter(passport, authHandler);
-
-raceRouter = raceRouter(databaseHelper.repositories.Race, authHandler);
-userRouter = userRouter(databaseHelper.repositories.User, authHandler); 
+raceRouter = raceRouter(databaseHelper.repositories.Race, databaseHelper.repositories.Participant, databaseHelper.repositories.Waypoint, authHandler, request);
+userRouter = userRouter(databaseHelper.repositories.User, databaseHelper.repositories.Participant, databaseHelper.repositories.Race, authHandler);
+participantRouter = participantRouter(databaseHelper.repositories.Participant)
 
 // ==== ROUTING ====
 app.use('/', indexRouter);
@@ -86,6 +87,7 @@ app.use('/dota/:id', function(req, res) {
 });
 app.use('/race', raceRouter);
 app.use('/user', userRouter);
+app.use('/participant', participantRouter);
 
 // no router applicable, catch 404 and forward to error handler
 app.use(function(req, res, next) {
