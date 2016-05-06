@@ -1,8 +1,9 @@
-var express = require('express');
-var router = express.Router();
+var express                 = require('express');
+var router                  = express.Router();
 
-var crudRouter = require('../lib/CrudRouter');
-var authModule = require('../lib/module/authModule');
+var crudRouter              = require('../lib/CrudRouter');
+var waypointSubrouter       = require('./subrouter/WaypointSubrouter');
+var participantSubrouter    = require('./subrouter/ParticipantSubrouter');
 
 var model = 'Race';
 var html = {
@@ -13,56 +14,40 @@ var html = {
     },
     detail: {
         title: 'race.detailTitle',
-        bag: `Race detail`,
+        bag: { 
+            getName: function(race) {
+                return race.name;
+            }
+        },
         view: 'Race'
     }
 };
 
 module.exports = function(raceRepository, participantRepository, waypointRepository, authHandler, request) {
 	
+    // init subrouters
+    waypointSubrouter       = waypointSubrouter(waypointRepository, authHandler, request);
+    participantSubrouter    = participantSubrouter(participantRepository, authHandler); 
+    
 	// add default routes
 	crudRouter(router, model, raceRepository, {
-		read: true,
-		create: true,
-		readById: true,
-		update: true,
+		read: function(req, res) { return {}; },
+		create: function(req, res){ 
+            return { 
+                name: req.body.name,
+                ownerID: req.user._id 
+            };
+        },
+		readById: function(req, res) {
+            return req.params.RaceId; 
+        },
+		update: function(req, res) {
+            req.Race.name = req.body.name;
+        },
 		delete: true
 	}, html);
     
-    router.get('/:id/testdelete',
-        authHandler.isAuthorized('Race-create'),
-        //repository.model,
-        function(req, res) {
-            req[model].popOwner((err, poppedRace) => { 
-                console.log(err);
-                console.log(poppedRace);
-                res.send('ggnore');
-            });
-        }
-    )
-
-    router.post('/:id/test',
-        authModule.isAuthenticated(model),
-        raceRepository.model, 
-        function(req, res) {
-            req['Model'].test();
-        }
-    )
-    
-    router.get('/:id/test',
-        authModule.isAuthorized(model),
-        raceRepository.model, 
-        function(req, res) {
-            req[model].popOwner((err, poppedRace) => { 
-                console.log(err);
-                console.log(poppedRace);
-                res.send('ggnore');
-            });
-        }
-    )
-    
-    router.post("/:id/state",
-        raceRepository.test,
+    router.post("/:RaceId/state",
         function(req, res) {
             req[model].start();
             res.status(204).end();
@@ -141,6 +126,9 @@ module.exports = function(raceRepository, participantRepository, waypointReposit
             }
         }); 
     })
+
+    router.use('/:RaceId', participantSubrouter);
+    router.use('/:RaceId', waypointSubrouter);
     
     router.delete("/:id/waypoints", waypointRepository.model, function (req, res) {
         if(req.body.wid) {
