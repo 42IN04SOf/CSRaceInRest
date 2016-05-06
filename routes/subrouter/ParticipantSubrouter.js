@@ -16,7 +16,7 @@ module.exports = function(participantRepository, authHandler) {
     );
     
     router.post('/participants', 
-        // authHandler.isAuthorized('Participant', 'Participant-create'),
+        // authHandler.isAuthorized('Participant-create'),
         function(req, res) {
             req[model].addParticipant(req.user._id, function(err, createdParticipant) {
                 if(err) {
