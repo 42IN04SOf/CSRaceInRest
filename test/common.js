@@ -20,7 +20,7 @@ var flash    			= require('connect-flash');
 var request				= require('request');
 
 // config
-var databaseConfig		= require('../config/database');
+var databaseConfig		= require('./config/database');
 var languageConfig		= require('../config/language');
 
 var authorizationConfig	= require('../config/authorization');
