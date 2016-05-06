@@ -32,7 +32,7 @@ module.exports = function(repository, participantRepository, raceRepository, aut
 		delete: false
 	}, html);
 	
-    router.get('/:UserId/participatingraces', participantRepository.model, function(req, res) {
+    router.get('/:UserId/participatingraces', participantRepository.model, authHandler.isAuthenticated(), function(req, res) {
         req.Model.getParticipantsByUserId(req.params.id, function(err, participant) {
             if(err) {
                res.status(403).end();
@@ -42,7 +42,7 @@ module.exports = function(repository, participantRepository, raceRepository, aut
         });
     });
     
-    router.get('/:UserId/owningraces',
+    router.get('/:UserId/owningraces', authHandler.isAuthenticated(),
         raceRepository.read(function(req, res){ return { ownerID: req.params.UserId } }),
         function(req, res) {
             res.return({ result: req.Race });

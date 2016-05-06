@@ -74,7 +74,7 @@ module.exports = function(raceRepository, participantRepository, waypointReposit
         });
     });
     
-    router.put("/:id/participants/:pid/waypoints", participantRepository.model, function (req, res, next) {
+    router.put("/:id/participants/:pid/waypoints", participantRepository.model, authHandler.isAuthenticated(), function (req, res, next) {
         req.Model.findOne({ "_id": req.params.pid }, {}, function (err, result) {
 
             if (err) {
@@ -94,56 +94,69 @@ module.exports = function(raceRepository, participantRepository, waypointReposit
             }
         });
     }, function(req, res) {
-        req.Participant.addCompletedWaypoint(req.body.wid, function(err) {
-            console.log(req.body);
-            if(err) {
-                res.status(403).end();
+            if (authHandler.isAuthorized('Participant-update')) {
+                req.Participant.addCompletedWaypoint(req.body.wid, function (err) {
+                    console.log(req.body);
+                    if (err) {
+                        res.status(403).end();
+                    } else {
+                        res.status(200).end();
+                    }
+                });
             } else {
-                res.status(200).end();
+                res.status(401).end();
             }
-        });
-    })
+        })
     
-    router.post("/:id/waypoints", waypointRepository.model, function (req, res) {
+    router.post("/:id/waypoints", waypointRepository.model, authHandler.isAuthenticated(), function (req, res) {
         var API = "AIzaSyBnOX9RDvO8Te8BftCqZBTeA5-bGPuQYb4";
         var url = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + req.body.pid + '&key=' + API;
         var place;
         //console.log(url);
 
-        request(url, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                //console.log(body);
-                var json = JSON.parse(body);
-                
-                place = json.result;
+        if (authHandler.isAuthorized('Waypoint-create')) {
+            request(url, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    //console.log(body);
+                    var json = JSON.parse(body);
 
-                console.log(place);
+                    place = json.result;
 
-                req.Model.createWaypoint(req.params.id, place, req.body.comment, function (waypoint) {
-                    console.log(waypoint)
-                    res.status(201).end();
-                });
-            }
-        }); 
+                    console.log(place);
+
+                    req.Model.createWaypoint(req.params.id, place, req.body.comment, function (waypoint) {
+                        console.log(waypoint)
+                        res.status(201).end();
+                    });
+                }
+            });
+        } else {
+            res.status(401).end();
+        }
     })
 
     router.use('/:RaceId', participantSubrouter);
     router.use('/:RaceId', waypointSubrouter);
     
-    router.delete("/:id/waypoints", waypointRepository.model, function (req, res) {
-        if(req.body.wid) {
-            req.Model.deleteWaypoint(req.body.wid, function(err) {
-                if(err) {
-                    console.log(err);
-                    res.status(403).end(); 
-                } else {
-                    res.status(200).end();
-                }
-            })
+    router.delete("/:id/waypoints", waypointRepository.model, authHandler.isAuthenticated(), function (req, res) {
+        if (authHandler.isAuthorized('Waypoint-delete')) {
+            if (req.body.wid) {
+                req.Model.deleteWaypoint(req.body.wid, function (err) {
+                    if (err) {
+                        console.log(err);
+                        res.status(403).end();
+                    } else {
+                        res.status(200).end();
+                    }
+                })
+            } else {
+                res.status(403).end();
+            }
         } else {
-            res.status(403).end();
+            res.status(401).end();
         }
+
     })
-    
+
     return router;
 }
