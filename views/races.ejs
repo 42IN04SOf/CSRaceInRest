@@ -1,16 +1,52 @@
 <%- include partials/_header.ejs %>
 <div class="container">
 
-    <%=: 'race.races' | trans %><br />
-    <%=: title | trans %><br />
     <div class="jumbotron text-center">
-        <h1><span class="fa fa-lock"></span> Node Hashtags</h1>
+        <h1><span class="fa fa-flag"></span> <%=: title | trans %><br /></h1>
 
-        <p>Hashtag:</p>
-
-        <a href="/#" class="btn btn-default"><span class="fa fa-user"></span>###</a>
+        <p><%=: 'race.aCompleteOverviewOfRaces' | trans %></p>
+        <p>
+            <%=: 'race.orCreateNewHere' | trans %><br /><br />
+            <!-- Button trigger modal -->
+            <button type="button" id="createRace" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                <%=: 'nav.toCreateRace' | trans %>
+            </button>
+        </p>
     </div>
-
+    <div class="container">
+        <div class="row">
+            <% data.forEach(function(race) { %>                
+                <div class="col-lg-6">
+                    <div class="panel panel-default">                    
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><% if(race.name){ %> <%- race.name %> <% } else { %> <%=: 'race.noNameAvailable' | trans %> <% } %> </h3>
+                        </div>
+                        <div class="panel-body clearfix">
+                            <span><strong><%=: 'race.dateCreate' | trans %></strong><%- race.dateCreate %></span><br />
+                            <span>
+                                <strong><%=: 'race.dateStart' | trans %></strong>
+                                <% if(race.dateStart) { %> <%- race.dateStart %>
+                                <% } else { %> <%=: 'race.notStartedYet' | trans %> <% } %>
+                            </span><br />
+                            <span>
+                                <strong><%=: 'race.dateStop' | trans %></strong>
+                                <% if(race.dateStop){ %> <%- race.dateStop %>
+                                <% } else if(race.dateStart && !race.dateStop) { %> <%=: 'race.inProgress' | trans %> <% } %>
+                                </span><br />
+                            <span>
+                                <strong><%=: 'race.owner' | trans %></strong>
+                                <% if(race.ownerID && race.ownerID.local && race.ownerID.local.email) { %> <%- race.ownerID.local.name %>
+                                <% } else if(race.ownerID && race.ownerID.google && race.ownerID.google.name) { %> <%- race.ownerID.google.name %>
+                                <% } else{ %> <%=: 'race.noOwnerAvailable' | trans %> <% } %>
+                            </span><br />
+                            <a class="btn btn-primary pull-right" href="#<%- race._id %>"><%=: 'nav.toRaceDetail' | trans %></a>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
 </div>
 <%- include partials/_raceForm.ejs %>
+<script>initUsingDocs();</script>
 <%- include partials/_footer.ejs %>

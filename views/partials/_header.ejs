@@ -1,23 +1,59 @@
 <!doctype html>
 <html>
-    <head>
-        <title><%- title %></title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> <!-- load bootstrap css -->
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
-        <link rel="stylesheet" href="/stylesheets/mapper.css"> <!-- load fontawesome -->
-        <style>
-        body {
-            padding-top:80px;
-        }
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-        #map {
-            height: 100%;
-        }
-        </style>
+	<head>
+		<title><%=: title | trans %></title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> <!-- load bootstrap css -->
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+		<link rel="stylesheet" href="/stylesheets/mapper.css"> <!-- load fontawesome -->
+		<style>
+		body {
+			padding-top:80px;
+		}
+		html, body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+		#map {
+			height: 100%;
+		}
+		</style>
 
-    </head>
+	</head>
 	<body>
+	<nav class="navbar navbar-default">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/">CSRaceInRest</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="/"><%=: 'nav.toHome' | trans %></a></li>
+					<li><a href="/profile"><%=: 'nav.toProfile' | trans %></a></li>
+					<li class="active"><a href="/race"><%=: 'nav.toAllRaces' | trans %></a></li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%=: 'nav.dropdownUser' | trans %><span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="#user/:uid/owned"><%=: 'nav.toOwnedRaces' | trans %></a></li>
+							<li><a href="#user/:uid/participating"><%=: 'nav.toParticipatingRaces' | trans %></a></li>
+							<li role="separator" class="divider"></li>
+							<li class="dropdown-header">placeholder title</li>
+							<li><a href="#placeholder_1">placeholder 1</a></li>
+							<li><a href="#placeholder_2">placeholder 2</a></li>
+						</ul>
+					</li>
+				</ul>
+				<!-- <ul class="nav navbar-nav navbar-right">
+					<li><a href="../navbar/">Default</a></li>
+					<li class="active"><a href="./">Static top <span class="sr-only">(current)</span></a></li>
+					<li><a href="../navbar-fixed-top/">Fixed top</a></li>
+				</ul> -->
+			</div><!--/.nav-collapse -->
+		</div>
+	</nav>
