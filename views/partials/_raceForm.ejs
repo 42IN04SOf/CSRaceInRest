@@ -1,0 +1,72 @@
+<div class="container">	
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<form>
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="myModalLabel"><% if(typeof data.name == 'undefined') { %> <%=: 'race.newRace' | trans %> <% } else { %> <%=: 'race.editRace' | trans %> <% } %></h4>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-lg-8" style="height:500px;">
+								<input id="pac-input" class="controls" type="text" placeholder="Zoeken">
+								<div id="map"></div>
+							</div>
+							<div class="col-lg-4">
+								<div class="form-group">
+									<label for="race_name">Naam</label>
+									<input type="text" name="race_name" class="form-control" required value="<% if(typeof data.name !== 'undefined') { %> <%- data.name %> <% } %>"/>
+								</div>
+								<h1>Uw waypoints</h1>
+								<div id="waypointContainer">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-success">Race aanmaken</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="/javascripts/mapper.js"></script>
+<script>
+	var googleSucces = googleSucces || false;
+	var docSuccess = docSuccess || false;
+
+    function initUsingDocs() {
+		docSuccess = true;
+		console.log('doccered');
+		if(googleSucces && docSuccess) {
+			console.log('mappered');
+			Mapper();
+		}
+	}
+	
+	function initUsingGoogle() {
+		googleSucces = true;
+		console.log('googlered');
+		if(googleSucces && docSuccess) {
+			console.log('mappered');
+			Mapper();
+		}
+	}
+    
+    $(document).ready(function() {
+        $('#myModal').on('shown.bs.modal', function() {
+			google.maps.event.trigger(map, "resize", {});
+        });
+		
+		$('body').tooltip({
+			selector: '[data-toggle="tooltip"]'
+		});
+    });
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcXuLjlvhOoDrC6as07h_1-eBXLynedHQ&callback=initUsingGoogle&libraries=places"></script>

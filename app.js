@@ -34,10 +34,9 @@ var colorizer			= require('./lib/module/colorizer');
 
 // router
 var authRouter			= require('./routes/AuthRouter');
-var indexRouter		= require('./routes/index');
-var raceRouter		= require('./routes/RaceRouter');
-var userRouter		= require('./routes/UserRouter');
-var participantRouter = require('./routes/ParticipantRouter');
+var indexRouter			= require('./routes/index');
+var raceRouter			= require('./routes/RaceRouter');
+var userRouter			= require('./routes/UserRouter');
 
 // ==== APP INITIALIZATION ====
 var app = express();
@@ -73,10 +72,9 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 app.use(tokenHandler.middleware);
 
 // router init
-authRouter = authRouter(passport, authHandler);
-raceRouter = raceRouter(databaseHelper.repositories.Race, databaseHelper.repositories.Participant, databaseHelper.repositories.Waypoint, authHandler, request);
-userRouter = userRouter(databaseHelper.repositories.User, databaseHelper.repositories.Participant, databaseHelper.repositories.Race, authHandler);
-participantRouter = participantRouter(databaseHelper.repositories.Participant)
+authRouter 			= authRouter(passport, authHandler);
+raceRouter 			= raceRouter(databaseHelper.repositories.Race, databaseHelper.repositories.Participant, databaseHelper.repositories.Waypoint, authHandler, request);
+userRouter 			= userRouter(databaseHelper.repositories.User, databaseHelper.repositories.Participant, databaseHelper.repositories.Race, authHandler);
 
 // ==== ROUTING ====
 app.use('/', indexRouter);
@@ -87,7 +85,6 @@ app.use('/dota/:id', function(req, res) {
 });
 app.use('/race', raceRouter);
 app.use('/user', userRouter);
-app.use('/participant', participantRouter);
 
 // no router applicable, catch 404 and forward to error handler
 app.use(function(req, res, next) {

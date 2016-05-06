@@ -20,14 +20,19 @@ module.exports = function(repository, participantRepository, raceRepository, aut
 	
 	// add default routes
 	crudRouter(router, model, repository, {
-		read: true,
-		create: true,
-		readById: true,
-		update: true,
-		delete: true
+		read: function(req, res) { return {}; },
+		create: false,
+		readById: function(req, res) {
+            console.log(req.params.UserId);
+            return req.params.UserId; 
+        },
+		update: function(req, res) {
+            req.User.name = req.body.name;
+        },
+		delete: false
 	}, html);
 	
-    router.get('/:id/participatingraces', participantRepository.model, function(req, res) {
+    router.get('/:UserId/participatingraces', participantRepository.model, function(req, res) {
         req.Model.getParticipantsByUserId(req.params.id, function(err, participant) {
             if(err) {
                res.status(403).end();
@@ -37,17 +42,12 @@ module.exports = function(repository, participantRepository, raceRepository, aut
         });
     });
     
-    router.get('/:id/owningraces', raceRepository.model, function(req, res) {
-        console.log(req.Model);
-        
-        req.Model.getRacesAsOwner(req.params.id, function(err, races) {
-            if(err) {
-               res.status(403).end();
-            } else {
-               res.return({ result: races });
-            }
-        });
-    });
+    router.get('/:UserId/owningraces',
+        raceRepository.read(function(req, res){ return { ownerID: req.params.UserId } }),
+        function(req, res) {
+            res.return({ result: req.Race });
+        }
+    );
     
     return router;
 }
