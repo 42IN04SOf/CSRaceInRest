@@ -71,9 +71,9 @@ module.exports = function(mongoose, unAuthorizedError) {
 			}
 		},
 		{
-			keys: ['Waypoint-create'],
+			keys: ['Waypoint-create', 'Waypoints-removeWhere'],
 			value: function(req, res, next) {
-				var raceID = req.body.raceID || req.param.id;
+				var raceID = req.body.raceID || req.params.RaceId;
 				var Race = mongoose.model('Race');
 				Race.findOne({ _id : raceID }, function(err, race) {
 					if(err) { return next(err); }
@@ -82,7 +82,7 @@ module.exports = function(mongoose, unAuthorizedError) {
 						notFoundError.status = 404;
 						return next(notFoundError);
 					}
-					if(race.ownerID === raceID) {
+					if(race.ownerID == req.user._id) {
 						return next();
 					}
 					return next(unAuthorizedError);

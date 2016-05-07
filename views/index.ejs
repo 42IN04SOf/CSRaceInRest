@@ -8,12 +8,13 @@
 
         <a href="/login" class="btn btn-default"><span class="fa fa-user"></span> Local Login</a>
         <a href="/signup" class="btn btn-default"><span class="fa fa-user"></span> Local Signup</a>
-        <a href="/auth/google" class="btn btn-danger"><span class="fa fa-google-plus"></span> Google</a>
+        <a href="/auth/google/authenticate" class="btn btn-danger"><span class="fa fa-google-plus"></span> Google</a>
     </div>
     <button type="button" onClick="socket.emit('toServer', { message: 'Ayylmao', user: 'client' })">click</button>
 </div>
 <script src="/socket.io/socket.io.js"></script>
 <script>
+    <% var raceID = raceID || {} %>
     var raceID = '<%- raceID %>';
 </script>
 <script src="/javascripts/socketeer.js"></script>

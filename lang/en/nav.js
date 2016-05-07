@@ -7,5 +7,6 @@ module.exports = {
 	'toParticipatingRaces': 'Participating races',
 	'toRaceDetail': 'See details',
 	'toCreateRace': 'Create a new race',
-	'toEditRace': 'Edit the selected race'
+	'toEditRace': 'Edit the selected race',
+	'toLogout': 'Logout',
 }

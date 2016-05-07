@@ -16,7 +16,8 @@ module.exports = {
         'apiKey'        : 'AIzaSyCcXuLjlvhOoDrC6as07h_1-eBXLynedHQ',
         'clientID'      : '74184454365-t803u4uvb5l14om7a2qmomg5i4s74irl.apps.googleusercontent.com',
         'clientSecret'  : 'bP-sHknCcfIuU6j-PgKMpFNK',
-        'callbackURL'   : 'https://rrfm.herokuapp.com/google/authenticate/callback'
+        // 'callbackURL'   : 'https://rrfm.herokuapp.com/google/authenticate/callback'
+        'callbackURL'   : 'http://localhost:3000/auth/google/authenticate/callback'
     }
 
 };

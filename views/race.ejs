@@ -15,7 +15,6 @@
     </div>
     <div class="container">
         <div class="row">
-            <% console.log(data); %>
             <div class="col-lg-6 col-lg-offset-3">
                 <div class="panel panel-default">                    
                     <div class="panel-heading">
@@ -46,16 +45,18 @@
         </div>
     </div>
 </div>
+<%- include partials/_scripts.ejs %>
 <%- include partials/_raceForm.ejs %>
 <script>
     placesAdded = [];
+    raceId = '<%- data._id %>';
     $(document).ready(function() {
-        $.get('/race/<%- data._id %>/waypoints?format=json').done(function(data) {
+        $.get('/race/<%- data._id %>/waypoints?format=json').done(function(waypoints) {
             placesAdded = [];
-            for(waypoint of data) {
+            for(waypoint of waypoints.result.reverse()) {
                 placesAdded.push(waypoint.place.place_id)
             }
-            initUsingDocs();
+            initUsingDocs('<%- data._id %>');
         });
     });
 </script>

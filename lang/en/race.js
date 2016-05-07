@@ -4,6 +4,8 @@ module.exports = {
 	'race': 'Race',
 	'newRace': 'A new race',
 	'editRace': 'Edit an existing race',
+	'createRace': 'Create new race',
+	'updateRace': 'Update race',
 	'overviewTitle': 'Races overview',
 	'detailTitle': 'A detailed view of a single race.',
 	'alreadyStarted': 'The race already started.',
