@@ -23,6 +23,8 @@ var request				= require('request');
 var databaseConfig		= require('./config/database');
 var languageConfig		= require('../config/language');
 
+var passportConfig		= require('../config/passport');
+
 var authorizationConfig	= require('../config/authorization');
 var apikeysConfig		= require('../config/apikeys');
 
@@ -39,6 +41,7 @@ var colorizer			= require('../lib/module/colorizer');
 // router
 var raceRouter			= require('../routes/RaceRouter');
 var userRouter			= require('../routes/Userrouter');
+var authRouter			= require('../routes/AuthRouter');
 
 // ==== APP INITIALIZATION ====
 var app = express();
@@ -47,6 +50,8 @@ app.listen(9090);
 // pre setup module setup
 databaseHelper 	= databaseHelper(mongoose, databaseConfig);
 translator 		= translator('../lang', languageConfig);
+
+passportConfig(passport, mongoose.model('User'), apikeysConfig, translator);
 
 authHandler		= authHandler(mongoose, authorizationConfig);
 tokenHandler 	= tokenHandler(mongoose.model('User'));
@@ -83,13 +88,21 @@ userRouter = userRouter(
 	databaseHelper.repositories.Participant,
 	databaseHelper.repositories.Race,
 	authHandler);
+authRouter = authRouter(
+	passport, 
+	authHandler);
 
 // ==== ROUTING ====
+app.use('/', authRouter);
 app.use('/race', raceRouter);
 app.use('/user', userRouter);
+
 
 var raceTests = require('./routes/raceRouterTest');
 raceTests.tests(app, agent, expect, should);
 
 var userTests = require('./routes/userRouterTest');
 userTests.tests(app, agent, expect, should);
+
+var authTests = require('./routes/authRouterTest');
+authTests.tests(app, agent, expect, should);
