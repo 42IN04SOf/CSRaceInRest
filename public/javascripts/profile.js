@@ -9,7 +9,6 @@ $(document).ready(function() {
 	var participatingRaces = $('#participatingRacesContainer');
 	
 	var raceBoxHtml = function(race, url) {
-		console.log(race);
 		return '' +
 			'<div class="col-lg-12">' +
 				'<div class="panel panel-default">' +                    
@@ -27,7 +26,7 @@ $(document).ready(function() {
 							(race.dateStop || '') +
 						'</span><br />' +
 						'<span>' +
-							'<strong>Owner</strong>' +
+							'<strong>Owner: </strong>' +
 							(race.ownerID.local.email || race.ownedID.google.name || '') +
 						'</span><br />' +
 						'<a class="btn btn-primary pull-right" href="' + url + '">Details</a>' +
@@ -62,8 +61,8 @@ $(document).ready(function() {
 		if(participating.count == 0) {
 			return;
 		}
-		for(race of participating.result) {
-			var htmlString = raceBoxHtml(race, '/race/' + race._id);
+		for(participant of participating.result) {
+			var htmlString = raceBoxHtml(participant.raceID, '/race/' + participant.raceID._id);
 			var raceBox = $(htmlString);
 			participatingRaces.append(raceBox);
 		}
