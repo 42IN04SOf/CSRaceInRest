@@ -35,7 +35,7 @@
                                 </span><br />
                             <span>
                                 <strong><%=: 'race.owner' | trans %></strong>
-                                <% if(race.ownerID && race.ownerID.local && race.ownerID.local.email) { %> <%- race.ownerID.local.name %>
+                                <% if(race.ownerID && race.ownerID.local && race.ownerID.local.email) { %> <%- race.ownerID.local.email %>
                                 <% } else if(race.ownerID && race.ownerID.google && race.ownerID.google.name) { %> <%- race.ownerID.google.name %>
                                 <% } else{ %> <%=: 'race.noOwnerAvailable' | trans %> <% } %>
                             </span><br />

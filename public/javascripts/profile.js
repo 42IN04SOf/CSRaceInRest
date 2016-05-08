@@ -8,8 +8,7 @@ $(document).ready(function() {
 	var ownedRaces = $('#ownedRacesContainer');
 	var participatingRaces = $('#participatingRacesContainer');
 	
-	var raceBoxHtml = function(race, url) {
-		console.log(race);
+	var raceBoxHtml = function(race, url, valeu, html) {
 		return '' +
 			'<div class="col-lg-12">' +
 				'<div class="panel panel-default">' +                    
@@ -27,10 +26,11 @@ $(document).ready(function() {
 							(race.dateStop || '') +
 						'</span><br />' +
 						'<span>' +
-							'<strong>Owner</strong>' +
+							'<strong>Owner: </strong>' +
 							(race.ownerID.local.email || race.ownedID.google.name || '') +
 						'</span><br />' +
-						'<a class="btn btn-primary pull-right" href="' + url + '">Details</a>' +
+						'<a class="btn btn-primary pull-right" href="' + url + '">' + valeu + '</a>' +
+						(html ? html : '') + 
 					'</div>' +
 				'</div>' +
 			'</div>';
@@ -51,7 +51,8 @@ $(document).ready(function() {
 		}
 		var i = 0;
 		for(race of owned.result) {
-			var htmlString = raceBoxHtml(race, '/user/' + userId + '/owningraces/' + race._id);
+			var htmlString = raceBoxHtml(race, '/race/' + race._id, 'Details', '' +
+				'<a class="btn btn-info pull-right" href="/user/' + userId + '/owningraces/' + race._id + '">Controlpanel</a>');
 			var raceBox = $(htmlString);
 			ownedRaces.append(raceBox);
 			i++;
@@ -62,8 +63,8 @@ $(document).ready(function() {
 		if(participating.count == 0) {
 			return;
 		}
-		for(race of participating.result) {
-			var htmlString = raceBoxHtml(race, '/race/' + race._id);
+		for(participant of participating.result) {
+			var htmlString = raceBoxHtml(participant.raceID, '/race/' + participant.raceID._id, 'Details');
 			var raceBox = $(htmlString);
 			participatingRaces.append(raceBox);
 		}

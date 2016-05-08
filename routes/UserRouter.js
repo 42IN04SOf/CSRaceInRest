@@ -29,7 +29,7 @@ module.exports = function(repository, participantRepository, raceRepository, aut
             req.User.name = req.body.name;
         },
 		delete: false
-	}, html);
+	}, html, authHandler);
 	
     // router.get('/:UserId/participatingraces', participantRepository.model(), authHandler.isAuthenticated(), function(req, res) {
     //     req.ParticipantSchema.getParticipantsByUserId(req.params.id, function(err, participant) {
@@ -67,7 +67,7 @@ module.exports = function(repository, participantRepository, raceRepository, aut
                 var result = req.Race;
                 if(res.isHTMLRequested()) {
                     result = { data: result};
-                    result.title = 'race.aCompleteOverviewOfOwnedRaces';
+                    result.title = 'race.ownedTitle';
                     result.bag = { active: 'race' };
                 }
                 return res.return({ result: result, view: 'raceOwned' });

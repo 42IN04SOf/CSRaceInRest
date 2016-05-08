@@ -21,7 +21,7 @@
                     <% if (user.local && user.local.email) { %>
                         <strong><%=: 'attributes.email' | trans %></strong>: <%= user.local.email %><br />
                     <% } else { %>
-                        <strong><%=: 'profile.notConnected' | trans %></strong><br />    
+                        <strong><%=: 'profile.notConnected' | trans %></strong><br />
                     <% } %>
                 </div>
                 <div class="panel-footer">
@@ -29,7 +29,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- GOOGLE INFORMATION -->
         <div class="col-sm-6">
             <div class="panel panel-primary">
@@ -37,7 +37,8 @@
                     <h3 class="panel-title"><span class="fa fa-google-plus"></span> <%=: 'profile.googleAcc' | trans %></h3>
                 </div>
                 <div class="panel-body">
-                    <% if (user.google && user.google.token) { %>
+                    <% console.log(user.google) %>
+                    <% if (user.google && user.google.name) { %>
                         <p>
                             <strong><%=: 'attributes.email' | trans %></strong>: <%= user.google.email %><br>
                             <strong><%=: 'attributes.name' | trans %></strong>: <%= user.google.name %>
@@ -51,24 +52,24 @@
         </div>
 
     </div>
-    
+
     <div class="row">
-    
+
         <div class="col-lg-6">
             <br />
             <h1 class="centered text-center"><%=: 'profile.ownedRaces' | trans %></h1>
             <hr />
             <div id="ownedRacesContainer">
-                
+
             </div>
         </div>
-        
+
         <div class="col-lg-6">
             <br />
             <h1 class="centered text-center"><%=: 'profile.participatingRaces' | trans %></h1>
             <hr />
             <div id="participatingRacesContainer">
-                
+
             </div>
         </div>
     </div>

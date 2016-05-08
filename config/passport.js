@@ -36,10 +36,6 @@ module.exports = function(passport, User, config, translator) {
     },
     function(req, email, password, done) {
 
-        if(!email || !password) {
-            return done(null, false, req.flash('signupMessage', 'auth.invalidFields'));
-        }
-
         // asynchronous
         // User.findOne wont fire unless data is sent back
         process.nextTick(function() {
@@ -52,7 +48,7 @@ module.exports = function(passport, User, config, translator) {
 
                 // check to see if theres already a user with that email
                 if (user) {
-                    return done(null, false, req.flash('signupMessage', 'auth.dupeEmail'));
+                    return done(null, false, { 'message': 'auth.dupeEmail'});
                 }
                 else {
                     // if there is no user with that email
@@ -98,11 +94,11 @@ module.exports = function(passport, User, config, translator) {
 
             // if no user is found, return the message
             if (!user)
-                return done(null, false, req.flash('loginMessage', 'auth.userNotfound')); // req.flash is the way to set flashdata using connect-flash
+                return done(null, false, { 'message': 'auth.userNotfound'}); // req.flash is the way to set flashdata using connect-flash
 
             // if the user is found but the password is wrong
             if (!user.validPassword(password))
-                return done(null, false, req.flash('loginMessage', 'auth.invalidPassword')); // create the loginMessage and save it to session as flashdata
+                return done(null, false, { 'message': 'auth.invalidPassword'}); // create the loginMessage and save it to session as flashdata
 
             // all is well, return successful user
             return done(null, user);

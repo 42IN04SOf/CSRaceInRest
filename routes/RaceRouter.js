@@ -53,7 +53,7 @@ module.exports = function(
             req.Race.name = req.body.name;
         },
 		delete: true
-	}, html);
+	}, html, authHandler);
     
     // start race
     router.post("/:RaceId/state",

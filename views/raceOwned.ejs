@@ -4,9 +4,8 @@
     <div class="jumbotron text-center">
         <h1><span class="fa fa-flag"></span> <%=: title | trans %><br /></h1>
 
-        <p><%=: 'race.aRaceDetail' | trans %></p>
+        <p><%=: 'race.controlPanelExplain' | trans %></p>
         <p>
-            <%=: 'race.orEditHere' | trans %><br /><br />
             <!-- Button trigger modal -->
             <button type="button" id="editRace" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
                 <%=: 'nav.toEditRace' | trans %>
@@ -20,7 +19,7 @@
         </p>
     </div>
     <div class="container">
-        <div class="row">
+        <div class="row" id="transitioner">
             <div class="col-lg-6 col-lg-offset-3">
                 <div class="panel panel-default">                    
                     <div class="panel-heading">
@@ -49,11 +48,17 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1">
+                <div id="resultPanel"></div>
+            </div>
+        </div>
     </div>
 </div>
 <%- include partials/_scripts.ejs %>
 <%- include partials/_raceForm.ejs %>
 <script src="/javascripts/raceDashboard.js"></script>
+<script src="/javascripts/raceResults.js"></script>
 <script>
     placesAdded = [];
     raceId = '<%- data._id %>';
