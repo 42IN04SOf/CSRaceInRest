@@ -139,7 +139,7 @@ function start() {
 						controlBox.find('#controlTable').append(rowBox);
 					});
 					racePromise.done(function(race) {
-						if(race.dateStart) {
+						if(race.dateStart && !race.dateStop) {
 							showNext(0);
 						}
 						else {

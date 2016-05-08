@@ -32,5 +32,5 @@ module.exports = {
 	'noWaypoints': 'The race has no waypoints',
 	'ownedTitle': 'Control panel',
 	'controlPanelExplain': 'This is the controlpanel for the owner of a race.',
-	'alreadyParticipating': 'The user is already a participant'
+	'alreadyAdded': 'This waypoint has already been completed.'
 };

@@ -49,7 +49,7 @@ module.exports = function(participantRepository, raceRepository, socketEmitter, 
         authHandler.isAuthorized('Participant-update'),
         function(req, res, next) {
             if(req.Race.dateStop) {
-                var err = new error('race.alreadyStopped');
+                var err = new Error('race.alreadyStopped');
                 err.status = 400;
                 throw err;
             }
@@ -57,7 +57,6 @@ module.exports = function(participantRepository, raceRepository, socketEmitter, 
         }, 
         function(req, res) {
             req.Participant.addCompletedWaypoint(req.body.wid, function(err) {
-                console.log(req.body);
                 if(err) {
                     res.status(403).end();
                 } else {
