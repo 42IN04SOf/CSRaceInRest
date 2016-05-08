@@ -36,27 +36,27 @@ server.on('listening', onListening);
 // waypoint complete - /Race/:id
 
 var socketServer = io.of('/Race').on('connection', function(clientSocket) {	
-	// A client has connected.
-	socketServer.emit('toClient', { user: 'server', message: 'A user has connected', type: 'public' });
-	
+	// on client disconnect
 	clientSocket.on('disconnect', function() {
-		// A client has disconnected.
-		socketServer.emit('toClient', { user: 'server', message: 'A user has disconnected', type: 'public' });
-		// No need to leave room, works automatically (i hope)
+		socketServer.emit('toClient', { user: 'server', message: 'A user has disconnected', type: 'global' });
 	});
+	
+	// Emit to all clients
+	socketServer.emit('toClient', { user: 'server', message: 'A user has connected', type: 'global' });
 	
 	// Emit to new client.
 	clientSocket.emit('toClient', { user: 'server', message: 'Hello new user', type: 'private' });
+	
+	// receiving from the new client
 	clientSocket.on('toServer', function(data) {
 		console.log(data);
-		// receiving from the new client
 	});
 	
 	clientSocket.on('create', function(room) {
 		// join room
 		clientSocket.join(room);
-		socketServer.to(room).emit('toClient', { user: 'server', message: 'A new user has joined the room: ' + room, type: 'public' });
-		clientSocket.emit('toClient', { user: 'server', message: 'Welcome to this room, new user.', type: 'private' });
+		clientSocket.emit('toClient', { user: 'server', message: 'Welcome to this room, new user.', type: 'room' });
+		socketServer.to(room).emit('toClient', { user: 'server', message: 'A new user has joined the room: ' + room, type: 'room' });
 	});
 });
 appModule.socketEmitter.setGlobalSocket(socketServer);

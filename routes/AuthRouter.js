@@ -2,24 +2,27 @@ var express = require('express');
 var router = express.Router();
 
 // subrouters
-var googleSubrouter = require('./GoogleRouter');
+var googleSubrouter = require('./subrouter/GoogleSubrouter');
 
 module.exports = function(passport, authHandler) {
 	
 	// subrouter initialization
-	googleSubrouter = googleSubrouter(passport, authHandler);
+	googleSubrouter = googleSubrouter(passport);
 	
 	// =====================================
 	// LOCAL LOGIN =========================
 	// =====================================
 	// show the login form
-	router.get('/login', function(req, res) {
-		// render the page and pass in any flash data if it exists
-		res.render('login.ejs', { title: 'auth.login', message: req.flash('loginMessage') });
-	});
+	router.get('/login',
+		authHandler.redirectWhenAuthenticated('/'),
+		function(req, res) {
+			// render the page and pass in any flash data if it exists
+			res.render('login.ejs', { title: 'auth.login', message: req.flash('loginMessage') });
+		}
+	);
 
 	// process the login form
-	router.post('/login', passport.authenticate('local-login', {
+	router.post('/login',passport.authenticate('local-login', {
 		successRedirect	: '/profile', 		// redirect to the secure profile section
 		failureRedirect	: '/login', 		// redirect back to the signup page if there is an error
 		failureFlash	: true 				// allow flash messages
@@ -29,13 +32,19 @@ module.exports = function(passport, authHandler) {
 	// LOCAL SIGNUP ========================
 	// =====================================
 	// show the signup form
-	router.get('/signup', function(req, res) {
-
-		// render the page and pass in any flash data if it exists
-		res.render('signup.ejs', { title: 'auth.signup', message: req.flash('signupMessage') });
-	});
+	router.get('/signup',
+	 	authHandler.redirectWhenAuthenticated('/'),
+		function(req, res) {
+			// render the page and pass in any flash data if it exists
+			res.render('signup.ejs', { title: 'auth.signup', message: req.flash('signupMessage')[0] });
+		}
+	);
 	// process the signup form
-	router.post('/signup', passport.authenticate('local-signup', {
+	router.post('/signup', 
+	function(req, res, next) {
+		req.flash('signupMessage', 'auth.invalidFields');
+		next()
+	}, passport.authenticate('local-signup', {
 		successRedirect	: '/profile', 		// redirect to the secure profile section
 		failureRedirect	: '/signup', 		// redirect back to the signup page if there is an error
 		failureFlash	: true 				// allow flash messages

@@ -15,6 +15,7 @@
 module.exports = {
 	tests: function(app, agent, expect, should) {
 		describe('Users retrieval', function() {
+			this.timeout(5000);
 			it('should get a list of all users', function(done) {
 				agent.get('/user?format=json')
 					.expect(200)
@@ -39,6 +40,7 @@ module.exports = {
 				agent.post('/signup')
 					.send({ "email": email, "password": "test" })
 					.expect(302)
+					.expect('location', '/profile')
 					.end(function (err, res) {
 						if (err) {
 							done(err);
@@ -51,9 +53,9 @@ module.exports = {
 			//Should work when views are complete!
 			it('should login', function (done) {
 				agent.post('/login')
-					.send({ email: email, password: 'test' })
+					.send({ "email": email, "password": "test" })
 					.expect(302)
-					.expect('Location', '/profile')
+					.expect('location', '/profile')
 					.end(function (err, res) {
 						if (err) {
 							done(err);
@@ -66,9 +68,9 @@ module.exports = {
 		
 		describe('Getting races', function () {
 			var userID = "572c7c596945a3d824225ee1";
-			
+				
 			it('should get a list of all races the user is participating in', function (done) {
-				agent.get('/user/' + userID + '/participatingraces')
+				agent.get('/user/' + userID + '/participatingraces?format=json')
 					.expect(200)
 					.end(function (err, res) {
 						if (err) {
@@ -80,7 +82,7 @@ module.exports = {
 			});
 			
 			it('should get a list of all races the user is participating in', function (done) {
-				agent.get('/user/' + userID + '/owningraces')
+				agent.get('/user/' + userID + '/owningraces?format=json')
 					.expect(200)
 					.end(function (err, res) {
 						if (err) {
@@ -92,4 +94,5 @@ module.exports = {
 			});
 		});
 	}
+	
 }

@@ -31,13 +31,15 @@ module.exports = {
         describe('Races router', function () {
             this.timeout(5000);
             it('should create a new race', function(done) {
-                agent.post('/race?token=' + token)
+                agent.post('/race?format=json')
                     .send({ "name": "naamtest"})
                     .expect(201)
                     .end(function(err, res) {
                         if(err) {
                             return done(err);
                         }
+                        ownerID = res.body.ownerID;
+                        raceID = res.body._id;
                         done();
                     })
             });
@@ -51,8 +53,19 @@ module.exports = {
                         if(!res.body) {
                             return done(new Error('Body is empty, not even an empty array.'));
                         }
-                        ownerID = res.body[0].ownerID._id;
-                        raceID = res.body[0]._id;
+                        done();
+                    })
+            });
+            
+            it('should get a specific race where user is owner', function(done) {
+                agent.get('/user/' + ownerID + '/owningraces/' + raceID + '?format=json')
+                    .expect(200)
+                    .expect('Content-Type', /json/)
+                    .end(function(err, res) {
+                        if (err) { return done(err); }
+                        if(!res.body) {
+                            return done(new Error('Body is empty, not even an empty array.'));
+                        }
                         done();
                     })
             });
@@ -70,10 +83,9 @@ module.exports = {
                     })
             });
             
-            /* Deze zooi heeft gewerkt, maar wil dat nu ineens niet meer...*/
             it('should add a waypoint to the race', function(done) {
                 var placeID = 'ChIJPVoIuvXuxkcR9TGwHoTMgrY';
-                agent.post('/race/' + raceID + '/waypoints?token='+token)
+                agent.post('/race/' + raceID + '/waypoints')
                     .send({"pid": placeID, "comment": "some comment"})
                     .expect(201)
                     .end(function(err, res) {
@@ -85,10 +97,40 @@ module.exports = {
                     })
             });
             
+            var participantID;
+            
+            it('should join the race', function(done) {
+                agent.post('/race/' + raceID + '/participants?format=json')
+                    .expect(200)
+                    .end(function(err, res) {
+                        if (err) { return done(err); }
+                        if(!res.body) {
+                            return done(new Error('Body is empty, not even an empty array.'));
+                        }
+                        participantID = res.body._id;
+                        done();
+                    })
+            });
+            
+            var waypointID;
+            
             it('should get a list of all waypoints from a race', function(done) {
-                agent.get('/race/' + raceID + '/waypoints?format=json&token='+token)
+                agent.get('/race/' + raceID + '/waypoints?format=json')
                     .expect(200)
                     .expect('Content-Type', /json/)
+                    .end(function(err, res) {
+                        if (err) { return done(err); }
+                        if(!res.body) {
+                            return done(new Error('Body is empty, not even an empty array.'));
+                        }
+                        waypointID = res.body.result[0]._id;
+                        done();
+                    })
+            });
+            
+            it('should start the race', function(done) {
+                agent.post('/race/' + raceID + '/state')
+                    .expect(204)
                     .end(function(err, res) {
                         if (err) { return done(err); }
                         if(!res.body) {
@@ -98,8 +140,9 @@ module.exports = {
                     })
             });
             
-            /*it('should join the race', function(done) {
-                agent.post('/race/' + raceID + '/participants?token='+token)
+            it('should complete a waypoint', function(done) {
+                agent.put('/race/' + raceID + '/participants/' + participantID + '/waypoints?format=json')
+                    .send({ "wid": waypointID })
                     .expect(200)
                     .end(function(err, res) {
                         if (err) { return done(err); }
@@ -108,9 +151,45 @@ module.exports = {
                         }
                         done();
                     })
-            })*/
+            });
+            
+            it('should stop the race', function(done) {
+                agent.delete('/race/' + raceID + '/state')
+                    .expect(204)
+                    .end(function(err, res) {
+                        if (err) { return done(err); }
+                        if(!res.body) {
+                            return done(new Error('Body is empty, not even an empty array.'));
+                        }
+                        done();
+                    })
+            });
+            
+            //This should be done at the end!
+            it('should delete all waypoints from the race', function(done) {
+                agent.delete('/race/' + raceID + '/waypoints')
+                    .expect(200)
+                    .end(function(err, res) {
+                        if (err) { return done(err); }
+                        if(!res.body) {
+                            return done(new Error('Body is empty, not even an empty array.'));
+                        }
+                        done();
+                    })
+            });
+            
+            it('should delete the race', function(done) {
+                agent.delete('/race/' + raceID)
+                    .expect(204)
+                    .end(function(err, res) {
+                        if (err) { return done(err); }
+                        if(!res.body) {
+                            return done(new Error('Body is empty, not even an empty array.'));
+                        }
+                        done();
+                    })
+            });
+
         });
-        
-		// more tests here
     }
 };
