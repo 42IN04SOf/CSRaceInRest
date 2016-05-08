@@ -119,6 +119,7 @@ function start() {
 						var button = rowBox.find('.waypointAction')
 						button.hide();
 						button.html(actionable);
+						buttons.push(button);
 						if(indiceWaypoint) { // waypoint completed
 							button.prop('disabled', true);
 							button.show();
@@ -134,13 +135,23 @@ function start() {
 								button.prop('disabled', true);
 							});
 						});
-						
-						buttons.push(button);
 						controlBox.find('#controlTable').append(rowBox);
 					});
 					racePromise.done(function(race) {
 						if(race.dateStart && !race.dateStop) {
-							showNext(0);
+							// showNext(0);
+							var initial = true;
+							buttons.forEach(function(button) {
+								if(button.html() === 'Completed') {
+									button.show();
+								}
+								else if(initial) {
+									button.show();
+								}
+								else {
+									button.hide();
+								}
+							});
 						}
 						else {
 							if(buttons.length > 0) {
