@@ -16,10 +16,9 @@ module.exports = {
 	tests: function(app, agent, expect, should) {
 		describe('User router', function() {
 			this.timeout(5000);
-			it('should get a list of all users', function(done) {
+			it('shouldnt get a list of all users', function(done) {
 				agent.get('/user?format=json')
-					.expect(200)
-					.expect('Content-Type', /json/)
+					.expect(401)
 					.end(function(err, res) {
 						if (err) { return done(err); }
 						if(!res.body) {
