@@ -58,7 +58,7 @@ app.use(translator.middleware);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -72,17 +72,23 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 app.use(tokenHandler.middleware);
 
 // router init
+indexRouter			= indexRouter(authHandler);
 authRouter 			= authRouter(passport, authHandler);
 raceRouter 			= raceRouter(databaseHelper.repositories.Race, databaseHelper.repositories.Participant, databaseHelper.repositories.Waypoint, authHandler, request);
 userRouter 			= userRouter(databaseHelper.repositories.User, databaseHelper.repositories.Participant, databaseHelper.repositories.Race, authHandler);
 
 // ==== ROUTING ====
+app.use(function(req, res, next) {
+	console.log(
+		colorizer.modify(['green'], '[request] ') +
+		colorizer.modify(['bright', 'bgblue', 'white'], req.method) +
+		colorizer.modify(['white'], ' ' +req.url)
+	);
+	return next();
+});
+
 app.use('/', indexRouter);
 app.use('/', authRouter);
-app.use('/dota/:id', function(req, res) {
-	socketEmitter.emitToRace(req.params.id, { user: 'server', message: 'A message to the room: ' + req.params.id });
-	res.json({ success: true });
-});
 app.use('/race', raceRouter);
 app.use('/user', userRouter);
 

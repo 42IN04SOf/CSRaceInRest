@@ -6,12 +6,12 @@ var model = 'User';
 var html = {
     overview: {
         title: 'Users',
-        message: 'User overview',
+        bag: { active: 'user' },
         view: 'Users'
     },
     detail: {
         title: 'User',
-        message: `User detail`,
+        bag: { active: 'user' },
         view: 'User'
     }
 };
@@ -23,7 +23,6 @@ module.exports = function(repository, participantRepository, raceRepository, aut
 		read: function(req, res) { return {}; },
 		create: false,
 		readById: function(req, res) {
-            console.log(req.params.UserId);
             return req.params.UserId; 
         },
 		update: function(req, res) {
@@ -32,8 +31,8 @@ module.exports = function(repository, participantRepository, raceRepository, aut
 		delete: false
 	}, html);
 	
-    router.get('/:UserId/participatingraces', participantRepository.model, function(req, res) {
-        req.Model.getParticipantsByUserId(req.params.id, function(err, participant) {
+    router.get('/:UserId/participatingraces', participantRepository.model(), authHandler.isAuthenticated(), function(req, res) {
+        req.ParticipantSchema.getParticipantsByUserId(req.params.id, function(err, participant) {
             if(err) {
                res.status(403).end();
             } else {
@@ -42,7 +41,7 @@ module.exports = function(repository, participantRepository, raceRepository, aut
         });
     });
     
-    router.get('/:UserId/owningraces',
+    router.get('/:UserId/owningraces', authHandler.isAuthenticated(),
         raceRepository.read(function(req, res){ return { ownerID: req.params.UserId } }),
         function(req, res) {
             res.return({ result: req.Race });

@@ -34,9 +34,9 @@
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav">
-					<li><a href="/"><%=: 'nav.toHome' | trans %></a></li>
-					<li><a href="/profile"><%=: 'nav.toProfile' | trans %></a></li>
-					<li class="active"><a href="/race"><%=: 'nav.toAllRaces' | trans %></a></li>
+					<li <% if(typeof bag !== 'undefined' && bag.active === 'home') { %> class="active" <% } %>><a href="/"><%=: 'nav.toHome' | trans %></a></li>
+					<li <% if(typeof bag !== 'undefined' && bag.active === 'profile') { %> class="active" <% } %>><a href="/profile"><%=: 'nav.toProfile' | trans %></a></li>
+					<li <% if(typeof bag !== 'undefined' && bag.active === 'race') { %> class="active" <% } %>><a href="/race"><%=: 'nav.toAllRaces' | trans %></a></li>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%=: 'nav.dropdownUser' | trans %><span class="caret"></span></a>
 						<ul class="dropdown-menu">

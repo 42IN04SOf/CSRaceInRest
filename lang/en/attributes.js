@@ -32,4 +32,7 @@ module.exports = {
 	'scope'					: 'scope',
 	'types'					: 'types',
 	'vicinity'				: 'vicinity',
+	
+	// Misc
+	'account'				: 'account'
 }

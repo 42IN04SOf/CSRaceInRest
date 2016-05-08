@@ -15,7 +15,7 @@
     </div>
     <div class="container">
         <div class="row">
-            <% data.forEach(function(race) { %>                
+            <% data.result.forEach(function(race) { %>                
                 <div class="col-lg-6">
                     <div class="panel panel-default">                    
                         <div class="panel-heading">
@@ -47,6 +47,11 @@
         </div>
     </div>
 </div>
+<%- include partials/_scripts.ejs %>
 <%- include partials/_raceForm.ejs %>
-<script>initUsingDocs();</script>
+<script>
+    $(document).ready(function() {
+        initUsingDocs();
+    });
+</script>
 <%- include partials/_footer.ejs %>

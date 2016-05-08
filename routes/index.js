@@ -1,15 +1,31 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/pancake/:id/hookie', function(req, res, next) {
-	if(req.user) {
-		console.log('user exists');
-	}
-	res.return({ 
-		result: { title: req.params.id, raceID: req.params.id }, 
-		view: 'index'
+module.exports = function(authHandler) {
+	
+	router.get('/', function(req, res) {
+		if(req.user) {
+			console.log('user exists');
+		}
+		res.return({ 
+			result: { title: 'index.title', bag: { active: 'home' } }, 
+			view: 'index'
+		});
 	});
-});
 
-module.exports = router;
+	router.get('/profile',
+	 	authHandler.isAuthenticated(),
+		function(req, res, next) {
+			if(res.isHTMLRequested()) {
+				console.log(req.user);
+				return res.return({ 
+					result: { title: 'index.title', user: req.user.asPublic(), bag: { active: 'profile' } }, 
+					view: 'profile'
+				});
+			}
+			return next();
+		}
+	);
+	
+	return router;
+};
