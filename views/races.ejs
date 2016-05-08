@@ -5,7 +5,7 @@
         <h1><span class="fa fa-flag"></span> <%=: title | trans %><br /></h1>
 
         <p><%=: 'race.aCompleteOverviewOfRaces' | trans %></p>
-        <p>
+        <p id="createRaceParagraph" style="display: none;">
             <%=: 'race.orCreateNewHere' | trans %><br /><br />
             <!-- Button trigger modal -->
             <button type="button" id="createRace" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
@@ -39,7 +39,7 @@
                                 <% } else if(race.ownerID && race.ownerID.google && race.ownerID.google.name) { %> <%- race.ownerID.google.name %>
                                 <% } else{ %> <%=: 'race.noOwnerAvailable' | trans %> <% } %>
                             </span><br />
-                            <a class="btn btn-primary pull-right" href="#<%- race._id %>"><%=: 'nav.toRaceDetail' | trans %></a>
+                            <a class="btn btn-primary pull-right" href="/race/<%- race._id %>"><%=: 'nav.toRaceDetail' | trans %></a>
                         </div>
                     </div>
                 </div>

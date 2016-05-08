@@ -14,19 +14,30 @@ var Mapper = function() {
 	var service = new google.maps.places.PlacesService(map)
 	
 	if(placesAdded.length > 0) {
-		for(placeId of placesAdded) {
-			service.getDetails({ placeId: placeId }, function(place, status) {
+		var getNextPlaceDetails = function(index) {
+			if(index >= placesAdded.length) {
+				return;
+			}
+			service.getDetails({ placeId: placesAdded[index] }, function(place, status) {
 				if (status === google.maps.places.PlacesServiceStatus.OK && place) {
 					waypointHandler(null, place.place_id, place.name, { getPosition: function() {
 						return place.geometry.location;
 					} });
+					getNextPlaceDetails(index + 1);
 				}
 			});
 		}
+		getNextPlaceDetails(0);
+	}
+	
+	var createRaceButton = $('#createRaceParagraph');
+	if(createRaceButton.length > 0) {
+		$.ajax({ method: 'GET', url: '/profile?format=json' }).done(function() {
+			createRaceButton.show();
+		});
 	}
 	
 	var updateExistingRaceSubmit = function(form) {
-		var muhToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NzI3ZDNiYzlmM2UyZWQ4MzkwZDg2MGEiLCJfX3YiOjAsImxvY2FsIjp7InBhc3N3b3JkIjoiJDJhJDA4JHdmRlpoN3ZIbUhlRWE2VW54ZnowV2UyazNLRzFTSWR5c3hKbVFWQ1lPUFBrUFJHVzIvZkZXIiwiZW1haWwiOiJmc2thcnNvZEBhdmFucy5ubCIsInRva2VuIjoiZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKSVV6STFOaUo5LmV5SmZhV1FpT2lJMU56STNaRE5pWXpsbU0yVXlaV1E0TXprd1pEZzJNR0VpTENKZlgzWWlPakFzSW14dlkyRnNJanA3SW5CaGMzTjNiM0prSWpvaUpESmhKREE0SkhkbVJscG9OM1pJYlVobFJXRTJWVzU0Wm5vd1YyVXlhek5MUnpGVFNXUjVjM2hLYlZGV1ExbFBVRkJyVUZKSFZ6SXZaa1pYSWl3aVpXMWhhV3dpT2lKbWMydGhjbk52WkVCaGRtRnVjeTV1YkNJc0luUnZhMlZ1SWpvaVpYbEtNR1ZZUVdsUGFVcExWakZSYVV4RFNtaGlSMk5wVDJsS1NWVjZTVEZPYVVvNUxtVjVTbVpoVjFGcFQybEpNVTU2U1ROYVJFNXBXWHBzYlUweVZYbGFWMUUwVFhwcmQxcEVaekpOUjBWcFRFTktabGd6V1dsUGFrRnpTVzE0ZGxreVJuTkphbkEzU1c1Q2FHTXpUak5pTTBwclNXcHZhVXBFU21oS1JFRTBTa2hrYlZKc2NHOU9NMXBKWWxWb2JGSlhSVEpXVnpVMFdtNXZkMVl5VlhsaGVrNU1VbnBHVkZOWFVqVmpNMmhMWWxaR1YxRXhiRkJWUmtKeVZVWktTRlo2U1haYWExcFlTV2wzYVZwWE1XaGhWM2RwVDJsS2JXTXlkR2hqYms1MldrVkNhR1J0Um5WamVUVjFZa05LT1daUkxrUnlPVkZKWVZCTk5FVnFVVWxWYlZsQ1YxOWhNMlpLVEUxUFgyTXRTVE5CUlRJek5UTXdTSEEyYzNNaWZYMC55NWRwVUUtS0prd0hzUXYwWGFaX3VyQ3FQcnEwWDNVQ1l2cnQ4ZXBxNTRRIn19.2CtZ3YXQCdfVEm6OxJEdVR0nOW5QA3XMHg-ob2dvl74';
 		
 		var nameInput = form.find('#race_name');
 		var raceData = { name: nameInput.val().trim() };
@@ -34,7 +45,7 @@ var Mapper = function() {
 		var placeIds = placesAdded;
 		$.ajax({
 			method: 'DELETE',
-			url: '/race/' + raceId + '/waypoints?format=json&token=' + muhToken
+			url: '/race/' + raceId + '/waypoints?format=json'
 		}).done(function() {
 			var nextRequest = function(index) {
 				var returnable = function() {
@@ -43,7 +54,7 @@ var Mapper = function() {
 				if(index < placeIds.length) {
 					returnable = function() {
 						$.ajax({
-							url: '/race/' + raceId + '/waypoints?format=json&token=' + muhToken,
+							url: '/race/' + raceId + '/waypoints?format=json',
 							method: 'POST',
 							data: { pid: placeIds[index] }
 						}).done(nextRequest(index + 1));
@@ -51,27 +62,39 @@ var Mapper = function() {
 				}
 				return returnable;
 			}
-			var currentRequest = $.ajax({ method: 'PUT', url: '/race/' + raceId + '?format=json&token=' + muhToken, data: raceData });
+			var currentRequest = $.ajax({ method: 'PUT', url: '/race/' + raceId + '?format=json', data: raceData });
 			currentRequest.done(nextRequest(0));
 		});
 	}
 	
-	var createNewRaceSubmit = function(form) {
-		var muhToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NzI3ZDNiYzlmM2UyZWQ4MzkwZDg2MGEiLCJfX3YiOjAsImxvY2FsIjp7InBhc3N3b3JkIjoiJDJhJDA4JHdmRlpoN3ZIbUhlRWE2VW54ZnowV2UyazNLRzFTSWR5c3hKbVFWQ1lPUFBrUFJHVzIvZkZXIiwiZW1haWwiOiJmc2thcnNvZEBhdmFucy5ubCIsInRva2VuIjoiZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKSVV6STFOaUo5LmV5SmZhV1FpT2lJMU56STNaRE5pWXpsbU0yVXlaV1E0TXprd1pEZzJNR0VpTENKZlgzWWlPakFzSW14dlkyRnNJanA3SW5CaGMzTjNiM0prSWpvaUpESmhKREE0SkhkbVJscG9OM1pJYlVobFJXRTJWVzU0Wm5vd1YyVXlhek5MUnpGVFNXUjVjM2hLYlZGV1ExbFBVRkJyVUZKSFZ6SXZaa1pYSWl3aVpXMWhhV3dpT2lKbWMydGhjbk52WkVCaGRtRnVjeTV1YkNJc0luUnZhMlZ1SWpvaVpYbEtNR1ZZUVdsUGFVcExWakZSYVV4RFNtaGlSMk5wVDJsS1NWVjZTVEZPYVVvNUxtVjVTbVpoVjFGcFQybEpNVTU2U1ROYVJFNXBXWHBzYlUweVZYbGFWMUUwVFhwcmQxcEVaekpOUjBWcFRFTktabGd6V1dsUGFrRnpTVzE0ZGxreVJuTkphbkEzU1c1Q2FHTXpUak5pTTBwclNXcHZhVXBFU21oS1JFRTBTa2hrYlZKc2NHOU9NMXBKWWxWb2JGSlhSVEpXVnpVMFdtNXZkMVl5VlhsaGVrNU1VbnBHVkZOWFVqVmpNMmhMWWxaR1YxRXhiRkJWUmtKeVZVWktTRlo2U1haYWExcFlTV2wzYVZwWE1XaGhWM2RwVDJsS2JXTXlkR2hqYms1MldrVkNhR1J0Um5WamVUVjFZa05LT1daUkxrUnlPVkZKWVZCTk5FVnFVVWxWYlZsQ1YxOWhNMlpLVEUxUFgyTXRTVE5CUlRJek5UTXdTSEEyYzNNaWZYMC55NWRwVUUtS0prd0hzUXYwWGFaX3VyQ3FQcnEwWDNVQ1l2cnQ4ZXBxNTRRIn19.2CtZ3YXQCdfVEm6OxJEdVR0nOW5QA3XMHg-ob2dvl74';
-		
+	var createNewRaceSubmit = function(form) {		
 		var nameInput = form.find('#race_name');
 		var raceData = { name: nameInput.val() };
 		
 		var placeIds = placesAdded;
 		
-		$.post('/race?format=json&token=' + muhToken, raceData, function(result, status, xhr) {
-			var waypointPromises = [];
-			for(placeId of placeIds) {
-				waypointPromises.push($.post('/race/' + result._id + '/waypoints?format=json&token=' + muhToken, { pid: placeId }));
+		$.post('/race?format=json', raceData, function(result, status, xhr) {
+			var nextRequest = function(index) {
+				var returnable = function() {
+					window.location.href = '/race/' + result._id;
+				};
+				if(index < placeIds.length) {
+					returnable = function() {
+						$.ajax({
+							url: '/race/' + result._id + '/waypoints?format=json',
+							method: 'POST',
+							data: { pid: placeIds[index] }
+						}).done(nextRequest(index + 1));
+					}
+				}
+				return returnable;
 			}
-			$.when(waypointPromises).done(function(waypointResults) {
-				window.location.href = '/race/' + result._id;
+			var currentRequest = $.ajax({
+				url: '/race/' + result._id + '/waypoints?format=json=',
+				method: 'POST',
+				data: { pid: placeIds[0] }
 			});
+			currentRequest.done(nextRequest(1));
 		});
 	}
 	

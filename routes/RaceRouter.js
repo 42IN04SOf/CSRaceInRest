@@ -24,11 +24,18 @@ var html = {
     }
 };
 
-module.exports = function(raceRepository, participantRepository, waypointRepository, authHandler, request) {
+module.exports = function(
+        raceRepository,
+        participantRepository,
+        waypointRepository, 
+        authHandler,
+        request,
+        apiConfig,
+        socketEmitter) {
 	
     // init subrouters
-    waypointSubrouter       = waypointSubrouter(waypointRepository, authHandler, request);
-    participantSubrouter    = participantSubrouter(participantRepository, authHandler); 
+    waypointSubrouter       = waypointSubrouter(waypointRepository, raceRepository, authHandler, request, apiConfig);
+    participantSubrouter    = participantSubrouter(participantRepository, raceRepository, socketEmitter, authHandler); 
     
 	// add default routes
 	crudRouter(router, model, raceRepository, {
@@ -48,95 +55,39 @@ module.exports = function(raceRepository, participantRepository, waypointReposit
 		delete: true
 	}, html);
     
+    // start race
     router.post("/:RaceId/state",
+        authHandler.isAuthorized('Race-update'),
         function(req, res) {
             req[model].start();
+            socketEmitter.emitToRace(req.params.RaceId, {
+                user: 'server',
+                message: 'The race has started',
+                type: 'room',
+                code: 'start'
+            });
             res.status(204).end();
 		}
     );
-     
-    router.delete("/:RaceId/state", 
+    
+    // stop race
+    router.delete("/:RaceId/state",
+        authHandler.isAuthorized('Race-update'),
         function(req, res) {
             req[model].stop();
+            socketEmitter.emitToRace(req.params.RaceId, {
+                user: 'server',
+                message: 'The race has stopped',
+                type: 'room',
+                code: 'stop'
+            });
             res.status(204).end();
         }
     );
     
-    // router.get('/:id/participants', participantRepository.model, function(req, res) {
-    //     console.log(req.Race);
-    //     req.Model.getParticipantsByRaceId(req.Race._id, function(err, participants) {
-    //         console.log(err);
-    //         console.log(participants)
-    //         if(err) {
-    //            res.status(403).end();
-    //         } else {
-    //            res.return({ result: participants });
-    //         }
-    //     });
-    // });
-    
-    // router.put("/:id/participants/:pid/waypoints", participantRepository.model, authHandler.isAuthenticated(), function (req, res, next) {
-    //     req.Model.findOne({ "_id": req.params.pid }, {}, function (err, result) {
-
-    //         if (err) {
-    //             if (err.name === 'CastError' && err.type === 'ObjectId') { // Here or @Errorhandler???
-    //                 err.status = 404;
-    //                 err.oldMessage = err.message;
-    //                 err.message = 'global.notFound';
-    //             }
-    //             return next(err)
-    //         }
-    //         if (result) {
-    //             req["Participant"] = result;
-    //             next();
-    //         }
-    //         else {
-    //             return next(NotFoundError);
-    //         }
-    //     });
-    // }, function(req, res) {
-    //         if (authHandler.isAuthorized('Participant-update')) {
-    //             req.Participant.addCompletedWaypoint(req.body.wid, function (err) {
-    //                 console.log(req.body);
-    //                 if (err) {
-    //                     res.status(403).end();
-    //                 } else {
-    //                     res.status(200).end();
-    //                 }
-    //             });
-    //         } else {
-    //             res.status(401).end();
-    //         }
-    //     })
-    
-    // router.post("/:id/waypoints", waypointRepository.model, authHandler.isAuthenticated(), function (req, res) {
-    //     var API = "AIzaSyBnOX9RDvO8Te8BftCqZBTeA5-bGPuQYb4";
-    //     var url = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + req.body.pid + '&key=' + API;
-    //     var place;
-    //     //console.log(url);
-
-    //     if (authHandler.isAuthorized('Waypoint-create')) {
-    //         request(url, function (error, response, body) {
-    //             if (!error && response.statusCode == 200) {
-    //                 //console.log(body);
-    //                 var json = JSON.parse(body);
-
-    //                 place = json.result;
-
-    //                 console.log(place);
-
-    //                 req.Model.createWaypoint(req.params.id, place, req.body.comment, function (waypoint) {
-    //                     console.log(waypoint)
-    //                     res.status(201).end();
-    //                 });
-    //             }
-    //         });
-    //     } else {
-    //         res.status(401).end();
-    //     }
-    // })
-
+    // participant routes
     router.use('/', participantSubrouter);
+    // waypoint routes
     router.use('/', waypointSubrouter);
 
     return router;

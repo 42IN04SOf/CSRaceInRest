@@ -48,8 +48,17 @@ translator 		= translator('./../../lang', languageConfig);
 authHandler		= authHandler(mongoose, authorizationConfig);
 tokenHandler 	= tokenHandler(mongoose.model('User'));
 
-passportConfig(passport, mongoose.model('User'), apikeysConfig, translator);
 ejs.filters.trans = translator.translate;
+
+morgan.token('staticRequest', function(req, res) {
+	return colorizer.modify(['green'], '[request]');
+});
+morgan.token('coloredStatusMethod', function(req, res) {
+	if(res.statusCode < 400) {
+		return colorizer.modify(['yellow'], res.statusCode + ' ' + req.method);
+	}
+	return colorizer.modify(['red'], res.statusCode + ' ' + req.method);
+});
 
 app.use(returnHelper);
 app.use(translator.middleware);
@@ -58,7 +67,8 @@ app.use(translator.middleware);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-// app.use(morgan('dev'));
+app.use(morgan(':staticRequest :coloredStatusMethod :url ' +
+	colorizer.modify(['black'], ':response-time ms - :res[content-length]')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -69,24 +79,16 @@ app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
 // post setup module setup
+passportConfig(passport, mongoose.model('User'), apikeysConfig, translator);
 app.use(tokenHandler.middleware);
 
 // router init
 indexRouter			= indexRouter(authHandler);
 authRouter 			= authRouter(passport, authHandler);
-raceRouter 			= raceRouter(databaseHelper.repositories.Race, databaseHelper.repositories.Participant, databaseHelper.repositories.Waypoint, authHandler, request);
+raceRouter 			= raceRouter(databaseHelper.repositories.Race, databaseHelper.repositories.Participant, databaseHelper.repositories.Waypoint, authHandler, request, apikeysConfig, socketEmitter);
 userRouter 			= userRouter(databaseHelper.repositories.User, databaseHelper.repositories.Participant, databaseHelper.repositories.Race, authHandler);
 
 // ==== ROUTING ====
-app.use(function(req, res, next) {
-	console.log(
-		colorizer.modify(['green'], '[request] ') +
-		colorizer.modify(['bright', 'bgblue', 'white'], req.method) +
-		colorizer.modify(['white'], ' ' +req.url)
-	);
-	return next();
-});
-
 app.use('/', indexRouter);
 app.use('/', authRouter);
 app.use('/race', raceRouter);

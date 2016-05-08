@@ -4,9 +4,6 @@ var router = express.Router();
 module.exports = function(authHandler) {
 	
 	router.get('/', function(req, res) {
-		if(req.user) {
-			console.log('user exists');
-		}
 		res.return({ 
 			result: { title: 'index.title', bag: { active: 'home' } }, 
 			view: 'index'
@@ -16,14 +13,16 @@ module.exports = function(authHandler) {
 	router.get('/profile',
 	 	authHandler.isAuthenticated(),
 		function(req, res, next) {
+			var result = req.user.asPublic();
 			if(res.isHTMLRequested()) {
-				console.log(req.user);
-				return res.return({ 
-					result: { title: 'index.title', user: req.user.asPublic(), bag: { active: 'profile' } }, 
-					view: 'profile'
-				});
+				result = { user: result }
+				result.title = 'index.title';
+				result.bag = { active: 'profile' };
 			}
-			return next();
+			return res.return({ 
+				result: result,
+				view: 'profile'
+			});
 		}
 	);
 	

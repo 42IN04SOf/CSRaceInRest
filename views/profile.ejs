@@ -5,8 +5,6 @@
         <h1><span class="fa fa-anchor"></span><%=: title | trans %></h1>
         <a href="/logout" class="btn btn-default btn-sm"><%=: 'nav.toLogout' | trans %></a>
         <a href="/race" class="btn btn-default btn-sm"><%=: 'nav.toAllRaces' | trans %></a>
-        <a href="/user/<%- user._id %>/owningraces" class="btn btn-default btn-sm"><%=: 'nav.toOwnedRaces' | trans %></a>
-        <a href="/user/<%- user._id %>/participatingraces" class="btn btn-default btn-sm"><%=: 'nav.toParticipatingRaces' | trans %></a>
     </div>
 
     <div class="row">
@@ -60,30 +58,8 @@
             <br />
             <h1 class="centered text-center"><%=: 'profile.ownedRaces' | trans %></h1>
             <hr />
-            <div class="ownedRacesContainer">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">                    
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Race name</h3>
-                        </div>
-                        <div class="panel-body clearfix">
-                            <span><strong>Date created: </strong>:Some date:</span><br />
-                            <span>
-                                <strong>Date started: </strong>
-                                :soon(tm):
-                            </span><br />
-                            <span>
-                                <strong>Date stopped: </strong>
-                                :soon(tm):
-                            </span><br />
-                            <span>
-                                <strong>Owner</strong>
-                                :Some owner:
-                            </span><br />
-                            <a class="btn btn-primary pull-right" href="#raceId">Race detail</a>
-                        </div>
-                    </div>
-                </div>
+            <div id="ownedRacesContainer">
+                
             </div>
         </div>
         
@@ -91,34 +67,16 @@
             <br />
             <h1 class="centered text-center"><%=: 'profile.participatingRaces' | trans %></h1>
             <hr />
-            <div class="ownedRacesContainer">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">                    
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Race name</h3>
-                        </div>
-                        <div class="panel-body clearfix">
-                            <span><strong>Date created: </strong>:Some date:</span><br />
-                            <span>
-                                <strong>Date started: </strong>
-                                :soon(tm):
-                            </span><br />
-                            <span>
-                                <strong>Date stopped: </strong>
-                                :soon(tm):
-                            </span><br />
-                            <span>
-                                <strong>Owner</strong>
-                                :Some owner:
-                            </span><br />
-                            <a class="btn btn-primary pull-right" href="#raceId">Race detail</a>
-                        </div>
-                    </div>
-                </div>
+            <div id="participatingRacesContainer">
+                
             </div>
         </div>
     </div>
 
 </div>
 <%- include partials/_scripts.ejs %>
+<script src="/javascripts/profile.js"></script>
+<script>
+    userId = '<%- user._id %>';
+</script>
 <%- include partials/_footer.ejs %>
