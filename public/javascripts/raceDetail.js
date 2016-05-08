@@ -146,6 +146,7 @@ function start() {
 									button.show();
 								}
 								else if(initial) {
+									initial = false;
 									button.show();
 								}
 								else {
