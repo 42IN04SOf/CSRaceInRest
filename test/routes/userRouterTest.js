@@ -14,7 +14,7 @@
 
 module.exports = {
 	tests: function(app, agent, expect, should) {
-		describe('Users retrieval', function() {
+		describe('User router', function() {
 			this.timeout(5000);
 			it('should get a list of all users', function(done) {
 				agent.get('/user?format=json')

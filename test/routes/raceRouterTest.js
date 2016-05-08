@@ -128,9 +128,33 @@ module.exports = {
                     })
             });
             
+            it('shouldnt stop the race', function(done) {
+                agent.delete('/race/' + raceID + '/state')
+                    .expect(400)
+                    .end(function(err, res) {
+                        if (err) { return done(err); }
+                        if(!res.body) {
+                            return done(new Error('Body is empty, not even an empty array.'));
+                        }
+                        done();
+                    })
+            });
+            
             it('should start the race', function(done) {
                 agent.post('/race/' + raceID + '/state')
                     .expect(204)
+                    .end(function(err, res) {
+                        if (err) { return done(err); }
+                        if(!res.body) {
+                            return done(new Error('Body is empty, not even an empty array.'));
+                        }
+                        done();
+                    })
+            });
+            
+            it('shouldnt start the race', function(done) {
+                agent.post('/race/' + raceID + '/state')
+                    .expect(400)
                     .end(function(err, res) {
                         if (err) { return done(err); }
                         if(!res.body) {
@@ -161,6 +185,44 @@ module.exports = {
                         if(!res.body) {
                             return done(new Error('Body is empty, not even an empty array.'));
                         }
+                        done();
+                    })
+            });
+            
+            it('shouldnt stop the race', function(done) {
+                agent.delete('/race/' + raceID + '/state')
+                    .expect(400)
+                    .end(function(err, res) {
+                        if (err) { return done(err); }
+                        if(!res.body) {
+                            return done(new Error('Body is empty, not even an empty array.'));
+                        }
+                        done();
+                    })
+            });
+            
+            it('shouldnt complete a waypoint', function(done) {
+                agent.put('/race/' + raceID + '/participants/' + participantID + '/waypoints?format=json')
+                    .send({ "wid": waypointID })
+                    .expect(400)
+                    .end(function(err, res) {
+                        if (err) { return done(err); }
+                        if(!res.body) {
+                            return done(new Error('Body is empty, not even an empty array.'));
+                        }
+                        done();
+                    })
+            });
+            
+            it('shouldnt join the race', function(done) {
+                agent.post('/race/' + raceID + '/participants?format=json')
+                    .expect(400)
+                    .end(function(err, res) {
+                        if (err) { return done(err); }
+                        if(!res.body) {
+                            return done(new Error('Body is empty, not even an empty array.'));
+                        }
+                        participantID = res.body._id;
                         done();
                     })
             });

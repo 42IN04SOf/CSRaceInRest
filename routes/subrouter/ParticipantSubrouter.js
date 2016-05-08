@@ -48,7 +48,7 @@ module.exports = function(participantRepository, raceRepository, socketEmitter, 
         authHandler.isAuthorized('Participant-update'),
         function(req, res, next) {
             if(req.Race.dateStop) {
-                var err = new error('race.alreadyStopped');
+                var err = new Error('race.alreadyStopped');
                 err.status = 400;
                 throw err;
             }
