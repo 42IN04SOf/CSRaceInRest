@@ -22,7 +22,7 @@ module.exports = function(waypointRepository, raceRepository, authHandler, reque
 			var API = apiConfig.googleAuth.apiKey || "AIzaSyBnOX9RDvO8Te8BftCqZBTeA5-bGPuQYb4";
 			var url = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + req.body.pid + '&key=' + API;
 			var place;
-
+			
 			request(url, function (error, response, body) {
 				if (!error && response.statusCode == 200) {
 					

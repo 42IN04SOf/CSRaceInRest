@@ -32,7 +32,7 @@ module.exports = function(
         request,
         apiConfig,
         socketEmitter) {
-	
+            
     // init subrouters
     waypointSubrouter       = waypointSubrouter(waypointRepository, raceRepository, authHandler, request, apiConfig);
     participantSubrouter    = participantSubrouter(participantRepository, raceRepository, socketEmitter, authHandler); 

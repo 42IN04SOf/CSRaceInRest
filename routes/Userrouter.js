@@ -62,7 +62,7 @@ module.exports = function(repository, participantRepository, raceRepository, aut
     router.get('/:UserId/owningraces/:RaceId', authHandler.isAuthorized('Race-read'),
         raceRepository.readById(function(req, res){ return req.params.RaceId }),
         function(req, res) {
-            console.log(req.user._id.equals(req.Race.ownerID._id));
+            //console.log(req.user._id.equals(req.Race.ownerID._id));
             if(req.user._id.equals(req.Race.ownerID._id)) {
                 var result = req.Race;
                 if(res.isHTMLRequested()) {

@@ -8,9 +8,20 @@ module.exports = {
         
         describe('Login', function () {
             this.timeout(5000);
-            it('should create a new race', function(done) {
+            it('should login', function(done) {
                 agent.get('/login?token=' + token)
-                    .expect(200)
+                    .expect(302)
+                    .end(function(err, res) {
+                        if(err) {
+                            return done(err);
+                        }
+                        done();
+                    })
+            });
+            
+            it('should logout', function(done) {
+                agent.get('/logout')
+                    .expect(302)
                     .end(function(err, res) {
                         if(err) {
                             return done(err);

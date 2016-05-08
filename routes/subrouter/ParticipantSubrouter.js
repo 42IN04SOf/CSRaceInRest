@@ -28,17 +28,16 @@ module.exports = function(participantRepository, raceRepository, socketEmitter, 
     router.post('/:RaceId/participants', 
         authHandler.isAuthorized('Participant-create'),
         function(req, res, next) {
-            console.log(req);
             if(req.Race.dateStart) {
                 var err = new Error('race.alreadyStarted');
                 err.status = 400;
                 throw err;
             }
+            
             return next();
         },
         participantRepository.create(function(req, res) { return { userID: req.user._id, raceID: req.params.RaceId } }),
         function(req, res) {
-            console.log(req.Participant);
             res.return({ result: req.Participant.asPublic() });
         }
     );
@@ -57,7 +56,6 @@ module.exports = function(participantRepository, raceRepository, socketEmitter, 
         }, 
         function(req, res) {
             req.Participant.addCompletedWaypoint(req.body.wid, function(err) {
-                console.log(req.body);
                 if(err) {
                     res.status(403).end();
                 } else {

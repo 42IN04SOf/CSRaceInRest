@@ -31,6 +31,7 @@ var apikeysConfig		= require('../config/apikeys');
 // lib
 var databaseHelper 		= require('../lib/module/databaseHelper');
 var returnHelper 		= require('../lib/module/returnHelper');
+var socketEmitter		= require('../lib/module/socketEmitter');
 
 var tokenHandler 		= require('../lib/module/tokenHandler');
 var authHandler 		= require('../lib/module/authHandler');
@@ -82,7 +83,9 @@ raceRouter = raceRouter(
 	databaseHelper.repositories.Participant,
 	databaseHelper.repositories.Waypoint,
 	authHandler,
-	request);
+	request,
+	apikeysConfig,
+	socketEmitter);
 userRouter = userRouter(
 	databaseHelper.repositories.User,
 	databaseHelper.repositories.Participant,
@@ -97,12 +100,11 @@ app.use('/', authRouter);
 app.use('/race', raceRouter);
 app.use('/user', userRouter);
 
+var userTests = require('./routes/userRouterTest');
+userTests.tests(app, agent, expect, should);
 
 var raceTests = require('./routes/raceRouterTest');
 raceTests.tests(app, agent, expect, should);
-
-var userTests = require('./routes/userRouterTest');
-userTests.tests(app, agent, expect, should);
 
 var authTests = require('./routes/authRouterTest');
 authTests.tests(app, agent, expect, should);
