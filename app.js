@@ -74,9 +74,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: 'B U L L E T B U L L E T B U L L E T' })); // session secret
+app.use(flash()); // use connect-flash for flash messages stored in session
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
-app.use(flash()); // use connect-flash for flash messages stored in session
+app.disable('etag');
 
 // post setup module setup
 passportConfig(passport, mongoose.model('User'), apikeysConfig, translator);
@@ -110,10 +111,12 @@ if (app.get('env') === 'development') {
 	app.use(function(err, req, res, next) {
 		console.error(colorizer.modify(['bright', 'white', 'bgred'], err.stack));
 		res.status(err.status || 500);
-		res.render('error', {
-			title: err.title,
-			message: err.message,
-			error: err
+		res.return({ view: 'error',
+			result: {
+				title: err.title,
+				message: (err.message.indexOf('.') > -1) ? translator.translate(err.message) : err.message,
+				error: err
+			}
 		});
 	});
 }
@@ -122,10 +125,12 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
 	res.status(err.status || 500);
-	res.render('error', {
-		title: err.title,
-		message: err.message,
-		error: err
+	res.return({ view: 'error',
+		result: {
+			title: err.title,
+			message: (err.message.indexOf('.') > -1) ? translator.translate(err.message) : err.message,
+			error: err
+		}
 	});
 });
 

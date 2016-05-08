@@ -78,13 +78,6 @@ module.exports = function(mongoose, unAuthorizedError) {
 				}
 				return next(unAuthorizedError);
 			}
-		},
-		{
-			keys: ['Test-value'],
-			value: function(req, res, next) {
-				console.log('isAuthorized using Test-value');
-				next();
-			}
 		}
 	];
 };

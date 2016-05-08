@@ -23,11 +23,14 @@ module.exports = {
 	'aCompleteOverviewOfRaces': 'Here, you can find a complete overview of all available races.',
 	'aCompleteOverviewOfOwnedRaces': 'Here, you can find a complete overview of all owned races.',
 	'orCreateNewHere': 'You can also create a new race below!',
-	'aRaceDetail': 'Here, you can find all the informatino about a single race.',
+	'aRaceDetail': 'Here, you can find all the information about a single race.',
 	'orEditHere': 'As an owner, you can also edit the race below!',
 	
 	'cannotParticipate': 'you cannot participate in this race.',
 	'attemptStart': 'Start the race',
 	'attemptStop': 'Stop the race',
-	'noWaypoints': 'The race has no waypoints'
+	'noWaypoints': 'The race has no waypoints',
+	'ownedTitle': 'Control panel',
+	'controlPanelExplain': 'This is the controlpanel for the owner of a race.',
+	'alreadyParticipating': 'The user is already a participant'
 };

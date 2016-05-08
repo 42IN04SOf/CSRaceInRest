@@ -63,10 +63,12 @@ function start() {
 	}	
 	
 	profilePromise.done(function(profile) {
+		console.log(profile);
 		participantPromise.done(function(participants) {
 			var userParticipant = false;
+			console.log(profile, participants);
 			participants.result.forEach(function(participant) {
-				if(participant.userID == profile._id) {
+				if(participant.userID._id == profile._id) {
 					userParticipant = participant;
 				}
 			});
@@ -168,7 +170,6 @@ function start() {
 				
 				var joinButton = controlBox.find('#controlJoin');
 				racePromise.done(function(race) {
-					console.log(race);
 					if(race.dateStart) {
 						joinButton.prop('disabled', true);
 					}
@@ -287,9 +288,7 @@ function start() {
 					break;
 			}
 		}
-		console.log(data);
 		if(data.code == 'start' && buttons.length > 0) {
-			console.log(buttons[0]);
 			buttons[0].prop('disabled', false);
 			buttons[0].show();
 		}
