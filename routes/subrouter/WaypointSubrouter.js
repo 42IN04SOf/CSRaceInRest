@@ -22,7 +22,7 @@ module.exports = function(waypointRepository, raceRepository, authHandler, reque
 			var API = apiConfig.googleAuth.apiKey || "AIzaSyBnOX9RDvO8Te8BftCqZBTeA5-bGPuQYb4";
 			var url = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + req.body.pid + '&key=' + API;
 			var place;
-
+			
 			request(url, function (error, response, body) {
 				if (!error && response.statusCode == 200) {
 					
@@ -38,7 +38,7 @@ module.exports = function(waypointRepository, raceRepository, authHandler, reque
 				throw error;
 			}); 
 		}
-	)
+	);
 	
 	// remove ALL waypoints from a race
 	router.delete("/:RaceId/waypoints", 
@@ -47,7 +47,7 @@ module.exports = function(waypointRepository, raceRepository, authHandler, reque
 		function(req, res) {
 			res.status(200).json({ status: 204, message: req.Waypoint + " deleted" });
 		}
-	)
+	);
 	
 	return router;
 }
