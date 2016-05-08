@@ -73,7 +73,6 @@ module.exports = {
             /* Deze zooi heeft gewerkt, maar wil dat nu ineens niet meer...*/
             it('should add a waypoint to the race', function(done) {
                 var placeID = 'ChIJPVoIuvXuxkcR9TGwHoTMgrY';
-                console.log('This test is broken.');
                 agent.post('/race/' + raceID + '/waypoints?token='+token)
                     .send({"pid": placeID, "comment": "some comment"})
                     .expect(201)
