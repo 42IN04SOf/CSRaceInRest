@@ -11,7 +11,7 @@ module.exports = function(mongoose, unAuthorizedError) {
 		{
 			keys: ['Race-update', 'Race-delete'], 
 			value: function(req, res, next) {
-				if(req.user && req.Race && (req.user.isAdmin() || req.Race.isOwner(user))) {
+				if(req.user && req.Race && (req.user.isAdmin() || req.Race.isOwner(req.user))) {
 					return next();
 				}
 				return next(unAuthorizedError);
@@ -20,7 +20,7 @@ module.exports = function(mongoose, unAuthorizedError) {
 		{
 			keys: ['Participant-update', 'Participant-delete'], 
 			value: function(req, res, next) {
-				if(req.user && req.Participant && (req.user.isAdmin() || req.Participant.isParticipant(user))) {
+				if(req.user && req.Participant && (req.user.isAdmin() || req.Participant.isParticipant(req.user))) {
 					return next();
 				}
 				return next(unAuthorizedError);
@@ -47,7 +47,7 @@ module.exports = function(mongoose, unAuthorizedError) {
 		{
 			keys: ['User-readById', 'User-update'], 
 			value: function(req, res, next) {
-				if(req.user && req.User && (req.user.isAdmin() || req.User._id === req.user._id)) {
+				if(req.user && req.User && (req.user.isAdmin() || req.User._id.equals(req.user._id))) {
 					return next();
 				}
 				return next(unAuthorizedError);
@@ -73,20 +73,10 @@ module.exports = function(mongoose, unAuthorizedError) {
 		{
 			keys: ['Waypoint-create', 'Waypoints-removeWhere'],
 			value: function(req, res, next) {
-				var raceID = req.body.raceID || req.params.RaceId;
-				var Race = mongoose.model('Race');
-				Race.findOne({ _id : raceID }, function(err, race) {
-					if(err) { return next(err); }
-					if(!race) {
-						var notFoundError = new Error('global.notFound');
-						notFoundError.status = 404;
-						return next(notFoundError);
-					}
-					if(race.ownerID == req.user._id) {
-						return next();
-					}
-					return next(unAuthorizedError);
-				});
+				if(req.Race.isOwner(req.user) || req.user.isAdmin()) {	
+					return next();
+				}
+				return next(unAuthorizedError);
 			}
 		},
 		{

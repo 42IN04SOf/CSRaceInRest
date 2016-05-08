@@ -1,63 +1,26 @@
 <%- include partials/_header.ejs %>
-<div class="container">
-
-    <div class="jumbotron text-center">
-        <h1><span class="fa fa-flag"></span> <%=: title | trans %><br /></h1>
-
-        <p><%=: 'race.aRaceDetail' | trans %></p>
-        <p>
-            <%=: 'race.orEditHere' | trans %><br /><br />
-            <!-- Button trigger modal -->
-            <button type="button" id="editRace" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-                <%=: 'nav.toEditRace' | trans %>
-            </button>
-        </p>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 col-lg-offset-3">
-                <div class="panel panel-default">                    
-                    <div class="panel-heading">
-                        <h3 class="panel-title"><% if(data.name){ %> <%- data.name %> <% } else { %> <%=: 'race.noNameAvailable' | trans %> <% } %> </h3>
-                    </div>
-                    <div class="panel-body clearfix">
-                        <span><strong><%=: 'race.dateCreate' | trans %></strong><%- data.dateCreate %></span><br />
-                        <span>
-                            <strong><%=: 'race.dateStart' | trans %></strong>
-                            <% if(data.dateStart) { %> <%- data.dateStart %>
-                            <% } else { %> <%=: 'race.notStartedYet' | trans %> <% } %>
-                        </span><br />
-                        <span>
-                            <strong><%=: 'race.dateStop' | trans %></strong>
-                            <% if(data.dateStop){ %> <%- data.dateStop %>
-                            <% } else if(data.dateStart && !data.dateStop) { %> <%=: 'race.inProgress' | trans %> <% } %>
-                            </span><br />
-                        <span>
-                            <strong><%=: 'race.owner' | trans %></strong>
-                            <% if(data.ownerID && data.ownerID.local && data.ownerID.local.email) { %> <%- data.ownerID.local.name %>
-                            <% } else if(data.ownerID && data.ownerID.google && data.ownerID.google.name) { %> <%- data.ownerID.google.name %>
-                            <% } else{ %> <%=: 'race.noOwnerAvailable' | trans %> <% } %>
-                        </span><br />
-                        <a class="btn btn-primary pull-right" href="#<%- data._id %>"><%=: 'nav.toRaceDetail' | trans %></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8" style="height:500px;">
+				<div id="map"></div>
+			</div>
+			<div class="col-lg-4">
+				<div id="detailContainer"></div>
+			</div>
+		</div>
+		<br /><br />
+		<div class="row">
+			<div class="col-lg-8 col-lg-offset-2">
+				<div id="controlContainer">
+				</div>
+			</div>
+		</div>
+	</div>
 <%- include partials/_scripts.ejs %>
-<%- include partials/_raceForm.ejs %>
 <script>
-    placesAdded = [];
-    raceId = '<%- data._id %>';
-    $(document).ready(function() {
-        $.get('/race/<%- data._id %>/waypoints?format=json').done(function(waypoints) {
-            placesAdded = [];
-            for(waypoint of waypoints.result.reverse()) {
-                placesAdded.push(waypoint.place.place_id)
-            }
-            initUsingDocs('<%- data._id %>');
-        });
-    });
+	raceId = '<%- data._id %>';
 </script>
+<script src="/javascripts/raceDetail.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcXuLjlvhOoDrC6as07h_1-eBXLynedHQ&callback=initUsingGoogle&libraries=places"></script>
 <%- include partials/_footer.ejs %>

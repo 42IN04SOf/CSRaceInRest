@@ -36,6 +36,10 @@ module.exports = function(passport, User, config, translator) {
     },
     function(req, email, password, done) {
 
+        if(!email || !password) {
+            return done(null, false, req.flash('signupMessage', 'auth.invalidFields'));
+        }
+
         // asynchronous
         // User.findOne wont fire unless data is sent back
         process.nextTick(function() {

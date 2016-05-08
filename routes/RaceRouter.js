@@ -24,11 +24,18 @@ var html = {
     }
 };
 
-module.exports = function(raceRepository, participantRepository, waypointRepository, authHandler, request) {
+module.exports = function(
+        raceRepository,
+        participantRepository,
+        waypointRepository, 
+        authHandler,
+        request,
+        apiConfig,
+        socketEmitter) {
 	
     // init subrouters
-    waypointSubrouter       = waypointSubrouter(waypointRepository, authHandler, request);
-    participantSubrouter    = participantSubrouter(participantRepository, authHandler); 
+    waypointSubrouter       = waypointSubrouter(waypointRepository, raceRepository, authHandler, request, apiConfig);
+    participantSubrouter    = participantSubrouter(participantRepository, raceRepository, socketEmitter, authHandler); 
     
 	// add default routes
 	crudRouter(router, model, raceRepository, {
@@ -48,21 +55,39 @@ module.exports = function(raceRepository, participantRepository, waypointReposit
 		delete: true
 	}, html);
     
+    // start race
     router.post("/:RaceId/state",
+        authHandler.isAuthorized('Race-update'),
         function(req, res) {
             req[model].start();
+            socketEmitter.emitToRace(req.params.RaceId, {
+                user: 'server',
+                message: 'The race has started',
+                type: 'room',
+                code: 'start'
+            });
             res.status(204).end();
 		}
     );
-     
-    router.delete("/:RaceId/state", 
+    
+    // stop race
+    router.delete("/:RaceId/state",
+        authHandler.isAuthorized('Race-update'),
         function(req, res) {
             req[model].stop();
+            socketEmitter.emitToRace(req.params.RaceId, {
+                user: 'server',
+                message: 'The race has stopped',
+                type: 'room',
+                code: 'stop'
+            });
             res.status(204).end();
         }
     );
     
+    // participant routes
     router.use('/', participantSubrouter);
+    // waypoint routes
     router.use('/', waypointSubrouter);
     
     return router;
