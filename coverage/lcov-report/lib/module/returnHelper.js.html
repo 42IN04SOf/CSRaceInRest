@@ -20,24 +20,24 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">73.08% </span>
+        <span class="strong">59.26% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>19/26</span>
+        <span class='fraction'>16/27</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">75% </span>
+        <span class="strong">40% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>6/8</span>
+        <span class='fraction'>4/10</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">57.14% </span>
+        <span class="strong">50% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>8/14</span>
+        <span class='fraction'>7/14</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">73.08% </span>
+        <span class="strong">59.26% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>19/26</span>
+        <span class='fraction'>16/27</span>
       </div>
     </div>
   </div>
@@ -100,7 +100,8 @@
 55
 56
 57
-58</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+58
+59</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -111,14 +112,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">10×</span>
 <span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">7×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10×</span>
 <span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">7×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7×</span>
 <span class="cline-any cline-yes">4×</span>
@@ -128,14 +129,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10×</span>
-<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4×</span>
@@ -143,20 +145,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-yes">3×</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">3×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Middleware module that handles responses using the proper requested content-type.
 //
 // In your routehandlers use:
@@ -174,8 +176,8 @@ module.exports = function(req, res, next) {
     var returnAction = function(callbacks) {
         switch(getReturnFormat()) {
 <span class="branch-0 cbranch-no" title="branch not covered" >            case 'html':</span>
-            case undefined: // if format is undefined, client expects HTML
-                return callbacks.html();
+<span class="branch-1 cbranch-no" title="branch not covered" >            case undefined: // if format is undefined, client expects HTML</span>
+<span class="cstat-no" title="statement not covered" >                return callbacks.html();</span>
             case "json":
                 if(callbacks.json) {
                     return callbacks.json(); 
@@ -187,12 +189,13 @@ module.exports = function(req, res, next) {
     // return handler
     res.return = function(data) {
         returnAction({
-            html: function(){
-                <span class="missing-if-branch" title="if path not taken" >I</span>if(data.view) {
+            html: <span class="fstat-no" title="function not covered" >function(){</span>
+<span class="cstat-no" title="statement not covered" >                if(data.view) {</span>
+<span class="cstat-no" title="statement not covered" >                    data.result.bag = data.result.bag || {}</span>
 <span class="cstat-no" title="statement not covered" >                    res.render(data.view, data.result);</span>
                 }
                 else {
-                    res.status(400).send('The content could not be viewed in a(n) HTML page.');
+<span class="cstat-no" title="statement not covered" >                    res.status(400).send('The content could not be viewed in an HTML page.');</span>
                 }
             },
             json: function(){ res.json(data.result); },
@@ -220,7 +223,7 @@ module.exports = function(req, res, next) {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun May 08 2016 10:45:59 GMT+0200 (W. Europe Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun May 08 2016 11:40:48 GMT+0200 (W. Europe Summer Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

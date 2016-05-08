@@ -51,8 +51,9 @@ module.exports = {
                         if(!res.body) {
                             return done(new Error('Body is empty, not even an empty array.'));
                         }
-                        ownerID = res.body[0].ownerID._id;
-                        raceID = res.body[0]._id;
+                        console.log(res.body.result[0]);
+                        ownerID = res.body.result[0].ownerID._id;
+                        raceID = res.body.result[0]._id;
                         done();
                     })
             });

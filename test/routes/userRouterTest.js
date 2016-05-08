@@ -51,9 +51,8 @@ module.exports = {
 			//Should work when views are complete!
 			it('should login', function (done) {
 				agent.post('/login')
-					.send({ email: email, password: 'test' })
-					.expect(302)
-					.expect('Location', '/profile')
+					.send({ "email": email, "password": "test" })
+					.expect(200)
 					.end(function (err, res) {
 						if (err) {
 							done(err);
@@ -63,9 +62,10 @@ module.exports = {
 					});
 			});
 		});
-		
+		/*
 		describe('Getting races', function () {
 			var userID = "572c7c596945a3d824225ee1";
+			var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NzJjN2M1OTY5NDVhM2Q4MjQyMjVlZTEiLCJsb2NhbCI6eyJwYXNzd29yZCI6IiQyYSQwOCQwVXhDb2lqc0ZhYjU4bC5lU09hcU0uaC55OGl5ZXZwYklvYk5kaVRIWXBrMDI0eTlKNS9RaSIsImVtYWlsIjoiZW1haWwifX0.FAZWgxTWUtshl8_2bBMAbDHGOjDHAANKMK01askFD5U';
 			
 			it('should get a list of all races the user is participating in', function (done) {
 				agent.get('/user/' + userID + '/participatingraces')
@@ -91,5 +91,6 @@ module.exports = {
 					});
 			});
 		});
-	}
+	*/}
+	
 }

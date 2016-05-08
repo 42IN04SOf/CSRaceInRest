@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">52.63% </span>
+        <span class="strong">80% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>10/19</span>
+        <span class='fraction'>16/20</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">50% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/4</span>
+        <span class='fraction'>2/4</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">20% </span>
+        <span class="strong">80% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>1/5</span>
+        <span class='fraction'>4/5</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">52.63% </span>
+        <span class="strong">80% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>10/19</span>
+        <span class='fraction'>16/20</span>
       </div>
     </div>
   </div>
-  <div class='status-line medium'></div>
+  <div class='status-line high'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -77,8 +77,7 @@
 32
 33
 34
-35
-36</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+35</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
@@ -89,7 +88,7 @@
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -97,20 +96,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">21×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">var colorizer = require('./colorizer');
@@ -123,29 +121,28 @@ module.exports = function(mongoose, config) {
 	
 	config = config(mongoose, unAuthorizedError);
 	
-	var isAuthenticated = <span class="fstat-no" title="function not covered" >function() {</span>
-<span class="cstat-no" title="statement not covered" >		return <span class="fstat-no" title="function not covered" >function(req, res, next) {	</span></span>
+	var isAuthenticated = function() {
+		return <span class="fstat-no" title="function not covered" >function(req, res, next) {	</span>
 <span class="cstat-no" title="statement not covered" >			if(req.user) {</span>
 <span class="cstat-no" title="statement not covered" >				return next();</span>
 			}
-<span class="cstat-no" title="statement not covered" >			return next();</span>
+<span class="cstat-no" title="statement not covered" >			return next(unAuthenticatedError);</span>
 		}
 	}
-	var isAuthorized = <span class="fstat-no" title="function not covered" >function(action) {</span>
-<span class="cstat-no" title="statement not covered" >		for(middleware of config) {</span>
-<span class="cstat-no" title="statement not covered" >			for(key of middleware.keys) {</span>
-<span class="cstat-no" title="statement not covered" >				if(key === action) {</span>
-<span class="cstat-no" title="statement not covered" >					return middleware.value;</span>
+	var isAuthorized = function(action) {
+		for(middleware of config) {
+			for(key of middleware.keys) {
+				if(key === action) {
+					return middleware.value;
 				}
 			}
 		}
-		
-		// return config[modelName][action];
+<span class="cstat-no" title="statement not covered" >		return next(unAuthorizedError);</span>
 	}
 	return {
 		isAuthenticated: isAuthenticated,
-		isAuthorized: <span class="fstat-no" title="function not covered" >function(action) {</span>
-<span class="cstat-no" title="statement not covered" >			return [isAuthenticated(), isAuthorized(action)];</span>
+		isAuthorized: function(action) {
+			return [isAuthenticated(), isAuthorized(action)];
 		},
 	}
 };</pre></td></tr>
@@ -154,7 +151,7 @@ module.exports = function(mongoose, config) {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun May 08 2016 10:45:59 GMT+0200 (W. Europe Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun May 08 2016 11:40:48 GMT+0200 (W. Europe Summer Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

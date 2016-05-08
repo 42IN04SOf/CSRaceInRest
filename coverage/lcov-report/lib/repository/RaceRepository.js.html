@@ -20,24 +20,24 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">78.95% </span>
+        <span class="strong">70.73% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>15/19</span>
+        <span class='fraction'>29/41</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">50% </span>
+        <span class="strong">40.91% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>4/8</span>
+        <span class='fraction'>9/22</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">83.33% </span>
+        <span class="strong">90.91% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>5/6</span>
+        <span class='fraction'>10/11</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">82.86% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>15/15</span>
+        <span class='fraction'>29/35</span>
       </div>
     </div>
   </div>
@@ -66,7 +66,42 @@
 21
 22
 23
-24</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
@@ -75,14 +110,49 @@
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -98,18 +168,53 @@
 	RaceRepository.read = function(where) {
 		where = where || <span class="fstat-no" title="function not covered" ><span class="branch-1 cbranch-no" title="branch not covered" >function(req, res){</span> <span class="cstat-no" title="statement not covered" >return {}; </span>};</span>
 		return function(req, res, next) {
-			Model.find(where(req, res), function(err, result){
-				<span class="missing-if-branch" title="if path not taken" >I</span>if(err) { <span class="cstat-no" title="statement not covered" >return next(err) }</span>
+			var predicate = where(req, res);            
+            var promise = Model.find(predicate)
+                .sort('-dateCreate');
+			<span class="missing-if-branch" title="if path not taken" >I</span>if(req.query.skip &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >req.query.take)</span> {
+<span class="cstat-no" title="statement not covered" >                promise.skip(req.query.skip)</span>
+                    .limit(req.query.take)
+            }
+			
+			promise.exec(function(err, result){
+                <span class="missing-if-branch" title="if path not taken" >I</span>if(err) { <span class="cstat-no" title="statement not covered" >return next(err) }</span>
 				<span class="missing-if-branch" title="if path not taken" >I</span>if(!result) { <span class="cstat-no" title="statement not covered" >return next(null, false); </span>}
-				var opts = [{ path: 'ownerID', select: 'google.name', model: 'User' }]
-				Model.populate(result, opts, function(err, popResult) {
-					<span class="missing-if-branch" title="if path not taken" >I</span>if(err) { <span class="cstat-no" title="statement not covered" >return next(err) }</span>
-					req[modelName] = popResult;
-					next();
+				var opts = [{ path: 'ownerID', select: 'google.name local.email', model: 'User' }]
+				Model.populate(result, opts, function(pErr, popResult) {
+					<span class="missing-if-branch" title="if path not taken" >I</span>if(pErr) { <span class="cstat-no" title="statement not covered" >return next(pErr) }</span>
+					Model.find(predicate).count(function(cErr, count) {
+						<span class="missing-if-branch" title="if path not taken" >I</span>if(cErr) { <span class="cstat-no" title="statement not covered" >return next(cErr) }</span>
+						req[modelName] =  {
+							count: count,
+							result: popResult
+						};
+						next();
+					});
 				});
-			});
+            });
 		}
 	}
+	
+	RaceRepository.readById = function(id) {
+        return function(req, res, next) {
+            Model.findOne({ "_id" : id(req, res) },{},function(err, result){
+                <span class="missing-if-branch" title="if path not taken" >I</span>if(err) {
+<span class="cstat-no" title="statement not covered" >                    if(err.name === 'CastError' &amp;&amp; err.type === 'ObjectId') { // Here or @Errorhandler???</span>
+<span class="cstat-no" title="statement not covered" >                        err.status = 404;</span>
+<span class="cstat-no" title="statement not covered" >                        err.oldMessage = err.message;</span>
+<span class="cstat-no" title="statement not covered" >                        err.message = 'global.notFound';</span>
+                    } 
+<span class="cstat-no" title="statement not covered" >                    return next(err)</span>
+                }
+                <span class="missing-if-branch" title="if path not taken" >I</span>if(!result) { <span class="cstat-no" title="statement not covered" >return next(NotFoundError); </span>}
+				var opts = [{ path: 'ownerID', select: 'google.name local.email', model: 'User' }]
+				Model.populate(result, opts, function(pErr, popResult) {
+					req[modelName] = result;
+					next();
+				});
+            });
+        }
+    }
 	
 	return RaceRepository; 
 }</pre></td></tr>
@@ -118,7 +223,7 @@
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun May 08 2016 10:45:59 GMT+0200 (W. Europe Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun May 08 2016 11:40:48 GMT+0200 (W. Europe Summer Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

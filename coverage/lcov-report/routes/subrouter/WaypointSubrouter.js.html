@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">73.08% </span>
+        <span class="strong">86.36% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>19/26</span>
+        <span class='fraction'>19/22</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">37.5% </span>
+        <span class="strong">75% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>3/8</span>
+        <span class='fraction'>3/4</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">75% </span>
@@ -35,13 +35,13 @@
         <span class='fraction'>6/8</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">72% </span>
+        <span class="strong">86.36% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>18/25</span>
+        <span class='fraction'>19/22</span>
       </div>
     </div>
   </div>
-  <div class='status-line medium'></div>
+  <div class='status-line high'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -86,14 +86,7 @@
 41
 42
 43
-44
-45
-46
-47
-48
-49
-50
-51</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+44</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
@@ -101,10 +94,7 @@
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -115,28 +105,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -147,50 +133,43 @@
 var router = express.Router({ mergeParams: true });
 &nbsp;
 module.exports = function(waypointRepository, authHandler, request) {
+		
+	router.get("/:RaceId/waypoints",
+		waypointRepository.read(function(req, res){ return { raceID: req.params.RaceId } }),
+		function(req, res) {
+			res.return({ result: req.Waypoint });
+		}
+	);
 	
-	router.get("/waypoints", waypointRepository.read(function(req, res){ return { raceID: req.params.RaceId } }), function(req, res) {
-		res.return({ result: req.Waypoint });
-        // res.return({ result: [
-        //     { raceID: req.params.id, place: { place_id: 'ChIJ868JyffuxkcRCBj2jwPPvc8' }  },
-        //     { raceID: req.params.id, place: { place_id: 'ChIJdaHSJvTuxkcRhN90R_unXbM', name: 'leuven&gt;?' }  },
-        //     { raceID: req.params.id, place: { place_id: 'ChIJf94g6PbuxkcR1xA8cer7osc', name: "bij dirk" }  },
-        //     { raceID: req.params.id, place: { place_id: 'ChIJ03DgufXuxkcRrQPAWOR0fzA', name: 'polleive' }  },
-        // ] });
-    });
-    
-    router.post("/waypoints", waypointRepository.model(), function (req, res) {
-        var API = "AIzaSyBnOX9RDvO8Te8BftCqZBTeA5-bGPuQYb4"; // todo: retrieve from config
-        var url = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + req.body.pid + '&amp;key=' + API;
-        var place;
+	router.post("/:RaceId/waypoints", waypointRepository.model(), function (req, res) {
+		var API = "AIzaSyBnOX9RDvO8Te8BftCqZBTeA5-bGPuQYb4"; // todo: retrieve from config
+		var url = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + req.body.pid + '&amp;key=' + API;
+		var place;
 &nbsp;
-        request(url, function (error, response, body) {
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (!error &amp;&amp; response.statusCode == 200) {
-                var json = JSON.parse(body);
-                
-                place = json.result;
-&nbsp;
-                req.WaypointSchema.createWaypoint(req.params.id, place, req.body.comment, function(waypoint) {
-                    console.log(waypoint)
-                    res.status(201).end();
-                });
-            }
-        }); 
-    });
-    
-    router.delete("/:id/waypoints", waypointRepository.model, <span class="fstat-no" title="function not covered" >function (req, res) {</span>
-<span class="cstat-no" title="statement not covered" >        if(req.body.wid) {</span>
-<span class="cstat-no" title="statement not covered" >            req.Model.deleteWaypoint(req.body.wid, <span class="fstat-no" title="function not covered" >function(err) {</span></span>
-<span class="cstat-no" title="statement not covered" >                if(err) {</span>
-<span class="cstat-no" title="statement not covered" >                    console.log(err);</span>
-<span class="cstat-no" title="statement not covered" >                    res.status(403).end(); </span>
-                } else {
-<span class="cstat-no" title="statement not covered" >                    res.status(200).end();</span>
-                }
-            })
-        } else {
-<span class="cstat-no" title="statement not covered" >            res.status(403).end();</span>
-        }
-    });
+		request(url, function (error, response, body) {
+			<span class="missing-if-branch" title="else path not taken" >E</span>if (!error &amp;&amp; response.statusCode == 200) {
+				
+				var json = JSON.parse(body);
+				place = json.result;
+				
+				// todo req.body.comment
+				return req.WaypointSchema.createWaypoint(req.params.RaceId, place, 'comment', function (waypoint) {
+					var status = 201;
+					res.status(status).json({ status: status, message: 'success' });
+				});
+			}
+<span class="cstat-no" title="statement not covered" >			throw error;</span>
+		}); 
+	});
+	
+	// remove ALL waypoints from a race, not one
+	router.delete("/:RaceId/waypoints", 
+	  	authHandler.isAuthorized('Waypoints-removeWhere'),
+		waypointRepository.removeWhere(<span class="fstat-no" title="function not covered" >function(req, res) {</span> <span class="cstat-no" title="statement not covered" >return { raceID: req.params.RaceId }; </span>}),
+<span class="fstat-no" title="function not covered" >		function(req, res) {</span>
+<span class="cstat-no" title="statement not covered" >			res.status(200).json({ status: 204, message: req.Waypoint + " deleted" });</span>
+		}
+	);
 	
 	return router;
 }</pre></td></tr>
@@ -199,7 +178,7 @@ module.exports = function(waypointRepository, authHandler, request) {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun May 08 2016 10:45:59 GMT+0200 (W. Europe Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun May 08 2016 11:40:48 GMT+0200 (W. Europe Summer Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>
