@@ -20,24 +20,24 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">89.36% </span>
+        <span class="strong">86.27% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>42/47</span>
+        <span class='fraction'>44/51</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">59.26% </span>
+        <span class="strong">55.56% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>16/27</span>
+        <span class='fraction'>15/27</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">71.43% </span>
+        <span class="strong">66.67% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>5/7</span>
+        <span class='fraction'>6/9</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">89.36% </span>
+        <span class="strong">86.27% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>42/47</span>
+        <span class='fraction'>44/51</span>
       </div>
     </div>
   </div>
@@ -167,7 +167,13 @@
 122
 123
 124
-125</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+125
+126
+127
+128
+129
+130
+131</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -221,26 +227,32 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">4×</span>
-<span class="cline-any cline-yes">3×</span>
-<span class="cline-any cline-yes">3×</span>
 <span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">17×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3×</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -345,15 +357,16 @@ module.exports = function(router, modelName, repository, options, html)
 	// handlers
 	var viewHandler = function(viewObject) {
 		return function(req, res) {
-			var publicData = [];
-			if(Array.isArray(req[modelName])) {
-				for(element of req[modelName]) {
-					publicData.push(element.asPublic());
+			var publicData = {};
+			<span class="missing-if-branch" title="else path not taken" >E</span>if(Array.isArray(req[modelName].result)) {
+				publicData.count = req[modelName].count;
+				publicData.result = [];
+				for(element of req[modelName].result) {
+					publicData.result.push(element.asPublic());
 				}
 			}
 			else {
-				console.log();
-				publicData = req[modelName].asPublic();
+<span class="cstat-no" title="statement not covered" >				publicData = req[modelName].asPublic();</span>
 			}
 			<span class="missing-if-branch" title="if path not taken" >I</span>if(res.isHTMLRequested()) {
 <span class="cstat-no" title="statement not covered" >				publicData = { data: publicData };</span>
@@ -364,8 +377,13 @@ module.exports = function(router, modelName, repository, options, html)
 		}
 	}
 	var statusHandler = function(status) {
+		return <span class="fstat-no" title="function not covered" >function(req, res) {</span>
+<span class="cstat-no" title="statement not covered" >			res.status(status).json({ status: status, message: 'success' });</span>
+		}
+	}
+	var createHandler = function() {
 		return function(req, res) {
-			res.status(status).end('complete');
+			return res.status(201).json(req[modelName].asPublic())
 		}
 	}
 	
@@ -383,7 +401,7 @@ module.exports = function(router, modelName, repository, options, html)
 		
 		var routeHandlers = [];
 		routeHandlers.push(repository.create(options.create));
-		routeHandlers.push(statusHandler(201));
+		routeHandlers.push(createHandler());
 		
 		router.post('/', routeHandlers);
 	}
@@ -402,7 +420,7 @@ module.exports = function(router, modelName, repository, options, html)
 		// PUT /entity/:id
 		var routeHandlers = [];
 		routeHandlers.push(repository.update(options.update));
-		routeHandlers.push(statusHandler(201));
+		routeHandlers.push(statusHandler(204));
 		
 		router.put('/:' + modelName + 'Id', routeHandlers);
 	}
@@ -411,7 +429,7 @@ module.exports = function(router, modelName, repository, options, html)
 		// DELETE /entity/:id
 		var routeHandlers = [];
 		routeHandlers.push(repository.remove());
-		routeHandlers.push(statusHandler(201));
+		routeHandlers.push(statusHandler(204));
 		
 		router.delete('/:' + modelName + 'Id', routeHandlers);
 	}
@@ -421,7 +439,7 @@ module.exports = function(router, modelName, repository, options, html)
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun May 08 2016 10:45:59 GMT+0200 (W. Europe Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun May 08 2016 11:55:06 GMT+0200 (West-Europa (zomertijd))
 </div>
 </div>
 <script src="../prettify.js"></script>
