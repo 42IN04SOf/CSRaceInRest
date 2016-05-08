@@ -83,7 +83,6 @@ module.exports = {
                     })
             });
             
-            /* Deze zooi heeft gewerkt, maar wil dat nu ineens niet meer...*/
             it('should add a waypoint to the race', function(done) {
                 var placeID = 'ChIJPVoIuvXuxkcR9TGwHoTMgrY';
                 agent.post('/race/' + raceID + '/waypoints')
@@ -192,7 +191,5 @@ module.exports = {
             });
 
         });
-        
-		// more tests here
     }
 };
