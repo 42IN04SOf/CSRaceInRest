@@ -108,3 +108,8 @@ raceTests.tests(app, agent, expect, should);
 
 var authTests = require('./routes/authRouterTest');
 authTests.tests(app, agent, expect, should);
+
+app.use(function(err, req, res, next) {
+	// Just swallow the errors, i guess
+	next();
+});
