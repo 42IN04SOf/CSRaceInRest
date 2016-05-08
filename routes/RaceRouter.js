@@ -61,7 +61,7 @@ module.exports = function(raceRepository, participantRepository, waypointReposit
         }
     );
     
-    router.get('/:id/participants', participantRepository.model, function(req, res) {
+    /*router.get('/:id/participants', participantRepository.model, function(req, res) {
         console.log(req.Race);
         req.Model.getParticipantsByRaceId(req.Race._id, function(err, participants) {
             console.log(err);
@@ -125,12 +125,12 @@ module.exports = function(raceRepository, participantRepository, waypointReposit
                 });
             }
         }); 
-    })
+    })*/
 
     router.use('/:RaceId', participantSubrouter);
     router.use('/:RaceId', waypointSubrouter);
     
-    router.delete("/:id/waypoints", waypointRepository.model, function (req, res) {
+    /*router.delete("/:id/waypoints", waypointRepository.model, function (req, res) {
         if(req.body.wid) {
             req.Model.deleteWaypoint(req.body.wid, function(err) {
                 if(err) {
@@ -143,7 +143,7 @@ module.exports = function(raceRepository, participantRepository, waypointReposit
         } else {
             res.status(403).end();
         }
-    })
+    })*/
     
     return router;
 }

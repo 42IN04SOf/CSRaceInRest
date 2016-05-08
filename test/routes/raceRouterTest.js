@@ -24,9 +24,41 @@
 module.exports = {
     tests: function(app, agent, expect, should) {
         
-        describe('Races retrieval', function() {
+        var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NzJjN2M1OTY5NDVhM2Q4MjQyMjVlZTEiLCJsb2NhbCI6eyJwYXNzd29yZCI6IiQyYSQwOCQwVXhDb2lqc0ZhYjU4bC5lU09hcU0uaC55OGl5ZXZwYklvYk5kaVRIWXBrMDI0eTlKNS9RaSIsImVtYWlsIjoiZW1haWwifX0.FAZWgxTWUtshl8_2bBMAbDHGOjDHAANKMK01askFD5U';
+        var ownerID;
+        var raceID;
+        
+        describe('Races router', function () {
+            this.timeout(5000);
+            it('should create a new race', function(done) {
+                agent.post('/race?token=' + token)
+                    .send({ "name": "naamtest"})
+                    .expect(201)
+                    .end(function(err, res) {
+                        if(err) {
+                            return done(err);
+                        }
+                        done();
+                    })
+            });
+            
             it('should get a list of all races', function(done) {
                 agent.get('/race?format=json')
+                    .expect(200)
+                    .expect('Content-Type', /json/)
+                    .end(function(err, res) {
+                        if (err) { return done(err); }
+                        if(!res.body) {
+                            return done(new Error('Body is empty, not even an empty array.'));
+                        }
+                        ownerID = res.body[0].ownerID._id;
+                        raceID = res.body[0]._id;
+                        done();
+                    })
+            });
+            
+            it('should find one race from the list', function(done) {
+                agent.get('/race/' + raceID + '?format=json')
                     .expect(200)
                     .expect('Content-Type', /json/)
                     .end(function(err, res) {
@@ -37,6 +69,47 @@ module.exports = {
                         done();
                     })
             });
+            
+            /* Deze zooi heeft gewerkt, maar wil dat nu ineens niet meer...*/
+            it('should add a waypoint to the race', function(done) {
+                var placeID = 'ChIJPVoIuvXuxkcR9TGwHoTMgrY';
+                console.log('This test is broken.');
+                agent.post('/race/' + raceID + '/waypoints?token='+token)
+                    .send({"pid": placeID, "comment": "some comment"})
+                    .expect(201)
+                    .end(function(err, res) {
+                        if (err) { return done(err); }
+                        if(!res.body) {
+                            return done(new Error('Body is empty, not even an empty array.'));
+                        }
+                        done();
+                    })
+            });
+            
+            it('should get a list of all waypoints from a race', function(done) {
+                agent.get('/race/' + raceID + '/waypoints?format=json&token='+token)
+                    .expect(200)
+                    .expect('Content-Type', /json/)
+                    .end(function(err, res) {
+                        if (err) { return done(err); }
+                        if(!res.body) {
+                            return done(new Error('Body is empty, not even an empty array.'));
+                        }
+                        done();
+                    })
+            });
+            
+            /*it('should join the race', function(done) {
+                agent.post('/race/' + raceID + '/participants?token='+token)
+                    .expect(200)
+                    .end(function(err, res) {
+                        if (err) { return done(err); }
+                        if(!res.body) {
+                            return done(new Error('Body is empty, not even an empty array.'));
+                        }
+                        done();
+                    })
+            })*/
         });
         
 		// more tests here
