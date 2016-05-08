@@ -7,12 +7,12 @@ var html = {
     overview: {
         title: 'Users',
         bag: { active: 'user' },
-        view: 'Users'
+        view: 'users'
     },
     detail: {
         title: 'User',
         bag: { active: 'user' },
-        view: 'User'
+        view: 'user'
     }
 };
 

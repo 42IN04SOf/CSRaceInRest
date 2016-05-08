@@ -10,7 +10,7 @@ var html = {
     overview: {
         title: 'race.overviewTitle',
         bag: { active: 'race' },
-        view: 'Races'
+        view: 'races'
     },
     detail: {
         title: 'race.detailTitle',
@@ -20,7 +20,7 @@ var html = {
             },
             active: 'race'
         },
-        view: 'Race'
+        view: 'race'
     }
 };
 
