@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">32.14% </span>
+        <span class="strong">75% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>9/28</span>
-      </div>
-      <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
-        <span class="quiet">Branches</span>
-        <span class='fraction'>0/8</span>
+        <span class='fraction'>21/28</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">37.5% </span>
-        <span class="quiet">Functions</span>
+        <span class="quiet">Branches</span>
         <span class='fraction'>3/8</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">29.63% </span>
+        <span class="strong">75% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>6/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">74.07% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>8/27</span>
+        <span class='fraction'>20/27</span>
       </div>
     </div>
   </div>
-  <div class='status-line low'></div>
+  <div class='status-line medium'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -113,23 +113,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -166,24 +166,24 @@ module.exports = function(waypointRepository, authHandler, request) {
         // ] });
     });
     
-    router.post("/waypoints", waypointRepository.model, <span class="fstat-no" title="function not covered" >function (req, res) {</span>
-<span class="cstat-no" title="statement not covered" >        var API = "AIzaSyBnOX9RDvO8Te8BftCqZBTeA5-bGPuQYb4"; </span>// todo: retrieve from config
-<span class="cstat-no" title="statement not covered" >        var url = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + req.body.pid + '&amp;key=' + API;</span>
-<span class="cstat-no" title="statement not covered" >        var place;</span>
+    router.post("/waypoints", waypointRepository.model(), function (req, res) {
+        var API = "AIzaSyBnOX9RDvO8Te8BftCqZBTeA5-bGPuQYb4"; // todo: retrieve from config
+        var url = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + req.body.pid + '&amp;key=' + API;
+        var place;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        console.log("wat is deze");</span>
+        console.log("wat is deze");
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        request(url, <span class="fstat-no" title="function not covered" >function (error, response, body) {</span></span>
-<span class="cstat-no" title="statement not covered" >            if (!error &amp;&amp; response.statusCode == 200) {</span>
-<span class="cstat-no" title="statement not covered" >                var json = JSON.parse(body);</span>
+        request(url, function (error, response, body) {
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (!error &amp;&amp; response.statusCode == 200) {
+                var json = JSON.parse(body);
                 
-<span class="cstat-no" title="statement not covered" >                place = json.result;</span>
+                place = json.result;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                console.log(place);</span>
+                console.log(place);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >                req.WaypointSchema.createWaypoint(req.params.id, place, req.body.comment, <span class="fstat-no" title="function not covered" >function(waypoint) {</span></span>
-<span class="cstat-no" title="statement not covered" >                    console.log(waypoint)</span>
-<span class="cstat-no" title="statement not covered" >                    res.status(201).end();</span>
+                req.WaypointSchema.createWaypoint(req.params.id, place, req.body.comment, function(waypoint) {
+                    console.log(waypoint)
+                    res.status(201).end();
                 });
             }
         }); 
@@ -211,7 +211,7 @@ module.exports = function(waypointRepository, authHandler, request) {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat May 07 2016 22:35:59 GMT+0200 (W. Europe Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun May 08 2016 10:10:29 GMT+0200 (W. Europe Summer Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

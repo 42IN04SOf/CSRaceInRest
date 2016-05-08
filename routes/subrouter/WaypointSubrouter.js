@@ -13,20 +13,16 @@ module.exports = function(waypointRepository, authHandler, request) {
         // ] });
     });
     
-    router.post("/waypoints", waypointRepository.model, function (req, res) {
+    router.post("/waypoints", waypointRepository.model(), function (req, res) {
         var API = "AIzaSyBnOX9RDvO8Te8BftCqZBTeA5-bGPuQYb4"; // todo: retrieve from config
         var url = 'https://maps.googleapis.com/maps/api/place/details/json?placeid=' + req.body.pid + '&key=' + API;
         var place;
-
-        console.log("wat is deze");
 
         request(url, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 var json = JSON.parse(body);
                 
                 place = json.result;
-
-                console.log(place);
 
                 req.WaypointSchema.createWaypoint(req.params.id, place, req.body.comment, function(waypoint) {
                     console.log(waypoint)
